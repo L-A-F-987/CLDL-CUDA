@@ -2,7 +2,8 @@
 #include <chrono>
 
 #include "cldl/Net.h"
-#include "cldl/wav.h"
+#include "../jetsonGPIO.h"
+
 
 #include <iostream>
 #include <thread>
@@ -15,6 +16,20 @@ using namespace std;
 int main(int argc, char* argv[]){
 
     std::cout<<"Made it to the Start :)\n\n\n";
+
+
+
+    //Trialing the GPIO Pins
+    cout << "Testing the GPIO Pins" << endl;
+
+    jetsonGPIO redLED = gpio165 ;
+    jetsonGPIO pushButton = gpio166 ;
+    gpioExport(pushButton) ;
+
+
+
+
+    //Network Code
 
     constexpr int nLayers = 7;
     int nNeurons[nLayers] = {10,7,5,3,2,2,1};
@@ -71,24 +86,8 @@ auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - sta
 
     std::cout<<"number of neurons:  "<<n<<"\n";
     std::cout<<"number of layers:  "<<l<<"\n\n\n";
-
     
 
-    //Wav File Reading 
 
-
-        char input[50];
-        if (argc == 1)
-		strcpy(input, "long_drill_16bit_int.wav");
-        else
-		strncpy(input, argv[1], 50);
-	
-	WAVread wavread;
-	wavread.open(input);
-	wavread.printHeaderInfo();
-    wavread.close();
-
-    std::cout<<"Made it to the end :)\n\n";
-    return EXIT_SUCCESS;
 
 }

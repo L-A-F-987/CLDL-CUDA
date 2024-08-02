@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 # 'Google_test' is the subproject name
-project(tests LANGUAGES CUDA CXX)
+project(tests LANGUAGES CUDA CXX C)
 
 add_executable(tests
         t.cu
@@ -8,6 +8,10 @@ add_executable(tests
 
 
 target_link_libraries(tests PRIVATE CLDL)
+
+
+target_link_libraries(tests PRIVATE Pins)
+
 
 set(tests_force_shared_crt ON FORCE)
 

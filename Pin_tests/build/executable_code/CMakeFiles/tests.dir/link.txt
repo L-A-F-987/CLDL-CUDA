@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/tests.dir/Initial_Testing.cpp.o  -o tests ../libPins.a -lcurand -lpthread 

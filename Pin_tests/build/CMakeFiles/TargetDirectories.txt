@@ -1,0 +1,8 @@
+/home/luca/Documents/CLDL-CUDA/Pin_tests/build/CMakeFiles/rebuild_cache.dir
+/home/luca/Documents/CLDL-CUDA/Pin_tests/build/CMakeFiles/edit_cache.dir
+/home/luca/Documents/CLDL-CUDA/Pin_tests/build/CMakeFiles/Pins.dir
+/home/luca/Documents/CLDL-CUDA/Pin_tests/build/CMakeFiles/test.dir
+/home/luca/Documents/CLDL-CUDA/Pin_tests/build/executable_code/CMakeFiles/rebuild_cache.dir
+/home/luca/Documents/CLDL-CUDA/Pin_tests/build/executable_code/CMakeFiles/edit_cache.dir
+/home/luca/Documents/CLDL-CUDA/Pin_tests/build/executable_code/CMakeFiles/tests.dir
+/home/luca/Documents/CLDL-CUDA/Pin_tests/build/executable_code/CMakeFiles/test.dir

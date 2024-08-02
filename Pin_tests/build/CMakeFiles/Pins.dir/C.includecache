@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/jetsonGPIO.h
+
+/home/luca/Documents/CLDL-CUDA/Pin_tests/jetsonGPIO.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+errno.h
+-
+unistd.h
+-
+fcntl.h
+-
+poll.h
+-
+jetsonGPIO.h
+/home/luca/Documents/CLDL-CUDA/Pin_tests/jetsonGPIO.h
+
