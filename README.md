@@ -1,4 +1,4 @@
-# GPU Accelerated Realtime Deep Learning
+# Deep Neural Filter Hearing Aid
 
  This is a GPU-accelerated version of the [Closed-Loop Deep Learning](https://github.com/Sama-Darya/CLDL) library.
  
