@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/luca/Documents/CLDL-CUDA/Callback_based_i2s_testing/Testing_Callback.cpp
+iostream
+-
+chrono
+-
+thread
+-
+functional
+-
+
