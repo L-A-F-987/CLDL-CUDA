@@ -20,9 +20,12 @@
 - USB to 3.5mm Stereo 
 
 # Setting up I2S
-To setup I2S on the jetson first you should run the following command:
+To setup I2S on the jetson first you should run the below command. 
+Note that this command requires that the python file requires that the board only has an Sd card or emmc, it will not work if you have a custom board containing both and will result in an error saying multiple partitions are mounted. In order to 
 
--
+- /opt/nvidia/jetson-io/jetson-io.py
+
+ 
+
 ## Contact
-
 Luca Faccenda: 2572705f@student.glasgow.ac.uk
