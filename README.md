@@ -26,6 +26,10 @@ Note that this command requires that the python file requires that the board onl
 
 - /opt/nvidia/jetson-io/jetson-io.py
 
+After running this command you will be met with the below screen. Note that your terminal window has to be big enough to display the menu so if your menu does not pop up try resizing your terminal window first.
+
+![alt text] ([image](https://github.com/user-attachments/assets/706b89e8-d338-45ac-a9ef-938a1e870797))
+
  
 
 ## Contact
