@@ -11,7 +11,7 @@
  Tested with CUDA-10.2 on a Jetson Nano Dev Kit
 ``
 # Hardware 
-Item1 Jetson nano Developer Kit
+- Item1 Jetson nano Developer Kit
 
 # Setting up I2S
 ## Contact
