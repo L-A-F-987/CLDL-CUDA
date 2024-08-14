@@ -28,7 +28,7 @@ Note that this command requires that the python file requires that the board onl
 
 After running this command you will be met with the below screen. Note that your terminal window has to be big enough to display the menu so if your menu does not pop up try resizing your terminal window first.
 
-![alt text] ([image](https://github.com/user-attachments/assets/706b89e8-d338-45ac-a9ef-938a1e870797))
+![alt text] (https://preview.redd.it/dzf8ny0l35a81.png?width=635&format=png&auto=webp&s=35644e8a99a6e4effddb0252a73caaca67c40f52)
 
  
 
