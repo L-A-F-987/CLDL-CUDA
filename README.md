@@ -41,8 +41,8 @@ After this has been done, the pins should be configured for I2S as follows.
 
 - Pin 40 = I2S Data Out
 
-  #Troubleshooting I2S
-  Before moving on please run the below command to check for a potential issue identified by this forum post (https://forums.developer.nvidia.com/t/enabling-i2s-audio-on-jetson-nano-gpio-header/245651). 
+# Troubleshooting I2S
+Before moving on please run the below command to check for a potential issue identified by this forum post (https://forums.developer.nvidia.com/t/enabling-i2s-audio-on-jetson-nano-gpio-header/245651). 
 
   
 - sudo cat /sys/kernel/debug/tegra_gpio
