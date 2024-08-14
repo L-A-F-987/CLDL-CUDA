@@ -56,9 +56,9 @@ In order to rectify this issue you have to edit the bootcmd, to do this you will
 ![image of serial Debug cable
 ](https://uk.pi-supply.com/cdn/shop/products/26849615c765531f0b2b74b598b70550_1200x901.jpg?v=1571708693)
 
-Plug this serial cable into your jetson following this video [](https://jetsonhacks.com/2019/04/19/jetson-nano-serial-console/), ensure that power is not connected when doing this. 
+Plug this serial cable into your jetson following this video (https://jetsonhacks.com/2019/04/19/jetson-nano-serial-console/), ensure that power is not connected when doing this. 
 
-After attaching the cable to the jetson and your laptop, open a serial terminal on your laptop, I did this using the screen command on Mac following this example [](https://forums.developer.nvidia.com/t/how-exactly-do-i-change-bootcmd-as-in-another-topic/298039). Run ls /dev/ on your local machine, you should see a tty.usbserial followed by some numbers, connect to this using screen on Mac (screen /dev/the_tty.usbserial_you_identified 115200) or some other terminal command on windows/linux. 
+After attaching the cable to the jetson and your laptop, open a serial terminal on your laptop, I did this using the screen command on Mac following this example (https://forums.developer.nvidia.com/t/how-exactly-do-i-change-bootcmd-as-in-another-topic/298039). Run ls /dev/ on your local machine, you should see a tty.usbserial followed by some numbers, connect to this using screen on Mac (screen /dev/the_tty.usbserial_you_identified 115200) or some other terminal command on windows/linux. 
 
 Plug in the jetson into power, you should then see a series of lines of code representing the boot appear on your terminal. When prompted interupt the bootloaded by pressing a key, after interupting this run the below commands.
 
