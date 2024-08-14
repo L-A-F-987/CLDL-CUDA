@@ -10,7 +10,10 @@
 
  Tested with CUDA-10.2 on a Jetson Nano Dev Kit
 ``
+# Hardware 
+*Jetson nano Developer Kit
 
+#Setting up I2S
 ## Contact
 
 Luca Faccenda: 2572705f@student.glasgow.ac.uk
