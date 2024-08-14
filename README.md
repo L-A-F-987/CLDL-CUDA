@@ -21,7 +21,8 @@
 
 # Setting up I2S
 To setup I2S on the jetson first you should run the below command. 
-Note that this command requires that the python file requires that the board only has an Sd card or emmc, it will not work if you have a custom board containing both and will result in an error saying multiple partitions are mounted. In order to 
+Note that this command requires that the python file requires that the board only has an Sd card or emmc, it will not work if you have a custom board containing both and will result in an error saying multiple partitions are mounted. As such you'll need to work wth the pinmux spreadsheet provided at this link ([
+](https://developer.nvidia.com/embedded/downloads)
 
 - /opt/nvidia/jetson-io/jetson-io.py
 
