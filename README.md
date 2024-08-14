@@ -54,7 +54,7 @@ After running check if the line J: ........ has the values J: 2:1 f0 00 00 00 00
 In order to rectify this issue you have to edit the bootcmd, to do this you will require a serial debugger cable like the one shown below.
 
 ![image of serial Debug cable
-](https://uk.pi-supply.com/cdn/shop/products/26849615c765531f0b2b74b598b70550_1200x901.jpg?v=1571708693)
+](https://uk.pi-supply.com/cdn/shop/products/26849615c765531f0b2b74b598b70550_1200x901.jpg?v=1571708693| width=100)
 
 
 
