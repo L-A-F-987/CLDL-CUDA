@@ -11,7 +11,13 @@
  Tested with CUDA-10.2 on a Jetson Nano Dev Kit
 ``
 # Hardware 
-- Item1 Jetson nano Developer Kit
+- Jetson Nano Developer Kit
+
+- Two I2s compatable Microphones
+
+- 3.5mm Stereo Headphones
+
+- USB to 3.5mm Stereo 
 
 # Setting up I2S
 ## Contact
