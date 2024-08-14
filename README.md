@@ -20,6 +20,9 @@
 - USB to 3.5mm Stereo 
 
 # Setting up I2S
+To setup I2S on the jetson first you should run the following command:
+
+-
 ## Contact
 
 Luca Faccenda: 2572705f@student.glasgow.ac.uk
