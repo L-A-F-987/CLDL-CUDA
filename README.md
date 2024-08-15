@@ -68,7 +68,23 @@ Plug in the jetson into power, you should then see a series of lines of code rep
 
 The file should now have 00 in place of f0.
 
-#Wiring I2S mic
+# Default asound commands
+
+## Soundcards
+The jetson comes preconfigured with multiple soundcards (note you may also have extra due to external connecters such as the USB -> Stereo adapter), you can check which cards you have by running the below command.
+
+- cat /proc/asound/cards 
+
+The default cards for the Nano Developer are provided below, you can find the default cards for other models at this link (https://docs.nvidia.com/jetson/archives/l4t-archived/l4t-3275/index.html#page/Tegra%20Linux%20Driver%20Package%20Development%20Guide/asoc_driver.19.2.html#wwpID0E0QX0HA). 
+
+- tegrasndt210ref (AHUB card)
+- tegrahda (HDA)
+
+## Recording a Wav File 
+
+
+
+
 
 
 
