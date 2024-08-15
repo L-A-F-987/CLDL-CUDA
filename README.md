@@ -93,6 +93,12 @@ If you are having problems getting your microphone to work, it may be worthwhile
 
 ![Example](https://github.com/user-attachments/assets/71ee7dd5-04a2-49fc-8dd3-5b7501fd6c6b)
 
+[![IMG_3916](https://github.com/user-attachments/assets/cc90cb9e-4329-4d1f-8364-8a22de804aaa)
+
+![IMG_3916](https://github.com/user-attachments/assets/81ab992c-a709-4263-bbaf-1823ae6c734e)
+
+
+
 
 
 
