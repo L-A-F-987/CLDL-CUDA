@@ -27,7 +27,7 @@ Note that this command requires that the python file requires that the board onl
 
 After running this command you will be met with the below screen. Note that your terminal window has to be big enough to display the menu so if your menu does not pop up try resizing your terminal window first.
 
-![alt text]
+![alt text](https://global.discourse-cdn.com/nvidia/original/3X/b/5/b5d719c1726d25a99b96c4582647296e9bc0fe6a.png)
 
 On this window select Configure Manually and navigate to the i2s option. Press enter on this option and a "star"/asterix should appear next to it, then select save pin changes followed by reboot and configure new pins changes.
 
@@ -47,7 +47,7 @@ Before moving on please run the below command to check for a potential issue ide
   
 - sudo cat /sys/kernel/debug/tegra_gpio
 
-After running check if the line J: ........ has the values J: 2:1 f0 00 00 00 00 00 000000, if so you need to changed the f0 to be 00 to do this follow the below instructions. If it says 00 in the place of f0 you can skip the following debug section.
+After running check if the line J: ........ has the values J: 2:1 f0 00 00 00 00 00 000000, if so you need to change the f0 to be 00 to do this follow the below instructions. If it says 00 in the place of f0 you can skip the following debug section.
 
 # Debugging tegra_gpio
 
