@@ -49,7 +49,7 @@ Before moving on please run the below command to check for a potential issue ide
 
 After running check if the line J: ........ has the values J: 2:1 f0 00 00 00 00 00 000000, if so you need to change the f0 to be 00 to do this follow the below instructions. If it says 00 in the place of f0 you can skip the following debug section.
 
-# Debugging tegra_gpio
+## Debugging tegra_gpio
 
 In order to rectify this issue you have to edit the bootcmd, to do this you will require a serial debugger cable like the one shown below.
 
