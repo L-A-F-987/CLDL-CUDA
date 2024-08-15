@@ -93,11 +93,9 @@ If you are having problems getting your microphone to work, it may be worthwhile
 
 ![Example](https://github.com/user-attachments/assets/71ee7dd5-04a2-49fc-8dd3-5b7501fd6c6b)
 
-[![IMG_3916](https://github.com/user-attachments/assets/cc90cb9e-4329-4d1f-8364-8a22de804aaa)
+![IMG_3916](https://github.com/user-attachments/assets/a0319f65-1675-43c9-93af-9ef69e3f5362)
 
-![IMG_3916](https://github.com/user-attachments/assets/81ab992c-a709-4263-bbaf-1823ae6c734e)
-
-
+![IMG_3916](https://github.com/user-attachments/assets/56d376a0-81b2-4393-8fc4-03ceb2eec230)
 
 
 
@@ -112,5 +110,6 @@ If you are having problems getting your microphone to work, it may be worthwhile
   
  
 
-## Contact
+## Contact![IMG_3916](https://github.com/user-attachments/assets/d514b641-d8d6-4fd9-a7e5-202b55eb5c5a)
+
 Luca Faccenda: 2572705f@student.glasgow.ac.uk
