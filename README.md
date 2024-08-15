@@ -71,7 +71,7 @@ The file should now have 00 in place of f0.
 # Default asound commands
 
 ## Soundcards
-The jetson comes preconfigured with multiple soundcards (note you may also have extra due to external connecters such as the USB -> Stereo adapter), you can check which cards you have by running the below command.
+The jetson comes preconfigured with multiple soundcards (note you may also have extra due to external connecters such as the USB -> Stereo adapter), you can check which cards you have by running the below command. 
 
 - cat /proc/asound/cards 
 
@@ -86,6 +86,13 @@ To record a wav file to test the microphones you can run the below command found
 
 - arecord -D hw:<cardname>,<i-1> -r <rate> -c <channels> -f <sample_format> <out.wav>
 - arecord -D hw:tegrasndt210ref,0 -r 44100 -c 2 -f S16 example.wav
+
+### Issues with arecord 
+
+If you are having problems getting your microphone to work, it may be worthwhile to try running the arecord command and varifying the clock signal and word select signals are working by using an osilliscope, you can see how they should look in the below diagram along with how the output of my jetson looks below.
+
+![Example](https://github.com/user-attachments/assets/71ee7dd5-04a2-49fc-8dd3-5b7501fd6c6b)
+
 
 
 
