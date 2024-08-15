@@ -89,14 +89,13 @@ To record a wav file to test the microphones you can run the below command found
 
 ### Issues with arecord 
 
-If you are having problems getting your microphone to work, it may be worthwhile to try running the arecord command and varifying the clock signal and word select signals are working by using an osilliscope, you can see how they should look in the below diagram along with how the output of my jetson looks below.
+If you are having problems getting your microphone to work, it may be worthwhile to try running the arecord command and varifying the clock signal and word select signals are working when not connected to the microphone by using an osilliscope, you can see how they should look in the below diagram along with how the output of my jetson looks below.
 
 ![Example](https://github.com/user-attachments/assets/71ee7dd5-04a2-49fc-8dd3-5b7501fd6c6b)
 
-![IMG_3916](https://github.com/user-attachments/assets/a0319f65-1675-43c9-93af-9ef69e3f5362)
+![IMG_3916](https://github.com/user-attachments/assets/24d0230c-adf1-40f9-9c1f-940fc1be5e17)
 
-![IMG_3916](https://github.com/user-attachments/assets/56d376a0-81b2-4393-8fc4-03ceb2eec230)
-
+![IMG_3917](https://github.com/user-attachments/assets/48364c60-e3e6-4d6b-a799-11ab3591fb21)
 
 
 
@@ -110,6 +109,6 @@ If you are having problems getting your microphone to work, it may be worthwhile
   
  
 
-## Contact![IMG_3916](https://github.com/user-attachments/assets/d514b641-d8d6-4fd9-a7e5-202b55eb5c5a)
+## Contact
 
 Luca Faccenda: 2572705f@student.glasgow.ac.uk
