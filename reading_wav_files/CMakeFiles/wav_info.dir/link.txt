@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/wav_info.dir/Reading_wav_file.cpp.o  -o wav_info 
