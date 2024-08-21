@@ -84,7 +84,7 @@ The default cards for the Nano Developer are provided below, you can find the de
 
 To record a wav file to test the microphones you can run the below command found at the same link as the soundcards for other models. Fill in the spaces with acceptable settings, the second command shown is filled in, it will create a wav file with 2 channels, a sampling rate of 44100Hz with 16bit resolution called example.wav
 
-- arecord -D hw:<cardname>,<i-1> -r rate -c channels -f sample_format out.wav
+- arecord -D hw:cardname,i-1 -r rate -c channels -f sample_format out.wav
 - arecord -D hw:tegrasndt210ref,0 -r 44100 -c 2 -f S16 example.wav
 
 ### Issues with arecord 
