@@ -102,7 +102,7 @@ Board output for I2S clock and I2S_Fs (1v per division)
 # Audio Playback
 
 ## Finding audio card
-If like me, you would like to play audio back through a usb -> stereo adapter, you should plug in the usb adapter and then re-run the command to view all audio card, shown again below. It should then give an output similar to the one I have shown below with the usb card name and number being provided.
+If like me, you would like to play audio back through a usb -> stereo adapter, you should plug in the usb adapter and then re-run the command to view all audio cards, shown again below. It should then give an output similar to the one I have shown below with the usb card name and number being provided.
 
 - cat /proc/asound/cards 
 
