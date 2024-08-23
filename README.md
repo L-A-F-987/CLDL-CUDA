@@ -82,26 +82,40 @@ The default cards for the Nano Developer are provided below, you can find the de
 
 ## Recording a Wav File 
 
-To record a wav file to test the microphones you can run the below command found at the same link as the soundcards for other models. Fill in the spaces with acceptable settings, the second command shown is filled in, it will create a wav file with 2 channels 
+To record a wav file to test the microphones you can run the below command found at the same link as the soundcards for other models. Fill in the spaces with acceptable settings, the second command shown is filled in, it will create a wav file with 2 channels, a sampling rate of 44100Hz with 16bit resolution called example.wav
 
-- arecord -D hw:<cardname>,<i-1> -r <rate> -c <channels> -f <sample_format> <out.wav>
+- arecord -D hw:cardname,i-1 -r rate -c channels -f sample_format out.wav
 - arecord -D hw:tegrasndt210ref,0 -r 44100 -c 2 -f S16 example.wav
 
 ### Issues with arecord 
 
-If you are having problems getting your microphone to work (in my case no error but the wav file is blank/empty), it may be worthwhile to try running the arecord command and varifying the clock signal and word select signals are working when not connected to the microphone by using an osilliscope, you can see how they should look in the below diagram along with how the output of my jetson looks below.
+If you are having problems getting your microphone to work (in my case no error but the wav file is blank/empty), it may be worthwhile to try running the arecord command and varifying the clock signal and word select signals are working when not connected to the microphone by using an osilliscope, you can see how they should look in the below. In my case, I resolved this issue
 
 ![Example](https://github.com/user-attachments/assets/71ee7dd5-04a2-49fc-8dd3-5b7501fd6c6b)
 
-Not Connected to Microphone
+Board output for I2S clock and I2S_Fs (1v per division)
 
 ![IMG_3916](https://github.com/user-attachments/assets/24d0230c-adf1-40f9-9c1f-940fc1be5e17)
 
 ![IMG_3917](https://github.com/user-attachments/assets/48364c60-e3e6-4d6b-a799-11ab3591fb21)
 
-If those signals appear ok but the wav file is still empty, you may see a the clock and word select signals looks like below when actually connected to the microphone. I am currently investigating this issue and will post a solution when one is found.
+# Audio Playback
 
-![IMG_3919 2](https://github.com/user-attachments/assets/5b667649-b4b8-49d4-9252-a54311e7d383)
+## Finding audio card
+If like me, you would like to play audio back through a usb -> stereo adapter, you should plug in the usb adapter and then re-run the command to view all audio cards, shown again below. It should then give an output similar to the one I have shown below with the usb card name and number being provided.
+
+- cat /proc/asound/cards 
+
+<img width="557" alt="image" src="https://github.com/user-attachments/assets/e5be9778-61db-4848-8f4d-f0941952f0f3">
+
+## Running playback command 
+
+In my case, the audio card 2 is the usb audio card, as such I can run the following command to play a wav file, in your case you may have to replace the two with whatever number corresponds to the output.
+
+- aplay -Dhw:2,0 wav_file.wav
+
+
+
 
 
 
