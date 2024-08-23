@@ -1,4 +1,4 @@
-# Install script for directory: /home/luca/Documents/CLDL-CUDA/Audio_out_testing
+# Install script for directory: /home/luca/Documents/CLDL-CUDA/audio_out_testing
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/luca/Documents/CLDL-CUDA/Audio_out_testing/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/luca/Documents/CLDL-CUDA/audio_out_testing/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -10,8 +10,6 @@ add_executable(tests
 target_link_libraries(tests PRIVATE CLDL)
 
 
-target_link_libraries(tests PRIVATE Pins)
-
 
 set(tests_force_shared_crt ON FORCE)
 

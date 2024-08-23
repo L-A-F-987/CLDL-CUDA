@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/luca/Documents/CLDL-CUDA/Audio_out_testing/Audio_out_test.c" "/home/luca/Documents/CLDL-CUDA/Audio_out_testing/build/CMakeFiles/audio_out_tests.dir/Audio_out_test.c.o"
+  "/home/luca/Documents/CLDL-CUDA/audio_out_testing/Audio_out_test.c" "/home/luca/Documents/CLDL-CUDA/audio_out_testing/build/CMakeFiles/audio_out_tests.dir/Audio_out_test.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

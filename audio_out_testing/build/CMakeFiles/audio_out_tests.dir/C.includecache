@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/luca/Documents/CLDL-CUDA/Audio_out_testing/Audio_out_test.c
+/home/luca/Documents/CLDL-CUDA/audio_out_testing/Audio_out_test.c
 alsa/asoundlib.h
 -
 stdio.h
