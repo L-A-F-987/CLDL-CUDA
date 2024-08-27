@@ -9,6 +9,5 @@ plt.plot(Unfiltered)
 
 output = plt.figure("output :Learning Rate 0.1")
 plt.plot(filtered)
-plt.savefig("output :Learning Rate 0.1.pdf")
 plt.show()
 

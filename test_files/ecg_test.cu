@@ -59,7 +59,7 @@ int main(int argc, char* argv[]){
 //Filling Neurons_array with some arbitray numbers to test network
 //Setting the output layer to be of size 1
 Neurons_array[0] = nInputs;
-Neurons_array[1] = 25;
+Neurons_array[1] = 125;
 Neurons_array[2] = 1;
 
 //Filling Input array with 0s array 
@@ -94,7 +94,7 @@ net -> setInputs(pointer_to_array_of_0s);
 
 
 //Setting Learning Rate
-net -> setLearningRate(0.1);
+net -> setLearningRate(0.001);
 
 
 
