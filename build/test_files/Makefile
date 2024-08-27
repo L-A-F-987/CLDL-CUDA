@@ -136,32 +136,32 @@ tests/fast:
 	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/tests.dir/build.make test_files/CMakeFiles/tests.dir/build
 .PHONY : tests/fast
 
-t.o: t.cu.o
+ecg_test.o: ecg_test.cu.o
 
-.PHONY : t.o
+.PHONY : ecg_test.o
 
 # target to build an object file
-t.cu.o:
-	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/tests.dir/build.make test_files/CMakeFiles/tests.dir/t.cu.o
-.PHONY : t.cu.o
+ecg_test.cu.o:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/tests.dir/build.make test_files/CMakeFiles/tests.dir/ecg_test.cu.o
+.PHONY : ecg_test.cu.o
 
-t.i: t.cu.i
+ecg_test.i: ecg_test.cu.i
 
-.PHONY : t.i
+.PHONY : ecg_test.i
 
 # target to preprocess a source file
-t.cu.i:
-	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/tests.dir/build.make test_files/CMakeFiles/tests.dir/t.cu.i
-.PHONY : t.cu.i
+ecg_test.cu.i:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/tests.dir/build.make test_files/CMakeFiles/tests.dir/ecg_test.cu.i
+.PHONY : ecg_test.cu.i
 
-t.s: t.cu.s
+ecg_test.s: ecg_test.cu.s
 
-.PHONY : t.s
+.PHONY : ecg_test.s
 
 # target to generate assembly for a file
-t.cu.s:
-	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/tests.dir/build.make test_files/CMakeFiles/tests.dir/t.cu.s
-.PHONY : t.cu.s
+ecg_test.cu.s:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/tests.dir/build.make test_files/CMakeFiles/tests.dir/ecg_test.cu.s
+.PHONY : ecg_test.cu.s
 
 # Help Target
 help:
@@ -173,9 +173,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... tests"
 	@echo "... test"
-	@echo "... t.o"
-	@echo "... t.i"
-	@echo "... t.s"
+	@echo "... ecg_test.o"
+	@echo "... ecg_test.i"
+	@echo "... ecg_test.s"
 .PHONY : help
 
 

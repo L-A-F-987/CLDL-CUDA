@@ -57,38 +57,38 @@ include test_files/CMakeFiles/tests.dir/progress.make
 # Include the compile flags for this target's objects.
 include test_files/CMakeFiles/tests.dir/flags.make
 
-test_files/CMakeFiles/tests.dir/t.cu.o: test_files/CMakeFiles/tests.dir/flags.make
-test_files/CMakeFiles/tests.dir/t.cu.o: ../test_files/t.cu
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/luca/Documents/CLDL-CUDA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CUDA object test_files/CMakeFiles/tests.dir/t.cu.o"
-	cd /home/luca/Documents/CLDL-CUDA/build/test_files && /usr/local/cuda/bin/nvcc  $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -x cu -c /home/luca/Documents/CLDL-CUDA/test_files/t.cu -o CMakeFiles/tests.dir/t.cu.o
+test_files/CMakeFiles/tests.dir/ecg_test.cu.o: test_files/CMakeFiles/tests.dir/flags.make
+test_files/CMakeFiles/tests.dir/ecg_test.cu.o: ../test_files/ecg_test.cu
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/luca/Documents/CLDL-CUDA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CUDA object test_files/CMakeFiles/tests.dir/ecg_test.cu.o"
+	cd /home/luca/Documents/CLDL-CUDA/build/test_files && /usr/local/cuda/bin/nvcc  $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -x cu -c /home/luca/Documents/CLDL-CUDA/test_files/ecg_test.cu -o CMakeFiles/tests.dir/ecg_test.cu.o
 
-test_files/CMakeFiles/tests.dir/t.cu.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CUDA source to CMakeFiles/tests.dir/t.cu.i"
+test_files/CMakeFiles/tests.dir/ecg_test.cu.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CUDA source to CMakeFiles/tests.dir/ecg_test.cu.i"
 	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_PREPROCESSED_SOURCE
 
-test_files/CMakeFiles/tests.dir/t.cu.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CUDA source to assembly CMakeFiles/tests.dir/t.cu.s"
+test_files/CMakeFiles/tests.dir/ecg_test.cu.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CUDA source to assembly CMakeFiles/tests.dir/ecg_test.cu.s"
 	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_ASSEMBLY_SOURCE
 
-test_files/CMakeFiles/tests.dir/t.cu.o.requires:
+test_files/CMakeFiles/tests.dir/ecg_test.cu.o.requires:
 
-.PHONY : test_files/CMakeFiles/tests.dir/t.cu.o.requires
+.PHONY : test_files/CMakeFiles/tests.dir/ecg_test.cu.o.requires
 
-test_files/CMakeFiles/tests.dir/t.cu.o.provides: test_files/CMakeFiles/tests.dir/t.cu.o.requires
-	$(MAKE) -f test_files/CMakeFiles/tests.dir/build.make test_files/CMakeFiles/tests.dir/t.cu.o.provides.build
-.PHONY : test_files/CMakeFiles/tests.dir/t.cu.o.provides
+test_files/CMakeFiles/tests.dir/ecg_test.cu.o.provides: test_files/CMakeFiles/tests.dir/ecg_test.cu.o.requires
+	$(MAKE) -f test_files/CMakeFiles/tests.dir/build.make test_files/CMakeFiles/tests.dir/ecg_test.cu.o.provides.build
+.PHONY : test_files/CMakeFiles/tests.dir/ecg_test.cu.o.provides
 
-test_files/CMakeFiles/tests.dir/t.cu.o.provides.build: test_files/CMakeFiles/tests.dir/t.cu.o
+test_files/CMakeFiles/tests.dir/ecg_test.cu.o.provides.build: test_files/CMakeFiles/tests.dir/ecg_test.cu.o
 
 
 # Object files for target tests
 tests_OBJECTS = \
-"CMakeFiles/tests.dir/t.cu.o"
+"CMakeFiles/tests.dir/ecg_test.cu.o"
 
 # External object files for target tests
 tests_EXTERNAL_OBJECTS =
 
-test_files/CMakeFiles/tests.dir/cmake_device_link.o: test_files/CMakeFiles/tests.dir/t.cu.o
+test_files/CMakeFiles/tests.dir/cmake_device_link.o: test_files/CMakeFiles/tests.dir/ecg_test.cu.o
 test_files/CMakeFiles/tests.dir/cmake_device_link.o: test_files/CMakeFiles/tests.dir/build.make
 test_files/CMakeFiles/tests.dir/cmake_device_link.o: libCLDL.a
 test_files/CMakeFiles/tests.dir/cmake_device_link.o: test_files/CMakeFiles/tests.dir/dlink.txt
@@ -102,12 +102,12 @@ test_files/CMakeFiles/tests.dir/build: test_files/CMakeFiles/tests.dir/cmake_dev
 
 # Object files for target tests
 tests_OBJECTS = \
-"CMakeFiles/tests.dir/t.cu.o"
+"CMakeFiles/tests.dir/ecg_test.cu.o"
 
 # External object files for target tests
 tests_EXTERNAL_OBJECTS =
 
-test_files/tests: test_files/CMakeFiles/tests.dir/t.cu.o
+test_files/tests: test_files/CMakeFiles/tests.dir/ecg_test.cu.o
 test_files/tests: test_files/CMakeFiles/tests.dir/build.make
 test_files/tests: libCLDL.a
 test_files/tests: test_files/CMakeFiles/tests.dir/cmake_device_link.o
@@ -120,7 +120,7 @@ test_files/CMakeFiles/tests.dir/build: test_files/tests
 
 .PHONY : test_files/CMakeFiles/tests.dir/build
 
-test_files/CMakeFiles/tests.dir/requires: test_files/CMakeFiles/tests.dir/t.cu.o.requires
+test_files/CMakeFiles/tests.dir/requires: test_files/CMakeFiles/tests.dir/ecg_test.cu.o.requires
 
 .PHONY : test_files/CMakeFiles/tests.dir/requires
 

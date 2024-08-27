@@ -84,7 +84,7 @@ curand.h
 chrono
 -
 
-/home/luca/Documents/CLDL-CUDA/test_files/t.cu
+/home/luca/Documents/CLDL-CUDA/test_files/ecg_test.cu
 chrono
 -
 cldl/Net.h

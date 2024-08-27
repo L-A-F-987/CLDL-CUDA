@@ -7,7 +7,8 @@ filtered = np.loadtxt("ecg_filtered.dat")
 plt.figure("Unfiltered")
 plt.plot(Unfiltered)
 
-plt.figure("Filtered")
+output = plt.figure("output :Learning Rate 0.1")
 plt.plot(filtered)
+plt.savefig("output :Learning Rate 0.1.pdf")
 plt.show()
 

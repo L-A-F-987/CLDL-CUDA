@@ -57,23 +57,15 @@ int main(int argc, char* argv[]){
 //generating a network to be used
 
 //Filling Neurons_array with some arbitray numbers to test network
-
-for(int i =0; i<nLayers;i++){
-    Neurons_array[i]=1;
-
-
-}
-
 //Setting the output layer to be of size 1
-Neurons_array[0] = 500;
+Neurons_array[0] = nInputs;
 Neurons_array[1] = 25;
 Neurons_array[2] = 1;
 
 //Filling Input array with 0s array 
 
 for(int i = 0; i<= nInputs;i++){
-    Array_of_0s_for_initial_inputs[i] = 1;
-
+    Array_of_0s_for_initial_inputs[i] = 0;
 
 }
 
@@ -102,7 +94,7 @@ net -> setInputs(pointer_to_array_of_0s);
 
 
 //Setting Learning Rate
-net -> setLearningRate(0.05);
+net -> setLearningRate(0.1);
 
 
 
@@ -174,7 +166,7 @@ auto start = std::chrono::high_resolution_clock::now();
 
 
 
-		fprintf(foutput,"%f \n",error);
+		fprintf(foutput,"%f \n",output);
 	}
 
     auto elapsed = std::chrono::high_resolution_clock::now() - start;
