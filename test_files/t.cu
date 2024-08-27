@@ -14,12 +14,12 @@
 using namespace std; 
 
 //Creating an error and output variable for use later
-double error;
+double error = 0;
 double output;
 
 
 //The nlayers should be an integer of the total number of hidden layers required not including the input layer
-const int nLayers = 5;
+const int nLayers = 3;
 
 //Neuron array should hold the number of neurons for each layer, each array element is a
 //single input 
@@ -30,7 +30,7 @@ int *nNeurons = Neurons_array;
 
 
 //setting up initial inputs
-const int nInputs = 100;
+const int nInputs = 500;
 
 double Array_of_0s_for_initial_inputs[nInputs];
 
@@ -43,7 +43,7 @@ double *pointer_to_array_of_0s = Array_of_0s_for_initial_inputs;
 
 int main(int argc, char* argv[]){
 
-    std::cout<<"Made it to the Start :)\n\n\n";
+    std::cout<<"Made it to the Start :)\n\n";
 
 
 
@@ -58,29 +58,36 @@ int main(int argc, char* argv[]){
 
 //Filling Neurons_array with some arbitray numbers to test network
 
-for(int i =0; i<=nLayers;i++){
-    Neurons_array[i]=i+1;
+for(int i =0; i<nLayers;i++){
+    Neurons_array[i]=1;
 
 
 }
+
+//Setting the output layer to be of size 1
+Neurons_array[0] = 500;
+Neurons_array[1] = 25;
+Neurons_array[2] = 1;
 
 //Filling Input array with 0s array 
 
 for(int i = 0; i<= nInputs;i++){
-    Array_of_0s_for_initial_inputs[i] = 0;
+    Array_of_0s_for_initial_inputs[i] = 1;
 
 
 }
 
+
 //Varifying that the pointer points to the first element of the array
-std::cout<<"Checking that the nNeurons pointed matches the values stored:\n";
-std::cout<<"Memmory Address and value at Address    "<<nNeurons<<":     "<<*nNeurons<<"\n\n";
+//std::cout<<"Checking that the nNeurons pointed matches the values stored:\n";
+//std::cout<<"Memmory Address and value at Address    "<<nNeurons<<":     "<<*nNeurons<<"\n\n";
 
 
 //Creating the Network 
 
 Net *net;
 net = new Net::Net(nLayers,nNeurons,nInputs);
+
 
 //Initialises the network with: weights, biases and activation function
 // for Weights; W_Zeroes sets to 0 , W_Ones sets to 1 , W_random sets to a randome value
@@ -95,15 +102,35 @@ net -> setInputs(pointer_to_array_of_0s);
 
 
 //Setting Learning Rate
-net -> setLearningRate(0.001);
+net -> setLearningRate(0.05);
 
 
 
-//Setting up a variable n that allows for access to read the final output of the network
-Layer *l = net -> getLayer(nLayers-1);
-Neuron *n = l ->getNeuron(0);
+//Setting up a variable that allows for access to read the final output of the network
+Layer *output_layer = net -> getLayer(nLayers-1);
+Neuron *output_neuron = output_layer ->getNeuron(0);
+int number_of_outputs = output_layer ->getnNeurons();
 
 
+//Getting variable that allows for access to input layer
+Layer *input_layer = net ->getLayer(0);
+Neuron *input_Neuron_0 = input_layer -> getNeuron(0);
+int number_of_inputs = input_layer ->getnNeurons();
+
+//variale to read the first input layer neuron
+double neuron_one_layer_one;
+
+
+std::cout<<"Number of Inputs:"<<number_of_inputs<<"\n";
+std::cout<<"Number of Outputs:"<<number_of_outputs<<"\n";
+std::cout<<"Number of Layers:"<<net->getnLayers()<<"\n";
+std::cout<<"Number of Total Neurons:"<<net->getnNeurons()<<"\n";
+std::cout<<"Neurons Array:";
+
+for(int i = 0;i<nLayers;i++){
+    std::cout<<Neurons_array[i]<<",";
+}
+std::cout<<"\n";
 
 
 
@@ -124,25 +151,30 @@ auto start = std::chrono::high_resolution_clock::now();
         }
 
         Array_of_0s_for_initial_inputs[0] = input_signal;
-
+        
         net -> setInputs(pointer_to_array_of_0s);
 
+        neuron_one_layer_one = input_Neuron_0 -> getOutput();
 
         //propegating the sample forwards
         net ->propInputs();
 
+
         //storing output of the function and calculation error
-        output = net ->getOutput(0);
+        output = net->getOutput(0);
 
 
-        error = ref_noise-output;
+        error = ref_noise - output;
+
 
         //Setting the backward error and updating weights
         net->setBackwardError(error);
         net->propErrorBackward();
         net ->updateWeights();
 
-		fprintf(foutput,"%f \n",input_signal);
+
+
+		fprintf(foutput,"%f \n",error);
 	}
 
     auto elapsed = std::chrono::high_resolution_clock::now() - start;
