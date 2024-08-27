@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(tests LANGUAGES CUDA CXX C)
 
 add_executable(tests
-        t.cu
+        ecg_test.cu
         )
 
 
