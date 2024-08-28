@@ -51,7 +51,18 @@ using namespace std;
 //in the final program this should be replaced with the mic inputs
     FILE *finput = fopen("ecg50hz.dat","rt");
 	FILE *foutput = fopen("ecg_filtered.dat","wt");
-    FILE *f_gpu_time = fopen("gpu_time_taken.txt","wt");
+
+//All files to store how long it takes for various gpu functions
+    FILE *f_gpu_time_per_sample = fopen("gpu_time_taken_per_sample.txt","wt");
+
+    FILE *f_gpu_time_per_input_update = fopen("gpu_time_taken_per_input_update.txt","wt");
+
+    FILE *f_gpu_time_per_error_update = fopen("gpu_time_taken_per_error_update.txt","wt");
+
+    FILE *f_gpu_time_per_input_prop = fopen("gpu_time_taken_per_input_prop.txt","wt");
+
+
+
 
 
 //generating a network to be used
@@ -110,19 +121,6 @@ using namespace std;
     double neuron_one_layer_one;
 
 
-    std::cout<<"Number of Inputs:"<<number_of_inputs<<"\n";
-    std::cout<<"Number of Outputs:"<<number_of_outputs<<"\n";
-    std::cout<<"Number of Layers:"<<net->getnLayers()<<"\n";
-    std::cout<<"Number of Total Neurons:"<<net->getnNeurons()<<"\n";
-    std::cout<<"Neurons Array:";
-
-    for(int i = 0;i<nLayers;i++){
-    std::cout<<Neurons_array[i]<<",";
-    }
-    std::cout<<"\n";
-
-
-
 
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -137,19 +135,36 @@ using namespace std;
 	if (fscanf(finput,"%lf\n",&input_signal)<1) break;
 	double ref_noise = sin(2*M_PI/20*i);
 
-//Updating the inputs to the network
+//Updating the inputs to the network array
     for(int i = nInputs-1;i>0;i--){
     Array_of_0s_for_initial_inputs[i] = Array_of_0s_for_initial_inputs[i-1];
     }
 
     Array_of_0s_for_initial_inputs[0] = input_signal;
-        
+    
+//Timing the input update time 
+    auto gpu_time_taken_input_update_start = std::chrono::high_resolution_clock::now();
+
+//Updating the inputs
     net -> setInputs(pointer_to_array_of_0s);
 
+    auto gpu_time_taken_input_update_total = std::chrono::high_resolution_clock::now() - gpu_time_taken_input_update_start; 
+
+    long long int_gpu_time_taken_input_update_total = std::chrono::duration_cast<std::chrono::microseconds>(
+        gpu_time_taken_input_update_total).count();
+
+    fprintf(f_gpu_time_per_input_update,"%i \n",int_gpu_time_taken_input_update_total);
+    
 
 
 //propegating the sample forwards
+    auto gpu_time_taken_per_input_prop_now = std::chrono::high_resolution_clock::now();
+
     net ->propInputs();
+
+    auto int_gpu_time_taken_input_prop_total = std::chrono::high_resolution_clock::now() - gpu_time_taken_per_input_prop_now ;
+
+    
 
 
 //storing output of the function and calculation error
@@ -159,17 +174,33 @@ using namespace std;
     error = ref_noise - output;
 
 
-//Setting the backward error and updating weights
+//Setting the backward error
+    auto gpu_time_taken_per_update_error_start = std::chrono::high_resolution_clock::now();
     net->setBackwardError(error);
+    auto gpu_time_taken_per_update_error_total = std::chrono::high_resolution_clock::now()- gpu_time_taken_per_update_error_start;
+
+
+//Updating Weights
     net->propErrorBackward();
     net ->updateWeights();
 
 
 
-	fprintf(foutput,"%f \n",output);
+
 
     auto gpu_timer_1_sample_time = std::chrono::high_resolution_clock::now() - gpu_timer_1_sample_input;
-    fprintf(f_gpu_time,"%i \n",gpu_timer_1_sample_time);
+
+//printing to files
+    fprintf(foutput,"%f \n",output);
+
+    fprintf(f_gpu_time_per_input_prop,"%i \n",int_gpu_time_taken_input_prop_total);
+
+    fprintf(f_gpu_time_per_sample,"%i \n",gpu_timer_1_sample_time);
+
+    fprintf(f_gpu_time_per_error_update,"%i \n",gpu_time_taken_per_update_error_total);
+
+
+
 	}
 
     auto elapsed = std::chrono::high_resolution_clock::now() - start;
@@ -182,7 +213,10 @@ using namespace std;
 
     fclose(finput);
 	fclose(foutput);
-    fclose(f_gpu_time);
+    fclose(f_gpu_time_per_sample);
+    fclose(f_gpu_time_per_input_update);
+    fclose(f_gpu_time_per_error_update);
+    fclose(f_gpu_time_per_input_prop);
 
 //fprintf(stderr,"Written the filtered ECG to 'ecg_filtered.dat'\n");
 

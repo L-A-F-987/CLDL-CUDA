@@ -135,17 +135,30 @@ CLDL/fast:
 .PHONY : CLDL/fast
 
 #=============================================================================
-# Target rules for targets named tests
+# Target rules for targets named ecg_test
 
 # Build rule for target.
-tests: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 tests
-.PHONY : tests
+ecg_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 ecg_test
+.PHONY : ecg_test
 
 # fast build rule for target.
-tests/fast:
-	$(MAKE) -f test_files/CMakeFiles/tests.dir/build.make test_files/CMakeFiles/tests.dir/build
-.PHONY : tests/fast
+ecg_test/fast:
+	$(MAKE) -f test_files/CMakeFiles/ecg_test.dir/build.make test_files/CMakeFiles/ecg_test.dir/build
+.PHONY : ecg_test/fast
+
+#=============================================================================
+# Target rules for targets named gpu_testing
+
+# Build rule for target.
+gpu_testing: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 gpu_testing
+.PHONY : gpu_testing
+
+# fast build rule for target.
+gpu_testing/fast:
+	$(MAKE) -f test_files/CMakeFiles/gpu_testing.dir/build.make test_files/CMakeFiles/gpu_testing.dir/build
+.PHONY : gpu_testing/fast
 
 lib/Layer.o: lib/Layer.cu.o
 
@@ -238,7 +251,8 @@ help:
 	@echo "... edit_cache"
 	@echo "... CLDL"
 	@echo "... test"
-	@echo "... tests"
+	@echo "... ecg_test"
+	@echo "... gpu_testing"
 	@echo "... lib/Layer.o"
 	@echo "... lib/Layer.i"
 	@echo "... lib/Layer.s"

@@ -54,5 +54,6 @@ set(CMAKE_MAKEFILE_PRODUCTS
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/CLDL.dir/DependInfo.cmake"
-  "test_files/CMakeFiles/tests.dir/DependInfo.cmake"
+  "test_files/CMakeFiles/ecg_test.dir/DependInfo.cmake"
+  "test_files/CMakeFiles/gpu_testing.dir/DependInfo.cmake"
   )

@@ -122,19 +122,34 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-test_files/CMakeFiles/tests.dir/rule:
-	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f CMakeFiles/Makefile2 test_files/CMakeFiles/tests.dir/rule
-.PHONY : test_files/CMakeFiles/tests.dir/rule
+test_files/CMakeFiles/ecg_test.dir/rule:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f CMakeFiles/Makefile2 test_files/CMakeFiles/ecg_test.dir/rule
+.PHONY : test_files/CMakeFiles/ecg_test.dir/rule
 
 # Convenience name for target.
-tests: test_files/CMakeFiles/tests.dir/rule
+ecg_test: test_files/CMakeFiles/ecg_test.dir/rule
 
-.PHONY : tests
+.PHONY : ecg_test
 
 # fast build rule for target.
-tests/fast:
-	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/tests.dir/build.make test_files/CMakeFiles/tests.dir/build
-.PHONY : tests/fast
+ecg_test/fast:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/ecg_test.dir/build.make test_files/CMakeFiles/ecg_test.dir/build
+.PHONY : ecg_test/fast
+
+# Convenience name for target.
+test_files/CMakeFiles/gpu_testing.dir/rule:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f CMakeFiles/Makefile2 test_files/CMakeFiles/gpu_testing.dir/rule
+.PHONY : test_files/CMakeFiles/gpu_testing.dir/rule
+
+# Convenience name for target.
+gpu_testing: test_files/CMakeFiles/gpu_testing.dir/rule
+
+.PHONY : gpu_testing
+
+# fast build rule for target.
+gpu_testing/fast:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/gpu_testing.dir/build.make test_files/CMakeFiles/gpu_testing.dir/build
+.PHONY : gpu_testing/fast
 
 ecg_test.o: ecg_test.cu.o
 
@@ -142,7 +157,7 @@ ecg_test.o: ecg_test.cu.o
 
 # target to build an object file
 ecg_test.cu.o:
-	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/tests.dir/build.make test_files/CMakeFiles/tests.dir/ecg_test.cu.o
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/ecg_test.dir/build.make test_files/CMakeFiles/ecg_test.dir/ecg_test.cu.o
 .PHONY : ecg_test.cu.o
 
 ecg_test.i: ecg_test.cu.i
@@ -151,7 +166,7 @@ ecg_test.i: ecg_test.cu.i
 
 # target to preprocess a source file
 ecg_test.cu.i:
-	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/tests.dir/build.make test_files/CMakeFiles/tests.dir/ecg_test.cu.i
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/ecg_test.dir/build.make test_files/CMakeFiles/ecg_test.dir/ecg_test.cu.i
 .PHONY : ecg_test.cu.i
 
 ecg_test.s: ecg_test.cu.s
@@ -160,8 +175,35 @@ ecg_test.s: ecg_test.cu.s
 
 # target to generate assembly for a file
 ecg_test.cu.s:
-	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/tests.dir/build.make test_files/CMakeFiles/tests.dir/ecg_test.cu.s
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/ecg_test.dir/build.make test_files/CMakeFiles/ecg_test.dir/ecg_test.cu.s
 .PHONY : ecg_test.cu.s
+
+gpu_tests.o: gpu_tests.cu.o
+
+.PHONY : gpu_tests.o
+
+# target to build an object file
+gpu_tests.cu.o:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/gpu_testing.dir/build.make test_files/CMakeFiles/gpu_testing.dir/gpu_tests.cu.o
+.PHONY : gpu_tests.cu.o
+
+gpu_tests.i: gpu_tests.cu.i
+
+.PHONY : gpu_tests.i
+
+# target to preprocess a source file
+gpu_tests.cu.i:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/gpu_testing.dir/build.make test_files/CMakeFiles/gpu_testing.dir/gpu_tests.cu.i
+.PHONY : gpu_tests.cu.i
+
+gpu_tests.s: gpu_tests.cu.s
+
+.PHONY : gpu_tests.s
+
+# target to generate assembly for a file
+gpu_tests.cu.s:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/gpu_testing.dir/build.make test_files/CMakeFiles/gpu_testing.dir/gpu_tests.cu.s
+.PHONY : gpu_tests.cu.s
 
 # Help Target
 help:
@@ -171,11 +213,15 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... tests"
 	@echo "... test"
+	@echo "... ecg_test"
+	@echo "... gpu_testing"
 	@echo "... ecg_test.o"
 	@echo "... ecg_test.i"
 	@echo "... ecg_test.s"
+	@echo "... gpu_tests.o"
+	@echo "... gpu_tests.i"
+	@echo "... gpu_tests.s"
 .PHONY : help
 
 
