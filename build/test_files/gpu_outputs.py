@@ -19,7 +19,7 @@ def average_calculation(x,y):
     print("Lowest Time Taken",y,":  ",Minimum,"s")
     print("Total Time Taken:",y,":  ",sum,"s")
     print("number of ",y,"per second if min:",1/Minimum)
-    print("number of ",y,"per second average:",1/average)
+    print("number of ",y,"per second average:",1/average,"\n")
 
 
     fig_per_sample = plt.figure()
@@ -38,7 +38,6 @@ def average_calculation(x,y):
 GPU_Timer_per_sample = np.loadtxt('gpu_time_taken_per_sample.txt')
 average_calculation(GPU_Timer_per_sample,"SAMPLE")
 
-
 GPU_Timer_per_input_prop = np.loadtxt('gpu_time_taken_per_input_prop.txt')
 average_calculation(GPU_Timer_per_input_prop,"INPUT PROP")
 
@@ -47,6 +46,11 @@ average_calculation(GPU_Timer_per_input_update,"INPUT UPDATE")
 
 GPU_Timer_per_error_update = np.loadtxt('gpu_time_taken_per_error_update.txt')
 average_calculation(GPU_Timer_per_error_update,"ERROR UPDATE")
+
+GPU_Timer_per_error_prop = np.loadtxt('gpu_time_taken_per_error_prop.txt')
+average_calculation(GPU_Timer_per_error_prop,"ERROR PROP")
+
+
 
 
 

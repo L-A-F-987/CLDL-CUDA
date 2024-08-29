@@ -30,7 +30,7 @@ using namespace std;
 
 
 //setting up initial inputs
-    const int nInputs = 500;
+    const int nInputs = 1;
 
     double Array_of_0s_for_initial_inputs[nInputs];
 
@@ -57,9 +57,11 @@ using namespace std;
 
     FILE *f_gpu_time_per_input_update = fopen("gpu_time_taken_per_input_update.txt","wt");
 
+    FILE *f_gpu_time_per_input_prop = fopen("gpu_time_taken_per_input_prop.txt","wt");
+
     FILE *f_gpu_time_per_error_update = fopen("gpu_time_taken_per_error_update.txt","wt");
 
-    FILE *f_gpu_time_per_input_prop = fopen("gpu_time_taken_per_input_prop.txt","wt");
+    FILE *f_gpu_time_per_error_prop = fopen("gpu_time_taken_per_error_prop.txt","wt");
 
 
 
@@ -181,10 +183,14 @@ using namespace std;
 
 
 //Updating Weights
+
+    auto gpu_time_taken_per_error_prop_start = std::chrono::high_resolution_clock::now();
     net->propErrorBackward();
+    auto gpu_time_taken_per_error_prop_total = std::chrono::high_resolution_clock::now() - gpu_time_taken_per_error_prop_start;
+
+    auto gpu_time_taken_per_weight_update_start = std::chrono::high_resolution_clock::now();
     net ->updateWeights();
-
-
+    auto gpu_time_taken_per_weight_update_total = std::chrono::high_resolution_clock::now() - gpu_time_taken_per_weight_update_start;
 
 
 
@@ -198,6 +204,10 @@ using namespace std;
     fprintf(f_gpu_time_per_sample,"%i \n",gpu_timer_1_sample_time);
 
     fprintf(f_gpu_time_per_error_update,"%i \n",gpu_time_taken_per_update_error_total);
+
+    fprintf(f_gpu_time_per_error_prop,"%i \n",gpu_time_taken_per_error_prop_total);
+
+    
 
 
 
@@ -217,6 +227,7 @@ using namespace std;
     fclose(f_gpu_time_per_input_update);
     fclose(f_gpu_time_per_error_update);
     fclose(f_gpu_time_per_input_prop);
+    fclose(f_gpu_time_per_error_prop);
 
 //fprintf(stderr,"Written the filtered ECG to 'ecg_filtered.dat'\n");
 

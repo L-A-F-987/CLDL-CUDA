@@ -89,8 +89,10 @@ __host__ void Net::setInputs(double* _inputs){
 
 __host__ void Net::propInputs() {
     for (int i=0;i<nLayers-1; i++) {
+// Calculates the output to the given layer using a layer function
         layers[i]->calcOutputs();
         double* layerOutputs = layers[i]->getOutputs();
+// Propagates the new outputs to the Input of the next layer
         layers[i+1]->propInputs(layerOutputs);
     }
     layers[nLayers-1]->calcOutputs();
