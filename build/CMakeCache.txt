@@ -40,17 +40,17 @@ CMAKE_CUDA_COMPILER:FILEPATH=/usr/local/cuda/bin/nvcc
 CMAKE_CUDA_FLAGS:STRING=
 
 //Flags used by the compiler during debug builds.
-CMAKE_CUDA_FLAGS_DEBUG:STRING=
+CMAKE_CUDA_FLAGS_DEBUG:STRING=-g
 
 //Flags used by the compiler during release builds for minimum
 // size.
-CMAKE_CUDA_FLAGS_MINSIZEREL:STRING=
+CMAKE_CUDA_FLAGS_MINSIZEREL:STRING=-O1 -DNDEBUG
 
 //Flags used by the compiler during release builds.
-CMAKE_CUDA_FLAGS_RELEASE:STRING=
+CMAKE_CUDA_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 
 //Flags used by the compiler during release builds with debug info.
-CMAKE_CUDA_FLAGS_RELWITHDEBINFO:STRING=
+CMAKE_CUDA_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
 //Host compiler to be used by nvcc
 CMAKE_CUDA_HOST_COMPILER:FILEPATH=

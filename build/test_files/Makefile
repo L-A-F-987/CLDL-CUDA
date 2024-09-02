@@ -122,6 +122,21 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+test_files/CMakeFiles/testing_input_prop.dir/rule:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f CMakeFiles/Makefile2 test_files/CMakeFiles/testing_input_prop.dir/rule
+.PHONY : test_files/CMakeFiles/testing_input_prop.dir/rule
+
+# Convenience name for target.
+testing_input_prop: test_files/CMakeFiles/testing_input_prop.dir/rule
+
+.PHONY : testing_input_prop
+
+# fast build rule for target.
+testing_input_prop/fast:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/testing_input_prop.dir/build.make test_files/CMakeFiles/testing_input_prop.dir/build
+.PHONY : testing_input_prop/fast
+
+# Convenience name for target.
 test_files/CMakeFiles/ecg_test.dir/rule:
 	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f CMakeFiles/Makefile2 test_files/CMakeFiles/ecg_test.dir/rule
 .PHONY : test_files/CMakeFiles/ecg_test.dir/rule
@@ -150,6 +165,33 @@ gpu_testing: test_files/CMakeFiles/gpu_testing.dir/rule
 gpu_testing/fast:
 	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/gpu_testing.dir/build.make test_files/CMakeFiles/gpu_testing.dir/build
 .PHONY : gpu_testing/fast
+
+Testing_the_each_element_of_input_prop.o: Testing_the_each_element_of_input_prop.cu.o
+
+.PHONY : Testing_the_each_element_of_input_prop.o
+
+# target to build an object file
+Testing_the_each_element_of_input_prop.cu.o:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/testing_input_prop.dir/build.make test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o
+.PHONY : Testing_the_each_element_of_input_prop.cu.o
+
+Testing_the_each_element_of_input_prop.i: Testing_the_each_element_of_input_prop.cu.i
+
+.PHONY : Testing_the_each_element_of_input_prop.i
+
+# target to preprocess a source file
+Testing_the_each_element_of_input_prop.cu.i:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/testing_input_prop.dir/build.make test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.i
+.PHONY : Testing_the_each_element_of_input_prop.cu.i
+
+Testing_the_each_element_of_input_prop.s: Testing_the_each_element_of_input_prop.cu.s
+
+.PHONY : Testing_the_each_element_of_input_prop.s
+
+# target to generate assembly for a file
+Testing_the_each_element_of_input_prop.cu.s:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/testing_input_prop.dir/build.make test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.s
+.PHONY : Testing_the_each_element_of_input_prop.cu.s
 
 ecg_test.o: ecg_test.cu.o
 
@@ -214,8 +256,12 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... test"
+	@echo "... testing_input_prop"
 	@echo "... ecg_test"
 	@echo "... gpu_testing"
+	@echo "... Testing_the_each_element_of_input_prop.o"
+	@echo "... Testing_the_each_element_of_input_prop.i"
+	@echo "... Testing_the_each_element_of_input_prop.s"
 	@echo "... ecg_test.o"
 	@echo "... ecg_test.i"
 	@echo "... ecg_test.s"

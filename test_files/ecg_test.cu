@@ -19,7 +19,7 @@ using namespace std;
 
 
 //The nlayers should be an integer of the total number of hidden layers required not including the input layer
-    const int nLayers = 10;
+    const int nLayers = 2;
 
 //Neuron array should hold the number of neurons for each layer, each array element is a
 //single input 
@@ -59,14 +59,6 @@ using namespace std;
 //Filling Neurons_array with some arbitray numbers to test network
 //Setting the output layer to be of size 1
     Neurons_array[0] = nInputs;
-    Neurons_array[1] = 1;
-    Neurons_array[2] = 1;
-    Neurons_array[3] = 1;
-    Neurons_array[4] = 1;
-    Neurons_array[5] = 1;
-    Neurons_array[6] = 1;
-    Neurons_array[7] = 1;
-    Neurons_array[8] = 1;
     Neurons_array[nLayers-1] = 1;
 
 //Filling Input array with 0s array 
@@ -173,7 +165,7 @@ using namespace std;
 
 
 
-	fprintf(foutput,"%f \n",output);
+	fprintf(foutput,"%f \n",error);
 
     auto gpu_timer_1_sample_time = std::chrono::high_resolution_clock::now() - gpu_timer_1_sample_input;
     fprintf(f_gpu_time,"%i \n",gpu_timer_1_sample_time);
@@ -190,8 +182,6 @@ using namespace std;
     fclose(finput);
 	fclose(foutput);
     fclose(f_gpu_time);
-
-//fprintf(stderr,"Written the filtered ECG to 'ecg_filtered.dat'\n");
 
 
     std::cout<<"Made it to the End :)\n\n\n";

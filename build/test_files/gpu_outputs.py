@@ -51,6 +51,16 @@ GPU_Timer_per_error_prop = np.loadtxt('gpu_time_taken_per_error_prop.txt')
 average_calculation(GPU_Timer_per_error_prop,"ERROR PROP")
 
 
+print("\n\n\nPrinting layer specific function times\n\n")
+
+GPU_Timer_per_calc_outputs = np.loadtxt('Calc_outputs.txt')
+average_calculation(GPU_Timer_per_calc_outputs,"Calc Output (Layer)")
+
+GPU_Timer_per_allocate_int = np.loadtxt('allocate_int.txt')
+average_calculation(GPU_Timer_per_allocate_int,"Allocate Int")
+
+
+
 
 
 

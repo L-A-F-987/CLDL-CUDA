@@ -1,1 +1,0 @@
-/usr/bin/g++   CMakeFiles/tests.dir/ecg_test.cu.o CMakeFiles/tests.dir/cmake_device_link.o -o tests ../libCLDL.a -lcurand -lpthread  -L"/usr/local/cuda/targets/aarch64-linux/lib/stubs" -L"/usr/local/cuda/targets/aarch64-linux/lib" -lcudadevrt -lcudart_static -lrt -lpthread -ldl

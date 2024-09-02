@@ -135,6 +135,19 @@ CLDL/fast:
 .PHONY : CLDL/fast
 
 #=============================================================================
+# Target rules for targets named testing_input_prop
+
+# Build rule for target.
+testing_input_prop: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 testing_input_prop
+.PHONY : testing_input_prop
+
+# fast build rule for target.
+testing_input_prop/fast:
+	$(MAKE) -f test_files/CMakeFiles/testing_input_prop.dir/build.make test_files/CMakeFiles/testing_input_prop.dir/build
+.PHONY : testing_input_prop/fast
+
+#=============================================================================
 # Target rules for targets named ecg_test
 
 # Build rule for target.
@@ -251,6 +264,7 @@ help:
 	@echo "... edit_cache"
 	@echo "... CLDL"
 	@echo "... test"
+	@echo "... testing_input_prop"
 	@echo "... ecg_test"
 	@echo "... gpu_testing"
 	@echo "... lib/Layer.o"

@@ -30,15 +30,11 @@ using namespace std;
 
 
 //setting up initial inputs
-    const int nInputs = 1;
+    const int nInputs = 50;
 
     double Array_of_0s_for_initial_inputs[nInputs];
 
     double *pointer_to_array_of_0s = Array_of_0s_for_initial_inputs;
-
-
-
-
 
 
     int main(int argc, char* argv[]){
@@ -72,7 +68,6 @@ using namespace std;
 //Filling Neurons_array with some arbitray numbers to test network
 //Setting the output layer to be of size 1
     Neurons_array[0] = nInputs;
-    Neurons_array[1] = 1;
     Neurons_array[nLayers-1] = 1;
 
 //Filling Input array with 0s array 
@@ -233,9 +228,6 @@ using namespace std;
 
 
     std::cout<<"Made it to the End :)\n\n\n";
-    
-    
-
-
+   
 
 }
