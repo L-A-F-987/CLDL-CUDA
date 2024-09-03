@@ -1,1 +1,1 @@
-/usr/local/cuda/bin/nvcc    -Xcompiler=-fPIC -Wno-deprecated-gpu-targets -shared -dlink CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o -o CMakeFiles/testing_input_prop.dir/cmake_device_link.o 
+/usr/local/cuda/bin/nvcc    -Xcompiler=-fPIC -Wno-deprecated-gpu-targets -shared -dlink CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o -o CMakeFiles/testing_input_prop.dir/cmake_device_link.o 

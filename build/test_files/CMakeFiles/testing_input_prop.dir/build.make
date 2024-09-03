@@ -57,38 +57,38 @@ include test_files/CMakeFiles/testing_input_prop.dir/progress.make
 # Include the compile flags for this target's objects.
 include test_files/CMakeFiles/testing_input_prop.dir/flags.make
 
-test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o: test_files/CMakeFiles/testing_input_prop.dir/flags.make
-test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o: ../test_files/Testing_the_each_element_of_input_prop.cu
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/luca/Documents/CLDL-CUDA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CUDA object test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o"
-	cd /home/luca/Documents/CLDL-CUDA/build/test_files && /usr/local/cuda/bin/nvcc  $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -x cu -c /home/luca/Documents/CLDL-CUDA/test_files/Testing_the_each_element_of_input_prop.cu -o CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o
+test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o: test_files/CMakeFiles/testing_input_prop.dir/flags.make
+test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o: ../test_files/testing_individual_elements_of_gpu_code.cu
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/luca/Documents/CLDL-CUDA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CUDA object test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o"
+	cd /home/luca/Documents/CLDL-CUDA/build/test_files && /usr/local/cuda/bin/nvcc  $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -x cu -c /home/luca/Documents/CLDL-CUDA/test_files/testing_individual_elements_of_gpu_code.cu -o CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o
 
-test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CUDA source to CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.i"
+test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CUDA source to CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.i"
 	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_PREPROCESSED_SOURCE
 
-test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CUDA source to assembly CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.s"
+test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CUDA source to assembly CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.s"
 	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_ASSEMBLY_SOURCE
 
-test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o.requires:
+test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o.requires:
 
-.PHONY : test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o.requires
+.PHONY : test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o.requires
 
-test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o.provides: test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o.requires
-	$(MAKE) -f test_files/CMakeFiles/testing_input_prop.dir/build.make test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o.provides.build
-.PHONY : test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o.provides
+test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o.provides: test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o.requires
+	$(MAKE) -f test_files/CMakeFiles/testing_input_prop.dir/build.make test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o.provides.build
+.PHONY : test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o.provides
 
-test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o.provides.build: test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o
+test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o.provides.build: test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o
 
 
 # Object files for target testing_input_prop
 testing_input_prop_OBJECTS = \
-"CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o"
+"CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o"
 
 # External object files for target testing_input_prop
 testing_input_prop_EXTERNAL_OBJECTS =
 
-test_files/CMakeFiles/testing_input_prop.dir/cmake_device_link.o: test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o
+test_files/CMakeFiles/testing_input_prop.dir/cmake_device_link.o: test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o
 test_files/CMakeFiles/testing_input_prop.dir/cmake_device_link.o: test_files/CMakeFiles/testing_input_prop.dir/build.make
 test_files/CMakeFiles/testing_input_prop.dir/cmake_device_link.o: libCLDL.a
 test_files/CMakeFiles/testing_input_prop.dir/cmake_device_link.o: test_files/CMakeFiles/testing_input_prop.dir/dlink.txt
@@ -102,12 +102,12 @@ test_files/CMakeFiles/testing_input_prop.dir/build: test_files/CMakeFiles/testin
 
 # Object files for target testing_input_prop
 testing_input_prop_OBJECTS = \
-"CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o"
+"CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o"
 
 # External object files for target testing_input_prop
 testing_input_prop_EXTERNAL_OBJECTS =
 
-test_files/testing_input_prop: test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o
+test_files/testing_input_prop: test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o
 test_files/testing_input_prop: test_files/CMakeFiles/testing_input_prop.dir/build.make
 test_files/testing_input_prop: libCLDL.a
 test_files/testing_input_prop: test_files/CMakeFiles/testing_input_prop.dir/cmake_device_link.o
@@ -120,7 +120,7 @@ test_files/CMakeFiles/testing_input_prop.dir/build: test_files/testing_input_pro
 
 .PHONY : test_files/CMakeFiles/testing_input_prop.dir/build
 
-test_files/CMakeFiles/testing_input_prop.dir/requires: test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o.requires
+test_files/CMakeFiles/testing_input_prop.dir/requires: test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o.requires
 
 .PHONY : test_files/CMakeFiles/testing_input_prop.dir/requires
 

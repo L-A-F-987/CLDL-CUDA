@@ -59,6 +59,9 @@ average_calculation(GPU_Timer_per_calc_outputs,"Calc Output (Layer)")
 GPU_Timer_per_allocate_int = np.loadtxt('allocate_int.txt')
 average_calculation(GPU_Timer_per_allocate_int,"Allocate Int")
 
+GPU_Timer_per_memcpy = np.loadtxt("gpu_memcpy_time.txt")
+average_calculation(GPU_Timer_per_memcpy,"MemCpy Time")
+
 
 
 

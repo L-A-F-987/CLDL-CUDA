@@ -166,33 +166,6 @@ gpu_testing/fast:
 	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/gpu_testing.dir/build.make test_files/CMakeFiles/gpu_testing.dir/build
 .PHONY : gpu_testing/fast
 
-Testing_the_each_element_of_input_prop.o: Testing_the_each_element_of_input_prop.cu.o
-
-.PHONY : Testing_the_each_element_of_input_prop.o
-
-# target to build an object file
-Testing_the_each_element_of_input_prop.cu.o:
-	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/testing_input_prop.dir/build.make test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o
-.PHONY : Testing_the_each_element_of_input_prop.cu.o
-
-Testing_the_each_element_of_input_prop.i: Testing_the_each_element_of_input_prop.cu.i
-
-.PHONY : Testing_the_each_element_of_input_prop.i
-
-# target to preprocess a source file
-Testing_the_each_element_of_input_prop.cu.i:
-	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/testing_input_prop.dir/build.make test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.i
-.PHONY : Testing_the_each_element_of_input_prop.cu.i
-
-Testing_the_each_element_of_input_prop.s: Testing_the_each_element_of_input_prop.cu.s
-
-.PHONY : Testing_the_each_element_of_input_prop.s
-
-# target to generate assembly for a file
-Testing_the_each_element_of_input_prop.cu.s:
-	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/testing_input_prop.dir/build.make test_files/CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.s
-.PHONY : Testing_the_each_element_of_input_prop.cu.s
-
 ecg_test.o: ecg_test.cu.o
 
 .PHONY : ecg_test.o
@@ -247,6 +220,33 @@ gpu_tests.cu.s:
 	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/gpu_testing.dir/build.make test_files/CMakeFiles/gpu_testing.dir/gpu_tests.cu.s
 .PHONY : gpu_tests.cu.s
 
+testing_individual_elements_of_gpu_code.o: testing_individual_elements_of_gpu_code.cu.o
+
+.PHONY : testing_individual_elements_of_gpu_code.o
+
+# target to build an object file
+testing_individual_elements_of_gpu_code.cu.o:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/testing_input_prop.dir/build.make test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o
+.PHONY : testing_individual_elements_of_gpu_code.cu.o
+
+testing_individual_elements_of_gpu_code.i: testing_individual_elements_of_gpu_code.cu.i
+
+.PHONY : testing_individual_elements_of_gpu_code.i
+
+# target to preprocess a source file
+testing_individual_elements_of_gpu_code.cu.i:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/testing_input_prop.dir/build.make test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.i
+.PHONY : testing_individual_elements_of_gpu_code.cu.i
+
+testing_individual_elements_of_gpu_code.s: testing_individual_elements_of_gpu_code.cu.s
+
+.PHONY : testing_individual_elements_of_gpu_code.s
+
+# target to generate assembly for a file
+testing_individual_elements_of_gpu_code.cu.s:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/testing_input_prop.dir/build.make test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.s
+.PHONY : testing_individual_elements_of_gpu_code.cu.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -259,15 +259,15 @@ help:
 	@echo "... testing_input_prop"
 	@echo "... ecg_test"
 	@echo "... gpu_testing"
-	@echo "... Testing_the_each_element_of_input_prop.o"
-	@echo "... Testing_the_each_element_of_input_prop.i"
-	@echo "... Testing_the_each_element_of_input_prop.s"
 	@echo "... ecg_test.o"
 	@echo "... ecg_test.i"
 	@echo "... ecg_test.s"
 	@echo "... gpu_tests.o"
 	@echo "... gpu_tests.i"
 	@echo "... gpu_tests.s"
+	@echo "... testing_individual_elements_of_gpu_code.o"
+	@echo "... testing_individual_elements_of_gpu_code.i"
+	@echo "... testing_individual_elements_of_gpu_code.s"
 .PHONY : help
 
 

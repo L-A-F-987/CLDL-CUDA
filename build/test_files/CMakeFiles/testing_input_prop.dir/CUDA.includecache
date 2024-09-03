@@ -84,7 +84,7 @@ curand.h
 chrono
 -
 
-/home/luca/Documents/CLDL-CUDA/test_files/Testing_the_each_element_of_input_prop.cu
+/home/luca/Documents/CLDL-CUDA/test_files/testing_individual_elements_of_gpu_code.cu
 chrono
 -
 cldl/Net.h

@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/testing_input_prop.dir/Testing_the_each_element_of_input_prop.cu.o"
+  "CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o"
   "CMakeFiles/testing_input_prop.dir/cmake_device_link.o"
   "testing_input_prop.pdb"
   "testing_input_prop"

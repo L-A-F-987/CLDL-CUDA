@@ -11,7 +11,7 @@ add_executable(gpu_testing
 )
 
 add_executable(testing_input_prop
-        Testing_the_each_element_of_input_prop.cu
+        testing_individual_elements_of_gpu_code.cu
 )
 
 target_link_libraries(ecg_test PRIVATE CLDL)

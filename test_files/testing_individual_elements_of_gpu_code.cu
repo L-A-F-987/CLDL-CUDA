@@ -46,6 +46,7 @@ int main(int argc, char* argv[]){
     FILE *f_calc_output = fopen("Calc_outputs.txt","wt");
     FILE *f_allocate_input = fopen("allocate_int.txt","wt");
     FILE *f_gpu_calc_outputs = fopen("gpu_calc_output.txt","wt");
+    FILE *f_gpu_memcpy = fopen("gpu_memcpy_time.txt","wt");
 
 
 
@@ -117,6 +118,17 @@ int main(int argc, char* argv[]){
     
     fprintf(f_allocate_input,"%i \n",allocate_int_total);
 
+//Testing cudaMemcpy() time taken
+
+    auto cudaMemcpy_int_start = std::chrono::high_resolution_clock::now();
+
+    cudaMemcpy(testlayerHasReported, &testlayerHasReported, sizeof(int), cudaMemcpyHostToDevice);
+
+    auto cudaMemcpy_int_total = std::chrono::high_resolution_clock::now() - cudaMemcpy_int_start;
+
+    fprintf(f_gpu_memcpy,"%i \n",cudaMemcpy_int_total);
+
+
     }
 
 
@@ -126,4 +138,5 @@ int main(int argc, char* argv[]){
     fclose(f_calc_output);
     fclose(f_allocate_input);
     fclose(f_gpu_calc_outputs);
+    fclose(f_gpu_memcpy);
 }
