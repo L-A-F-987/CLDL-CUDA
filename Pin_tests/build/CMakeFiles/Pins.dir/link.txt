@@ -1,2 +1,0 @@
-/usr/bin/ar qc libPins.a  CMakeFiles/Pins.dir/jetsonGPIO.c.o
-/usr/bin/ranlib libPins.a

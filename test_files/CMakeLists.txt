@@ -14,9 +14,14 @@ add_executable(testing_input_prop
         testing_individual_elements_of_gpu_code.cu
 )
 
+add_executable(wav_tests
+        wav_tests.cu
+)
+
 target_link_libraries(ecg_test PRIVATE CLDL)
 target_link_libraries(gpu_testing PRIVATE CLDL)
 target_link_libraries(testing_input_prop PRIVATE CLDL)
+target_link_libraries(wav_tests PRIVATE CLDL)
 
 
 

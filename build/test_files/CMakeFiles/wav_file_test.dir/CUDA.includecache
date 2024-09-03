@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/luca/Documents/CLDL-CUDA/test_files/Wav_file_test.cu
+chrono
+-
+cldl/Net.h
+/home/luca/Documents/CLDL-CUDA/test_files/cldl/Net.h
+iostream
+-
+stdio.h
+-
+thread
+-
+math.h
+-
+

@@ -135,6 +135,19 @@ CLDL/fast:
 .PHONY : CLDL/fast
 
 #=============================================================================
+# Target rules for targets named gpu_testing
+
+# Build rule for target.
+gpu_testing: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 gpu_testing
+.PHONY : gpu_testing
+
+# fast build rule for target.
+gpu_testing/fast:
+	$(MAKE) -f test_files/CMakeFiles/gpu_testing.dir/build.make test_files/CMakeFiles/gpu_testing.dir/build
+.PHONY : gpu_testing/fast
+
+#=============================================================================
 # Target rules for targets named testing_input_prop
 
 # Build rule for target.
@@ -148,6 +161,19 @@ testing_input_prop/fast:
 .PHONY : testing_input_prop/fast
 
 #=============================================================================
+# Target rules for targets named wav_tests
+
+# Build rule for target.
+wav_tests: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 wav_tests
+.PHONY : wav_tests
+
+# fast build rule for target.
+wav_tests/fast:
+	$(MAKE) -f test_files/CMakeFiles/wav_tests.dir/build.make test_files/CMakeFiles/wav_tests.dir/build
+.PHONY : wav_tests/fast
+
+#=============================================================================
 # Target rules for targets named ecg_test
 
 # Build rule for target.
@@ -159,19 +185,6 @@ ecg_test: cmake_check_build_system
 ecg_test/fast:
 	$(MAKE) -f test_files/CMakeFiles/ecg_test.dir/build.make test_files/CMakeFiles/ecg_test.dir/build
 .PHONY : ecg_test/fast
-
-#=============================================================================
-# Target rules for targets named gpu_testing
-
-# Build rule for target.
-gpu_testing: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 gpu_testing
-.PHONY : gpu_testing
-
-# fast build rule for target.
-gpu_testing/fast:
-	$(MAKE) -f test_files/CMakeFiles/gpu_testing.dir/build.make test_files/CMakeFiles/gpu_testing.dir/build
-.PHONY : gpu_testing/fast
 
 lib/Layer.o: lib/Layer.cu.o
 
@@ -264,9 +277,10 @@ help:
 	@echo "... edit_cache"
 	@echo "... CLDL"
 	@echo "... test"
-	@echo "... testing_input_prop"
-	@echo "... ecg_test"
 	@echo "... gpu_testing"
+	@echo "... testing_input_prop"
+	@echo "... wav_tests"
+	@echo "... ecg_test"
 	@echo "... lib/Layer.o"
 	@echo "... lib/Layer.i"
 	@echo "... lib/Layer.s"

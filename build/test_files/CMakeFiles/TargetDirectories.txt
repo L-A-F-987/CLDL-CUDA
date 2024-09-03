@@ -3,8 +3,9 @@
 /home/luca/Documents/CLDL-CUDA/build/test_files/CMakeFiles/CLDL.dir
 /home/luca/Documents/CLDL-CUDA/build/test_files/CMakeFiles/test.dir
 /home/luca/Documents/CLDL-CUDA/build/test_files/test_files/CMakeFiles/rebuild_cache.dir
-/home/luca/Documents/CLDL-CUDA/build/test_files/test_files/CMakeFiles/edit_cache.dir
-/home/luca/Documents/CLDL-CUDA/build/test_files/test_files/CMakeFiles/test.dir
-/home/luca/Documents/CLDL-CUDA/build/test_files/test_files/CMakeFiles/testing_input_prop.dir
-/home/luca/Documents/CLDL-CUDA/build/test_files/test_files/CMakeFiles/ecg_test.dir
 /home/luca/Documents/CLDL-CUDA/build/test_files/test_files/CMakeFiles/gpu_testing.dir
+/home/luca/Documents/CLDL-CUDA/build/test_files/test_files/CMakeFiles/testing_input_prop.dir
+/home/luca/Documents/CLDL-CUDA/build/test_files/test_files/CMakeFiles/test.dir
+/home/luca/Documents/CLDL-CUDA/build/test_files/test_files/CMakeFiles/wav_tests.dir
+/home/luca/Documents/CLDL-CUDA/build/test_files/test_files/CMakeFiles/ecg_test.dir
+/home/luca/Documents/CLDL-CUDA/build/test_files/test_files/CMakeFiles/edit_cache.dir

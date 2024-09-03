@@ -1,1 +1,0 @@
-/usr/bin/g++   CMakeFiles/gpu_testing.dir/gpu_tests.cu.o CMakeFiles/gpu_testing.dir/cmake_device_link.o -o gpu_testing ../libCLDL.a -lcurand -lpthread  -L"/usr/local/cuda/targets/aarch64-linux/lib/stubs" -L"/usr/local/cuda/targets/aarch64-linux/lib" -lcudadevrt -lcudart_static -lrt -lpthread -ldl

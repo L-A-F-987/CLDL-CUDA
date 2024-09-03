@@ -67,17 +67,6 @@ rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target test
 test:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
@@ -88,6 +77,17 @@ test:
 test/fast: test
 
 .PHONY : test/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -122,6 +122,21 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+test_files/CMakeFiles/gpu_testing.dir/rule:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f CMakeFiles/Makefile2 test_files/CMakeFiles/gpu_testing.dir/rule
+.PHONY : test_files/CMakeFiles/gpu_testing.dir/rule
+
+# Convenience name for target.
+gpu_testing: test_files/CMakeFiles/gpu_testing.dir/rule
+
+.PHONY : gpu_testing
+
+# fast build rule for target.
+gpu_testing/fast:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/gpu_testing.dir/build.make test_files/CMakeFiles/gpu_testing.dir/build
+.PHONY : gpu_testing/fast
+
+# Convenience name for target.
 test_files/CMakeFiles/testing_input_prop.dir/rule:
 	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f CMakeFiles/Makefile2 test_files/CMakeFiles/testing_input_prop.dir/rule
 .PHONY : test_files/CMakeFiles/testing_input_prop.dir/rule
@@ -137,6 +152,21 @@ testing_input_prop/fast:
 .PHONY : testing_input_prop/fast
 
 # Convenience name for target.
+test_files/CMakeFiles/wav_tests.dir/rule:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f CMakeFiles/Makefile2 test_files/CMakeFiles/wav_tests.dir/rule
+.PHONY : test_files/CMakeFiles/wav_tests.dir/rule
+
+# Convenience name for target.
+wav_tests: test_files/CMakeFiles/wav_tests.dir/rule
+
+.PHONY : wav_tests
+
+# fast build rule for target.
+wav_tests/fast:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/wav_tests.dir/build.make test_files/CMakeFiles/wav_tests.dir/build
+.PHONY : wav_tests/fast
+
+# Convenience name for target.
 test_files/CMakeFiles/ecg_test.dir/rule:
 	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f CMakeFiles/Makefile2 test_files/CMakeFiles/ecg_test.dir/rule
 .PHONY : test_files/CMakeFiles/ecg_test.dir/rule
@@ -150,21 +180,6 @@ ecg_test: test_files/CMakeFiles/ecg_test.dir/rule
 ecg_test/fast:
 	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/ecg_test.dir/build.make test_files/CMakeFiles/ecg_test.dir/build
 .PHONY : ecg_test/fast
-
-# Convenience name for target.
-test_files/CMakeFiles/gpu_testing.dir/rule:
-	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f CMakeFiles/Makefile2 test_files/CMakeFiles/gpu_testing.dir/rule
-.PHONY : test_files/CMakeFiles/gpu_testing.dir/rule
-
-# Convenience name for target.
-gpu_testing: test_files/CMakeFiles/gpu_testing.dir/rule
-
-.PHONY : gpu_testing
-
-# fast build rule for target.
-gpu_testing/fast:
-	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/gpu_testing.dir/build.make test_files/CMakeFiles/gpu_testing.dir/build
-.PHONY : gpu_testing/fast
 
 ecg_test.o: ecg_test.cu.o
 
@@ -247,6 +262,33 @@ testing_individual_elements_of_gpu_code.cu.s:
 	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/testing_input_prop.dir/build.make test_files/CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.s
 .PHONY : testing_individual_elements_of_gpu_code.cu.s
 
+wav_tests.o: wav_tests.cu.o
+
+.PHONY : wav_tests.o
+
+# target to build an object file
+wav_tests.cu.o:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/wav_tests.dir/build.make test_files/CMakeFiles/wav_tests.dir/wav_tests.cu.o
+.PHONY : wav_tests.cu.o
+
+wav_tests.i: wav_tests.cu.i
+
+.PHONY : wav_tests.i
+
+# target to preprocess a source file
+wav_tests.cu.i:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/wav_tests.dir/build.make test_files/CMakeFiles/wav_tests.dir/wav_tests.cu.i
+.PHONY : wav_tests.cu.i
+
+wav_tests.s: wav_tests.cu.s
+
+.PHONY : wav_tests.s
+
+# target to generate assembly for a file
+wav_tests.cu.s:
+	cd /home/luca/Documents/CLDL-CUDA/build && $(MAKE) -f test_files/CMakeFiles/wav_tests.dir/build.make test_files/CMakeFiles/wav_tests.dir/wav_tests.cu.s
+.PHONY : wav_tests.cu.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -254,11 +296,12 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... edit_cache"
-	@echo "... test"
-	@echo "... testing_input_prop"
-	@echo "... ecg_test"
 	@echo "... gpu_testing"
+	@echo "... testing_input_prop"
+	@echo "... test"
+	@echo "... wav_tests"
+	@echo "... ecg_test"
+	@echo "... edit_cache"
 	@echo "... ecg_test.o"
 	@echo "... ecg_test.i"
 	@echo "... ecg_test.s"
@@ -268,6 +311,9 @@ help:
 	@echo "... testing_individual_elements_of_gpu_code.o"
 	@echo "... testing_individual_elements_of_gpu_code.i"
 	@echo "... testing_individual_elements_of_gpu_code.s"
+	@echo "... wav_tests.o"
+	@echo "... wav_tests.i"
+	@echo "... wav_tests.s"
 .PHONY : help
 
 
