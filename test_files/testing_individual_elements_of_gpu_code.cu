@@ -29,7 +29,7 @@ using namespace std;
 
 
 //setting up initial inputs
-    const int nInputs = 10;
+    const int nInputs = 200;
 
     double Array_of_0s_for_initial_inputs[nInputs];
 
@@ -47,6 +47,9 @@ int main(int argc, char* argv[]){
     FILE *f_allocate_input = fopen("allocate_int.txt","wt");
     FILE *f_gpu_calc_outputs = fopen("gpu_calc_output.txt","wt");
     FILE *f_gpu_memcpy = fopen("gpu_memcpy_time.txt","wt");
+    FILE *f_gpu_nInputs_neuron = fopen("gpu_nInputs_neuron.txt","wt");
+    FILE *f_gpu_dot_product = fopen("gpu_dot_product.txt","wt");
+
 
 
 
@@ -128,6 +131,15 @@ int main(int argc, char* argv[]){
 
     fprintf(f_gpu_memcpy,"%i \n",cudaMemcpy_int_total);
 
+//nInputs time taken 
+
+    auto nInputs_time_start = std::chrono::high_resolution_clock::now();
+
+    int* nInputs = output_neuron -> nInputs;
+
+    auto nInputs_time_total = std::chrono::high_resolution_clock::now() - nInputs_time_start;
+
+    fprintf(f_gpu_nInputs_neuron,"%i \n",nInputs_time_total);
 
     }
 
@@ -139,4 +151,8 @@ int main(int argc, char* argv[]){
     fclose(f_allocate_input);
     fclose(f_gpu_calc_outputs);
     fclose(f_gpu_memcpy);
+    fclose(f_gpu_nInputs_neuron);
+    fclose(f_gpu_dot_product);
+
+
 }

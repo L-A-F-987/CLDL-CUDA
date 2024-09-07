@@ -22,12 +22,14 @@ def average_calculation(x,y):
     print("number of ",y,"per second average:",1/average,"\n")
 
 
-    fig_per_sample = plt.figure()
+    fig = plt.figure()
     plt.hlines(average,0,len(x),linestyle = "--",color = "red",label = "average",linewidth = 2)
     plt.plot(x/to_s)
     plt.title(y)
     plt.legend()
+    fig.savefig(y)
     plt.show()
+
 
     return()
 
@@ -49,6 +51,9 @@ average_calculation(GPU_Timer_per_error_update,"ERROR UPDATE")
 
 GPU_Timer_per_error_prop = np.loadtxt('gpu_time_taken_per_error_prop.txt')
 average_calculation(GPU_Timer_per_error_prop,"ERROR PROP")
+
+GPU_Timer_per_nInputs_neurons = np.loadtxt('gpu_nInputs_neuron.txt')
+average_calculation(GPU_Timer_per_nInputs_neurons,"nInputs Neurons")
 
 
 print("\n\n\nPrinting layer specific function times\n\n")

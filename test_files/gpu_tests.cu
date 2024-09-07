@@ -30,7 +30,7 @@ using namespace std;
 
 
 //setting up initial inputs
-    const int nInputs = 1;
+    const int nInputs = 10;
 
     double Array_of_0s_for_initial_inputs[nInputs];
 
