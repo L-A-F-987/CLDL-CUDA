@@ -1,1 +1,0 @@
-/usr/bin/g++   CMakeFiles/testing_input_prop.dir/testing_individual_elements_of_gpu_code.cu.o CMakeFiles/testing_input_prop.dir/cmake_device_link.o -o testing_input_prop ../libCLDL.a -lcurand -lpthread  -L"/usr/local/cuda/targets/aarch64-linux/lib/stubs" -L"/usr/local/cuda/targets/aarch64-linux/lib" -lcudadevrt -lcudart_static -lrt -lpthread -ldl

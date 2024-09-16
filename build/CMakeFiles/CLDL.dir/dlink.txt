@@ -1,1 +1,0 @@
-/usr/local/cuda/bin/nvcc    -Xcompiler=-fPIC -Wno-deprecated-gpu-targets -shared -dlink CMakeFiles/CLDL.dir/lib/Neuron.cu.o CMakeFiles/CLDL.dir/lib/Layer.cu.o CMakeFiles/CLDL.dir/lib/Net.cu.o -o CMakeFiles/CLDL.dir/cmake_device_link.o 

@@ -115,6 +115,7 @@ __global__ void gpu_getOutputs(Neuron* n, double* _outputs, int nNeurons){
     }
 }
 
+
 // HOST FUNCTIONS //
 
 __host__ Layer::Layer(int _nNeurons, int _nInputs){
@@ -132,6 +133,7 @@ __host__ Layer::Layer(int _nNeurons, int _nInputs){
     cudaMalloc( (void**) &gpu_inputs, sizeof(double)*nInputs);
     cudaMalloc( (void**) &gpu_neurons, sizeof(Neuron)*nNeurons);
     cudaMemcpy(gpu_neurons, neurons, sizeof(Neuron)*nNeurons, cudaMemcpyHostToDevice);
+
 }
 
 __host__ Layer::~Layer(){

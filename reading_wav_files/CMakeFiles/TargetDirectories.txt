@@ -1,3 +1,0 @@
-/home/luca/Documents/CLDL-CUDA/reading_wav_files/CMakeFiles/rebuild_cache.dir
-/home/luca/Documents/CLDL-CUDA/reading_wav_files/CMakeFiles/wav_info.dir
-/home/luca/Documents/CLDL-CUDA/reading_wav_files/CMakeFiles/edit_cache.dir

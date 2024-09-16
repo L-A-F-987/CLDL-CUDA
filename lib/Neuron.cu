@@ -539,6 +539,7 @@ __host__ void gpu_allocateInt(int** pointer, int value){
     cudaMalloc(pointer, sizeof(int));
     gpu_setInt<<<1,1>>>(*pointer, value);
 }
+
 __host__ void gpu_allocateDouble(double** pointer, double value){
     cudaMalloc(pointer, sizeof(double));
     gpu_setDouble<<<1,1>>>(*pointer, value);

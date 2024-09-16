@@ -3,7 +3,13 @@ cmake_minimum_required(VERSION 3.10)
 project(CLDL LANGUAGES CXX CUDA)
 
 
-add_subdirectory(test_files)
+add_subdirectory(gpu_tests)
+
+add_subdirectory(gtest)
+
+add_subdirectory(ecg_tests)
+
+add_subdirectory(wav_tests)
 
 enable_testing()
 
