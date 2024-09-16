@@ -1,14 +1,30 @@
 # Deep Neural Filter Hearing Aid
 
- The objective of this project was to design a real-time adaptive noise canceling hearing aid style device. Unlike conventional hearing aids, this hearing aid used a neural network (Deep neural filter) libary written by Dr Bernd Porr at University of Glasgow. 
- 
+ The objective of this project was to design a real-time adaptive noise canceling hearing aid style device. Unlike conventional hearing aids, this hearing aid used a neural network (Deep neural filter) libary written by Dr Bernd Porr at University of Glasgow.
+
+# Building 
+
+This project is designed to allow for building using cmake (min version 3.10). Following the below instructions will allow for the build. Feel free 
+
+- cd CLDL-CUDA/build
+- cmake
+- make
+
+This will create 4 folders each containing executables.
+
+- gtest 
+- wav_tests
+- ecg_tests
+- gpu_tests
+
+
 # Prerequisites
 
  A CUDA-enabled GPU is required to use this library.
  
  The CUDA developer toolkit is required to compile and run the library.
 
- Tested with CUDA-10.2 on a Jetson Nano Dev Kit
+ Tested with CUDA-10.2 on a Jetson Nano Dev Kit running Ubuntu 18.04
 ``
 # Hardware 
 - Jetson Nano Developer Kit
