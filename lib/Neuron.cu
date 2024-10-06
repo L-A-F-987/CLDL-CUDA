@@ -323,7 +323,9 @@ __host__ void Neuron::setBackwardError(double _leadError){
 
 __device__ void device_setBackwardError(double _leadError, Neuron* n){
     device_doActivationPrime((*n).backwardError, (*n).sum, (*n).actMet);
-    *(*n).backwardError = *(*n).backwardError * _leadError;
+//edited by luca so the backward error is just set and not calculated
+    //*(*n).backwardError = *(*n).backwardError * _leadError;
+    *(*n).backwardError =  _leadError;
 }
 
 __global__ void gpu_setBackwardError(double _leadError, Neuron* n){

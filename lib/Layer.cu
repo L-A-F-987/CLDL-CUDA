@@ -115,12 +115,60 @@ __global__ void gpu_getOutputs(Neuron* n, double* _outputs, int nNeurons){
     }
 }
 
+/*
+
+Added by luca, Purpose is to implement pinned memory to skip the pageable memeory used
+by the Layer::CalcOutputs funtion
+
+For beckground on this See: https://developer.nvidia.com/blog/how-optimize-data-transfers-cuda-cc/ 
+
+*/
+
+//General function to check the allocation of the memory was successful
+inline
+cudaError_t Layer::checkCuda(cudaError_t result)
+{
+#if defined(DEBUG) || defined(_DEBUG)
+  if (result != cudaSuccess) {
+    fprintf(stderr, "CUDA Runtime Error: %s\n", 
+            cudaGetErrorString(result));
+    assert(result == cudaSuccess);
+  }
+#endif
+  return result;
+}
+
+
+__host__ int* Layer::generating_pinned_memory_address(){
+
+
+    const unsigned int bytes =  sizeof(int);
+
+
+    //int *h_aPageable, *h_bPageable;   
+    //int *h_aPinned, *h_bPinned;
+
+
+    h_aPageable = (int*)malloc(bytes);                   
+    h_bPageable = (int*)malloc(bytes);
+
+    checkCuda( cudaMallocHost((void**)&h_aPinned, bytes) ); // host pinned
+    checkCuda( cudaMallocHost((void**)&h_bPinned, bytes) ); // host pinned
+
+
+    return(0);
+}
+
+
+
+//end of code added by Luca
 
 // HOST FUNCTIONS //
 
 __host__ Layer::Layer(int _nNeurons, int _nInputs){
     nNeurons = _nNeurons; // number of neurons in this layer
     nInputs = _nInputs; // number of inputs to each neuron
+
 
     neurons = (Neuron*) (malloc(sizeof(Neuron) * nNeurons));
     for (int i=0; i<nNeurons; i++){
@@ -134,6 +182,10 @@ __host__ Layer::Layer(int _nNeurons, int _nInputs){
     cudaMalloc( (void**) &gpu_neurons, sizeof(Neuron)*nNeurons);
     cudaMemcpy(gpu_neurons, neurons, sizeof(Neuron)*nNeurons, cudaMemcpyHostToDevice);
 
+//added by luca 
+
+    generating_pinned_memory_address();
+
 }
 
 __host__ Layer::~Layer(){
@@ -143,6 +195,13 @@ __host__ Layer::~Layer(){
     free(neurons);
     cudaFree(gpu_inputs);
     cudaFree(gpu_neurons);
+
+//Added by Luca
+//Freeing Pinned and Pagable Memory
+    cudaFreeHost(h_aPinned);
+    cudaFreeHost(h_bPinned);
+    free(h_aPageable);
+    free(h_bPageable);
 }
 
 //*************************************************************************************
@@ -221,15 +280,26 @@ __host__ void Layer::propInputs(double* _gpu_InputOutputs) {
 }
 
 __host__ void Layer::calcOutputs(){
-    // block id gets neuron
+
+    //block id gets neuron
+
+//original code for testing
+/*
     int* _layerHasReported;
     gpu_allocateInt(&_layerHasReported, 0);
     cudaMemcpy(_layerHasReported, &layerHasReported, sizeof(int), cudaMemcpyHostToDevice);
-
     gpu_calcOutputs<<<nNeurons, 1>>>(gpu_neurons, _layerHasReported);
     cudaDeviceSynchronize();
-
     cudaMemcpy(&layerHasReported, _layerHasReported, sizeof(int), cudaMemcpyDeviceToHost);
+*/
+//edited code by luca
+
+    memcpy(h_aPinned, h_aPageable, sizeof(int));
+    gpu_calcOutputs<<<nNeurons, 1>>>(gpu_neurons, h_bPinned);
+    cudaDeviceSynchronize();
+
+    memcpy(&h_bPinned, h_aPageable, sizeof(int));
+
 }
 
 //*************************************************************************************

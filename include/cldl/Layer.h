@@ -25,6 +25,8 @@
 
 class Layer {
 public:
+
+
     /**
      * Constructor for Layer: it initialises the neurons internally.
      * @param _nNeurons Total number of neurons in the layer
@@ -54,6 +56,15 @@ public:
      * see Neuron::actMethod for different options
      */
     __host__ void initLayer(int _layerIndex, Neuron::weightInitMethod _wim, Neuron::biasInitMethod _bim, Neuron::actMethod _am);
+
+    //Added by luca, Pinned memory generation function
+
+    cudaError_t checkCuda(cudaError_t result);
+
+    __host__ int* generating_pinned_memory_address();
+
+
+
 
     /** Sets the learning rate.
      * @param _learningRate Sets the learning rate for all neurons.
@@ -329,6 +340,13 @@ public:
     __host__ void printLayer();
 
 public:
+    /**Added by Luca
+    *constant variable to store the pageable and pinned memory locations
+    */
+
+    int *h_aPageable, *h_bPageable;   
+    int *h_aPinned, *h_bPinned;
+
     // initialisation:
     int nNeurons = 0;
     int nInputs = 0;

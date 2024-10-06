@@ -94,7 +94,7 @@ using namespace std;
 
 
 //Setting Learning Rate
-        net -> setLearningRate(0.0001);
+        net -> setLearningRate(0.001);
 
 
 
@@ -139,7 +139,8 @@ using namespace std;
 	        double input_signal;		
 	        if (fscanf(finput,"%lf\n",&input_signal)<1) break;
 	        double ref_noise = sin(2*M_PI/20*i);
-
+        
+            input_signal/=1000;
 //Updating the inputs to the network
             for(int i = nInputs-1;i>0;i--){
                 Array_of_0s_for_initial_inputs[i] = Array_of_0s_for_initial_inputs[i-1];
