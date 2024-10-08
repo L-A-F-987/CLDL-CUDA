@@ -30,7 +30,7 @@ using namespace std;
 
 
 //setting up initial inputs
-    const int nInputs = 1;
+    const int nInputs = 200;
 
     double Array_of_0s_for_initial_inputs[nInputs];
 
@@ -43,14 +43,17 @@ using namespace std;
 
 
 
+
 //Opening the .dat file and the output file
 //in the final program this should be replaced with the mic inputs
         char *file="/home/luca/Documents/CLDL-CUDA/ecg_tests/ecg50hz.dat";
         FILE *finput = fopen(file,"rt");
-	    FILE *foutput = fopen("ecg_filtered.dat","wt");
+	FILE *foutput = fopen("ecg_filtered.dat","wt");
+
+
 
 //All files to store how long it takes for various gpu functions
-        FILE *f_gpu_time_per_sample = fopen("gpu_time_taken_per_sample.txt","wt");
+        FILE *f_gpu_time_per_sample = fopen("edited_200_gpu_time_taken_per_sample.txt","wt");
 
         FILE *f_gpu_time_per_input_update = fopen("gpu_time_taken_per_input_update.txt","wt");
 
@@ -120,7 +123,7 @@ using namespace std;
 
         auto start = std::chrono::high_resolution_clock::now();
 
-
+    
         for(int i=0;;i++) 
         {
 //timer for gpu 
@@ -187,7 +190,6 @@ using namespace std;
             auto gpu_time_taken_per_weight_update_total = std::chrono::high_resolution_clock::now() - gpu_time_taken_per_weight_update_start;
 
 
-
             auto gpu_timer_1_sample_time = std::chrono::high_resolution_clock::now() - gpu_timer_1_sample_input;
 
 //printing to files
@@ -213,20 +215,22 @@ using namespace std;
             elapsed).count();
 
     
-    std::cout<<"Time Taken:     "<<microseconds_taken<<"µs\n";
+        std::cout<<"Time Taken:     "<<microseconds_taken<<"µs\n";
 
-    fclose(finput);
-	fclose(foutput);
-    fclose(f_gpu_time_per_sample);
-    fclose(f_gpu_time_per_input_update);
-    fclose(f_gpu_time_per_error_update);
-    fclose(f_gpu_time_per_input_prop);
-    fclose(f_gpu_time_per_error_prop);
 
+
+        fclose(f_gpu_time_per_sample);
+        fclose(f_gpu_time_per_input_update);
+        fclose(f_gpu_time_per_error_update);
+        fclose(f_gpu_time_per_input_prop);
+        fclose(f_gpu_time_per_error_prop);
+
+        fclose(finput);
+        fclose(foutput);
 //fprintf(stderr,"Written the filtered ECG to 'ecg_filtered.dat'\n");
 
 
-    std::cout<<"Made it to the End :)\n\n\n";
-   
+        std::cout<<"Made it to the End :)\n\n\n";
+    
 
 }
