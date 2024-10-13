@@ -196,6 +196,13 @@ __host__ Layer::~Layer(){
     cudaFree(gpu_inputs);
     cudaFree(gpu_neurons);
 
+//added by Luca 
+//freeing some of the memory that was not freed in the original program
+    cudaFreeHost(gpu_inputs);
+    cudaFreeHost(gpu_weights);
+    cudaFreeHost(gpu_neurons);
+    cudaFreeHost(gpu_sumlist);
+
 //Added by Luca
 //Freeing Pinned and Pagable Memory
     cudaFreeHost(h_aPinned);
@@ -294,8 +301,11 @@ __host__ void Layer::calcOutputs(){
 */
 //edited code by luca
 
+//change is that memcpy is used in place of cudaMemcpy before and after the gpu_calcOutput, also removed the allocate
+
     memcpy(h_aPinned, h_aPageable, sizeof(int));
-    gpu_calcOutputs<<<nNeurons, 1>>>(gpu_neurons, h_bPinned);
+    
+    gpu_calcOutputs<<<nNeurons,1>>>(gpu_neurons, h_bPinned);
     cudaDeviceSynchronize();
 
     memcpy(&h_bPinned, h_aPageable, sizeof(int));
