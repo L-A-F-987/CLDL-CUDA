@@ -335,12 +335,12 @@ __host__ void Layer::calcOutputs(){
     memcpy(h_aPinned, h_aPageable, sizeof(int));
 
     layer_set_sum_zero<<<nNeurons,1>>>(gpu_neurons);
-    cudaDeviceSynchronize();
+    //cudaDeviceSynchronize();
     gpu_calcOutputs<<<nNeurons,128>>>(gpu_neurons,h_bPinned);
-    cudaDeviceSynchronize();
+    //cudaDeviceSynchronize();
     //gpu_sumTempArray<<<nNeurons,1>>>(gpu_neurons);
     sum_reduction<<<nNeurons,128>>>(gpu_neurons);
-    cudaDeviceSynchronize();
+    //cudaDeviceSynchronize();
     gpu_apply_activation_to_output<<<nNeurons,1>>>(gpu_neurons,h_bPinned);
     memcpy(&h_bPinned, h_aPageable, sizeof(int));
     
