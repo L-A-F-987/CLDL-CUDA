@@ -11,7 +11,10 @@
 //*************************************************************************************
 
 __host__ Neuron::Neuron(int _nInputs)
-{
+{   
+    cudaMalloc(&array_for_dot_product_sum,128*sizeof(double));
+
+
     // initialisation
     gpu_allocateInt(&nInputs, _nInputs);
     gpu_allocateInt(&myLayerIndex, 0);
@@ -20,6 +23,7 @@ __host__ Neuron::Neuron(int _nInputs)
     gpu_allocateDouble(&learningRate, 0.0);
 
     gpu_allocateInt(&iHaveReported, 0);
+
 
     // forward propagation of inputs
     cudaMalloc((void**)&inputs, sizeof(double)*_nInputs);
@@ -70,9 +74,16 @@ __host__ Neuron::Neuron(int _nInputs)
 
     //cout << "neuron" << endl;
 
+
+
 }
 
 __host__ Neuron::~Neuron(){
+
+    //added by luca 
+    cudaFree(array_for_dot_product_sum);
+
+
     //initialisation
     cudaFree(nInputs);
     cudaFree(learningRate);
@@ -221,11 +232,12 @@ __host__ void Neuron::propInputs(int _index,  double _value){
 __device__ void device_calcOutput(Neuron* n){
     __shared__ double _value[1024];
     int nInputs = *(n->nInputs);
-    device_dotProduct((*n).inputs, (*n).weights, _value, (*n).sum, nInputs);
+    device_dotProduct((*n).inputs, (*n).weights, _value, (*n).sum, nInputs,(*n).array_for_dot_product_sum);
 }
 
 __device__ void device_calcOutputCont(Neuron* n, int* _layerHasReported){
-    if (threadIdx.x == 0) {
+    //if (threadIdx.x == 0) {
+
         if (*(*n).myLayerIndex == 0){
             *(*n).sum = *(*n).sum * 0.01;
         }
@@ -236,8 +248,77 @@ __device__ void device_calcOutputCont(Neuron* n, int* _layerHasReported){
             *(*n).iHaveReported = 1;
         }
         *_layerHasReported = *(*n).iHaveReported;
-    }
+    //}
 }
+
+//added by luca 
+
+__device__ void warpReduce(double* shmem_ptr, int t) {
+	shmem_ptr[t] += shmem_ptr[t + 32];
+	shmem_ptr[t] += shmem_ptr[t + 16];
+	shmem_ptr[t] += shmem_ptr[t + 8];
+	shmem_ptr[t] += shmem_ptr[t + 4];
+	shmem_ptr[t] += shmem_ptr[t + 2];
+	shmem_ptr[t] += shmem_ptr[t + 1];
+}
+
+__device__ void parallelReduction(Neuron* n){
+
+    double* array = (*n).array_for_dot_product_sum;
+    __shared__ double partial_sum[128];
+    int idx = threadIdx.x;
+    
+    partial_sum[idx] = array[idx];
+	__syncthreads();
+
+    for (int s = 128 / 2; s > 0; s >>= 1) {
+		// Each thread does work unless it is further than the stride
+		if (threadIdx.x < s) {
+			partial_sum[threadIdx.x] += partial_sum[threadIdx.x + s];
+		}
+		__syncthreads();
+	}
+      __syncthreads();
+    // Let the thread 0 for this block write it's result to main memory
+	// Result is inexed by this block
+	if (threadIdx.x == 0) {
+		double total = partial_sum[0];
+        *(*n).sum = total;
+	}
+    
+
+}
+
+__device__ void device_sum_tempArray(Neuron* n){
+
+    //variable for final value
+    double total = 0.0;
+
+    //array of temp values
+    double* array = (*n).array_for_dot_product_sum;
+
+    //threadIdx
+    int idx = threadIdx.x;
+
+    //nInputs
+    int nelements = 128;
+    int nInputs = *(*n).nInputs;
+
+    if(nInputs<128){
+        nelements = nInputs;
+    }
+
+    for(int i = 0;i<nelements;i++){
+        total +=  array[i]; 
+    }  
+
+    *(*n).sum = total;
+
+
+
+}
+
+
 
 //int Neuron::calcOutput(int _layerHasReported){
 //    sum=0;
@@ -286,7 +367,7 @@ __host__ void Neuron::propErrorForward(int _index, double _value){
 __device__ void device_calcForwardError(Neuron* n){
     __shared__ double _value[1024];
     int nInputs = *(n->nInputs);
-    device_dotProduct((*n).inputErrors,(*n).weights, _value, (*n).calcForwardOutput, nInputs);
+    device_dotProduct((*n).inputErrors,(*n).weights, _value, (*n).calcForwardOutput, nInputs,(*n).array_for_dot_product_sum);
     device_doActivationPrime((*n).forwardError, (*n).sum, (*n).actMet);
     *(*n).forwardError = *(*n).forwardError * *(*n).calcForwardOutput;
 }
@@ -324,8 +405,8 @@ __host__ void Neuron::setBackwardError(double _leadError){
 __device__ void device_setBackwardError(double _leadError, Neuron* n){
     device_doActivationPrime((*n).backwardError, (*n).sum, (*n).actMet);
 //edited by luca so the backward error is just set and not calculated
-    //*(*n).backwardError = *(*n).backwardError * _leadError;
-    *(*n).backwardError =  _leadError;
+    *(*n).backwardError = *(*n).backwardError * _leadError;
+    //*(*n).backwardError =  _leadError;
 }
 
 __global__ void gpu_setBackwardError(double _leadError, Neuron* n){
@@ -550,6 +631,7 @@ __host__ void gpu_allocateDouble(double** pointer, double value){
 //*************************************************************************************
 //device CUDA kernels:
 //*************************************************************************************
+
 __device__ void device_propError(double _value, double* sum, int* actMet, double* errorLocation){
     double output = 0;
     device_doActivationPrime(&output, sum, actMet);
@@ -649,7 +731,16 @@ __global__ void gpu_dotProduct(double* list1, double* list2, double* _value, dou
     }
 }
 
-__device__ void device_dotProduct(double* list1, double* list2, double* _value, double* _target, int arrayLength){
+__device__ void setSum_zero(Neuron* n){
+    double* _sum = (*n).sum;
+    double target = 0.0;
+    *_sum = target;
+}
+
+
+__device__ void device_dotProduct(double* list1, double* list2, double* _value, double* _target, int arrayLength, double* _storageArray){
+
+/*
     int idx = threadIdx.x;
     int stride = 1;
 
@@ -657,19 +748,38 @@ __device__ void device_dotProduct(double* list1, double* list2, double* _value, 
     for (int i = 0; i < arrayLength; i+=1){
         target += list1[i]*list2[i];
     }
+
     *_target = target;
-    _value[idx] = target;
     __syncthreads();
 
-    for (int size = stride/2; size>0; size/=2){
-        if (idx < size){
-            _value[idx] += _value[idx+size];
-        }
-        __syncthreads();
+*/
+
+
+
+    int idx = threadIdx.x;
+    double target = 0.0;
+
+    if(*_target != 0.0){
+    printf("BlockIdx.x: %i\ntarget: %f\n *_target:%f\n\n",blockIdx.x,target,*_target);
     }
-    if (idx == 0){
-        *_target = _value[0];
+
+    for (int i = idx; i < arrayLength; i+=128){
+        target+=list1[i]*list2[i];
+        //if(blockIdx.x == 1 && idx == 1){
+        //printf("target: %f\n*_target: %f\ni: %i\n",target,*_target,i);
+        //}
     }
+
+    double sum = *_target + target;
+    double current_target = *_target;
+    __syncthreads();
+    //*_target += target;
+    _storageArray[idx] = target;
+    __syncthreads();
+
+    //if(blockIdx.x == 1 && idx == 1 && *_target != sum){
+    //printf("BlockIdx.x: %i\ntarget: %f\n *_target:%f\nsum: %f*_target_before: %f\n\n",blockIdx.x,target,*_target,sum,current_target);
+    //}
 }
 
 __global__ void gpu_multiplication(double value, double* output){

@@ -26,7 +26,6 @@
 class Layer {
 public:
 
-
     /**
      * Constructor for Layer: it initialises the neurons internally.
      * @param _nNeurons Total number of neurons in the layer
@@ -63,7 +62,9 @@ public:
 
     __host__ int* generating_pinned_memory_address();
 
+    __host__ void setSum_zero();
 
+    //end of added by luca 
 
 
     /** Sets the learning rate.
@@ -346,6 +347,7 @@ public:
 
     int *h_aPageable, *h_bPageable;   
     int *h_aPinned, *h_bPinned;
+
 
     // initialisation:
     int nNeurons = 0;

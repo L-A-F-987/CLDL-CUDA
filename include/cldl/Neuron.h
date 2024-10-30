@@ -15,6 +15,8 @@ using namespace std;
 class Neuron {
 public:
 
+
+
     /**
      * Constructor for the Neuron class: it initialises a neuron with specific number fo inputs to that neuron
      * @param _nInputs
@@ -127,8 +129,13 @@ public:
     __host__ double getWeightChange();
     __host__ double getWeight(int index);
 
+
 // initialisation:
 public:
+
+    //added by luca to store dot product results
+    double* array_for_dot_product_sum;
+
     int *nInputs;
     double *learningRate;
     int *myLayerIndex;
@@ -215,7 +222,7 @@ __device__ void device_doActivationPrime(double* output, double *_sum, int* actM
 
 
 __global__ void gpu_dotProduct(double* list1, double* list2, double* _value, double* _target, int arrayLength);
-__device__ void device_dotProduct(double* list1, double* list2, double* _value, double* _target, int arrayLength);
+__device__ void device_dotProduct(double* list1, double* list2, double* _value, double* _target, int arrayLength, double* _storageArray);
 
 __device__ void device_calcForwardError(Neuron* n);
 __global__ void gpu_calcForwardError(Neuron* n);
@@ -234,3 +241,20 @@ __global__ void gpu_multiplication(double value, double* output);
 
 __device__ void device_calcOutput(Neuron* n);
 __device__ void device_calcOutputCont(Neuron* n, int* _layerHasReported);
+
+
+//added by luca 
+    //function to allow for sum to be set
+    __device__ void setSum_zero(Neuron* n);
+
+    //added by luca to sum the temp array from dot product
+    __device__ void device_sum_tempArray(Neuron* n);
+
+    __device__ void parallelReduction(Neuron* n);
+
+    __device__ void warpReduce(double* shmem_ptr, int t);
+
+    //end of added by luca
+
+
+
