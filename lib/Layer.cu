@@ -87,18 +87,19 @@ __global__ void gpu_calcErrorWeightProductSum(Neuron* n, int nNeurons, int nInpu
 }*/
 
 __global__ void gpu_calcOutputs(Neuron* neurons, int* layerHasReported){
-    device_calcOutput(&neurons[blockIdx.x]);
+    device_calcOutput(&neurons[blockIdx.x], layerHasReported);
     __syncthreads();
     //device_calcOutputCont(&neurons[blockIdx.x], layerHasReported);
     //__syncthreads();
 }
 
-//added by luca, function for summing temp array 
-
+//added by luca, function for summing temp array (simple non-gpu version)
+/*
 __global__ void gpu_sumTempArray(Neuron* neurons){
     device_sum_tempArray(&neurons[blockIdx.x]);
     __syncthreads();
 }
+*/
 
 //added by luca, not currently used
 __global__ void gpu_apply_activation_to_output(Neuron* neurons, int* layerHasReported){
@@ -114,7 +115,7 @@ __global__ void layer_set_sum_zero(Neuron* neurons){
 //added by luca,sum parallel reduction
 __global__ void sum_reduction(Neuron* neurons){
 
-    parallelReduction(&neurons[blockIdx.x]);
+    //parallelReduction(&neurons[blockIdx.x]);
 
 
 }
@@ -302,7 +303,7 @@ __host__ void Layer::setInputs(double *_inputs) {
     dim3 T = dim3(nInputs, blockYDim);          // 2D block dimensions
     gpu_setInputs<<<B,T>>>(gpu_neurons, gpu_inputs, nNeurons);
 
-    cudaDeviceSynchronize();
+    //cudaDeviceSynchronize();
 }
 
 __host__ void Layer::propInputs(double* _gpu_InputOutputs) {
@@ -312,7 +313,7 @@ __host__ void Layer::propInputs(double* _gpu_InputOutputs) {
     int B = std::ceil(float(nThreads)/blockSize);   // Total number of blocks required
     dim3 T = dim3(nInputs, blockYDim);          // 2D block dimensions
     gpu_setInputs<<<B,T>>>(gpu_neurons, _gpu_InputOutputs, nNeurons);
-    cudaDeviceSynchronize();
+    //cudaDeviceSynchronize();
 }
 
 __host__ void Layer::calcOutputs(){
@@ -339,9 +340,9 @@ __host__ void Layer::calcOutputs(){
     gpu_calcOutputs<<<nNeurons,128>>>(gpu_neurons,h_bPinned);
     //cudaDeviceSynchronize();
     //gpu_sumTempArray<<<nNeurons,1>>>(gpu_neurons);
-    sum_reduction<<<nNeurons,128>>>(gpu_neurons);
+    //sum_reduction<<<nNeurons,128>>>(gpu_neurons);
     //cudaDeviceSynchronize();
-    gpu_apply_activation_to_output<<<nNeurons,1>>>(gpu_neurons,h_bPinned);
+    //gpu_apply_activation_to_output<<<nNeurons,1>>>(gpu_neurons,h_bPinned);
     memcpy(&h_bPinned, h_aPageable, sizeof(int));
     
 }
@@ -420,7 +421,7 @@ __host__ void Layer::updateWeights() {
     int B = std::ceil(float(nThreads)/blockSize);   // Total number of blocks required
     dim3 T = dim3(nInputs, blockYDim);          // 2D block dimensions
     gpu_updateWeights<<<B,T>>>(gpu_neurons, nNeurons);
-    cudaDeviceSynchronize();
+    //cudaDeviceSynchronize();
 }
 
 //*************************************************************************************

@@ -134,7 +134,7 @@ public:
 public:
 
     //added by luca to store dot product results
-    double* array_for_dot_product_sum;
+    //double* array_for_dot_product_sum;
 
     int *nInputs;
     double *learningRate;
@@ -239,7 +239,7 @@ __device__ void device_calcMidError(Neuron *n);
 
 __global__ void gpu_multiplication(double value, double* output);
 
-__device__ void device_calcOutput(Neuron* n);
+__device__ void device_calcOutput(Neuron* n,int* _layerHasReported);
 __device__ void device_calcOutputCont(Neuron* n, int* _layerHasReported);
 
 
@@ -248,9 +248,9 @@ __device__ void device_calcOutputCont(Neuron* n, int* _layerHasReported);
     __device__ void setSum_zero(Neuron* n);
 
     //added by luca to sum the temp array from dot product
-    __device__ void device_sum_tempArray(Neuron* n);
+    //__device__ void device_sum_tempArray(Neuron* n);
 
-    __device__ void parallelReduction(Neuron* n);
+    __device__ void parallelReduction(Neuron* n, double * _array_for_sum);
 
     __device__ void warpReduce(double* shmem_ptr, int t);
 

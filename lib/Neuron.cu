@@ -12,7 +12,7 @@
 
 __host__ Neuron::Neuron(int _nInputs)
 {   
-    cudaMalloc(&array_for_dot_product_sum,128*sizeof(double));
+    //cudaMalloc(&array_for_dot_product_sum,128*sizeof(double));
 
 
     // initialisation
@@ -81,7 +81,7 @@ __host__ Neuron::Neuron(int _nInputs)
 __host__ Neuron::~Neuron(){
 
     //added by luca 
-    cudaFree(array_for_dot_product_sum);
+    //cudaFree(array_for_dot_product_sum);
 
 
     //initialisation
@@ -229,14 +229,20 @@ __host__ void Neuron::propInputs(int _index,  double _value){
 }
 
 
-__device__ void device_calcOutput(Neuron* n){
+__device__ void device_calcOutput(Neuron* n, int* _layerHasReported){
     __shared__ double _value[1024];
     int nInputs = *(n->nInputs);
-    device_dotProduct((*n).inputs, (*n).weights, _value, (*n).sum, nInputs,(*n).array_for_dot_product_sum);
+    __shared__ double _array_for_sum[128];
+    device_dotProduct((*n).inputs, (*n).weights, _value, (*n).sum, nInputs,_array_for_sum);
+    __syncthreads();
+    parallelReduction(n,_array_for_sum);
+    __syncthreads();
+    device_calcOutputCont(n, _layerHasReported);
+
 }
 
 __device__ void device_calcOutputCont(Neuron* n, int* _layerHasReported){
-    //if (threadIdx.x == 0) {
+    if (threadIdx.x == 0) {
 
         if (*(*n).myLayerIndex == 0){
             *(*n).sum = *(*n).sum * 0.01;
@@ -248,7 +254,7 @@ __device__ void device_calcOutputCont(Neuron* n, int* _layerHasReported){
             *(*n).iHaveReported = 1;
         }
         *_layerHasReported = *(*n).iHaveReported;
-    //}
+    }
 }
 
 //added by luca 
@@ -262,9 +268,9 @@ __device__ void warpReduce(double* shmem_ptr, int t) {
 	shmem_ptr[t] += shmem_ptr[t + 1];
 }
 
-__device__ void parallelReduction(Neuron* n){
+__device__ void parallelReduction(Neuron* n,double* _array_for_dot_sum){
 
-    double* array = (*n).array_for_dot_product_sum;
+    double* array = _array_for_dot_sum;
     __shared__ double partial_sum[128];
     int idx = threadIdx.x;
     
@@ -289,6 +295,7 @@ __device__ void parallelReduction(Neuron* n){
 
 }
 
+/*
 __device__ void device_sum_tempArray(Neuron* n){
 
     //variable for final value
@@ -317,7 +324,7 @@ __device__ void device_sum_tempArray(Neuron* n){
 
 
 }
-
+*/
 
 
 //int Neuron::calcOutput(int _layerHasReported){
@@ -366,8 +373,9 @@ __host__ void Neuron::propErrorForward(int _index, double _value){
 
 __device__ void device_calcForwardError(Neuron* n){
     __shared__ double _value[1024];
+    __shared__ double _array_for_sum[128];
     int nInputs = *(n->nInputs);
-    device_dotProduct((*n).inputErrors,(*n).weights, _value, (*n).calcForwardOutput, nInputs,(*n).array_for_dot_product_sum);
+    device_dotProduct((*n).inputErrors,(*n).weights, _value, (*n).calcForwardOutput, nInputs,_array_for_sum);
     device_doActivationPrime((*n).forwardError, (*n).sum, (*n).actMet);
     *(*n).forwardError = *(*n).forwardError * *(*n).calcForwardOutput;
 }
@@ -753,8 +761,6 @@ __device__ void device_dotProduct(double* list1, double* list2, double* _value, 
     __syncthreads();
 
 */
-
-
 
     int idx = threadIdx.x;
     double target = 0.0;
