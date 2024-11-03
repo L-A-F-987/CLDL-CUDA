@@ -230,20 +230,18 @@ __host__ void Neuron::propInputs(int _index,  double _value){
 
 
 __device__ void device_calcOutput(Neuron* n, int* _layerHasReported){
-    __shared__ double _value[1024];
     int nInputs = *(n->nInputs);
     __shared__ double _array_for_sum[128];
-    device_dotProduct((*n).inputs, (*n).weights, _value, (*n).sum, nInputs,_array_for_sum);
+    device_dotProduct((*n).inputs, (*n).weights, (*n).sum, nInputs,_array_for_sum);
     __syncthreads();
     parallelReduction(n,_array_for_sum);
     __syncthreads();
+    if(threadIdx.x ==0){
     device_calcOutputCont(n, _layerHasReported);
-
+    }
 }
 
 __device__ void device_calcOutputCont(Neuron* n, int* _layerHasReported){
-    if (threadIdx.x == 0) {
-
         if (*(*n).myLayerIndex == 0){
             *(*n).sum = *(*n).sum * 0.01;
         }
@@ -254,7 +252,6 @@ __device__ void device_calcOutputCont(Neuron* n, int* _layerHasReported){
             *(*n).iHaveReported = 1;
         }
         *_layerHasReported = *(*n).iHaveReported;
-    }
 }
 
 //added by luca 
@@ -373,9 +370,8 @@ __host__ void Neuron::propErrorForward(int _index, double _value){
 
 __device__ void device_calcForwardError(Neuron* n){
     __shared__ double _value[1024];
-    __shared__ double _array_for_sum[128];
     int nInputs = *(n->nInputs);
-    device_dotProduct((*n).inputErrors,(*n).weights, _value, (*n).calcForwardOutput, nInputs,_array_for_sum);
+    device_dotProduct((*n).inputErrors,(*n).weights, (*n).calcForwardOutput, nInputs,_value);
     device_doActivationPrime((*n).forwardError, (*n).sum, (*n).actMet);
     *(*n).forwardError = *(*n).forwardError * *(*n).calcForwardOutput;
 }
@@ -746,7 +742,7 @@ __device__ void setSum_zero(Neuron* n){
 }
 
 
-__device__ void device_dotProduct(double* list1, double* list2, double* _value, double* _target, int arrayLength, double* _storageArray){
+__device__ void device_dotProduct(double* list1, double* list2, double* _target, int arrayLength, double* _storageArray){
 
 /*
     int idx = threadIdx.x;
@@ -765,29 +761,20 @@ __device__ void device_dotProduct(double* list1, double* list2, double* _value, 
     int idx = threadIdx.x;
     double target = 0.0;
 
-    if(*_target != 0.0){
-    printf("BlockIdx.x: %i\ntarget: %f\n *_target:%f\n\n",blockIdx.x,target,*_target);
-    }
-
     for (int i = idx; i < arrayLength; i+=128){
         target+=list1[i]*list2[i];
-        //if(blockIdx.x == 1 && idx == 1){
-        //printf("target: %f\n*_target: %f\ni: %i\n",target,*_target,i);
-        //}
-    }
 
-    double sum = *_target + target;
-    double current_target = *_target;
+    }
     __syncthreads();
-    //*_target += target;
     _storageArray[idx] = target;
     __syncthreads();
+    
 
-    //if(blockIdx.x == 1 && idx == 1 && *_target != sum){
-    //printf("BlockIdx.x: %i\ntarget: %f\n *_target:%f\nsum: %f*_target_before: %f\n\n",blockIdx.x,target,*_target,sum,current_target);
-    //}
+
 }
 
 __global__ void gpu_multiplication(double value, double* output){
     *output = value * *output;
 }
+
+

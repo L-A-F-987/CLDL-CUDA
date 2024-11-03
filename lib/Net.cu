@@ -85,6 +85,7 @@ __host__ void Net::setWeights(double* _weightsList) {
 __host__ void Net::setInputs(double* _inputs){
     inputs=_inputs;
     layers[0]->setInputs(inputs); //sets the inputs to the first layer only
+
 }
 
 __host__ void Net::propInputs() {
