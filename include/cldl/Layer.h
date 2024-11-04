@@ -60,10 +60,10 @@ public:
 
     cudaError_t checkCuda(cudaError_t result);
 
-    __host__ int* generating_pinned_memory_address();
+    __host__ int* generating_pinned_memory_address(int nInputs);
 
     __host__ void setSum_zero();
-
+    
     //end of added by luca 
 
 
@@ -340,6 +340,9 @@ public:
      */
     __host__ void printLayer();
 
+    //added by luca 
+    __device__ void device_set_First_Layer_Output(double* inputs, int nNeurons,Neuron *n,int* layerHasReported);
+
 public:
     /**Added by Luca
     *constant variable to store the pageable and pinned memory locations
@@ -347,6 +350,11 @@ public:
 
     int *h_aPageable, *h_bPageable;   
     int *h_aPinned, *h_bPinned;
+
+    //pinned and pageable for the inputs 
+
+    double* inputs_a_Pageable;
+    double* inputs_a_Pinned;
 
 
     // initialisation:

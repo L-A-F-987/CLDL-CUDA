@@ -101,23 +101,8 @@ __global__ void gpu_calcErrorWeightProductSum_less_blocks(Neuron* n, int nNeuron
     __shared__ double s[128];
     extern __shared__ double sums[];
     for(int j = tid;j<nNeurons;j+=blockDim.x * gridDim.x){
-        for(int i = threadIdx.x;i<nInputs;i+=128){
-            n[j].ErrorWeightProducts[i] = n[j].weights[i] * (*n[j].backwardError);
-            temp_sum += n[j].ErrorWeightProducts[i];
-        }
-        s[threadIdx.x] = temp_sum;
-        __syncthreads();
-        if(threadIdx.x == 0){
-        double su;
-        for(int i = 0;i<128;i++){
-            su +=s[i];
-        }
-        sumlist[j] = su;
-        }
+        device_calcErrorWeightProductSum_less_blocks(&n[j],nInputs,sumlist,j);
     }
-   
-
-
 }
 
 /*__global__ void gpu_setForwardError(Neuron*n, double _leadForwardError) {
@@ -191,10 +176,11 @@ __global__ void gpu_propErrorBackwards(Neuron *n, double* _sumList, int nNeurons
 }
 
 __global__ void gpu_propErrorBackwards_less_blocks(Neuron *n, double* _sumList, int nNeurons) {
-    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    int tid = blockIdx.x * blockDim.x + threadIdx.x;
     double* sumList = _sumList;
-    if (i<nNeurons)
+    for(int i = tid;i<nNeurons;i+=i+=blockDim.x * gridDim.x){
         device_propErrorBackward(sumList[i], &n[i]);
+        }
 }
 
 __global__ void gpu_updateWeights(Neuron *n, int nNeurons){
@@ -382,19 +368,20 @@ __host__ void Layer::setInputs(double *_inputs) {
 
     
     inputs = _inputs;
-    cudaMemcpy(gpu_inputs, inputs, sizeof(double)*nInputs,cudaMemcpyHostToDevice);
+    inputs_a_Pageable = _inputs;
+    //cudaMemcpy(gpu_inputs, inputs, sizeof(double)*nInputs,cudaMemcpyHostToDevice);
+    memcpy(inputs_a_Pinned,inputs_a_Pageable,sizeof(double)*nInputs);
 
-    /*
-    int nThreads = nInputs * nNeurons;          // Total number of CUDA threads required
-    int blockYDim = MAX_BLOCKSIZE/nInputs;      // Size of a block's Y dimension
-    int blockSize = nInputs * blockYDim;        // Size of required block
-    int B = std::ceil(float(nThreads)/blockSize);   // Total number of blocks required
-    dim3 T = dim3(nInputs, blockYDim);          // 2D block dimensions
-    
-    gpu_setInputs<<<B,T>>>(gpu_neurons, gpu_inputs, nNeurons);
-    */
+    int B;
+    if((nInputs)>1024){
+        B = 8;
+    }
+    else{
+        B = 8 * std::ceil(nInputs/128);
+    }
+    int T = 128;
 
-    gpu_setInputs_less_blocks<<<8,128>>>(gpu_neurons, gpu_inputs, nNeurons);
+    gpu_setInputs_less_blocks<<<8,128>>>(gpu_neurons, inputs_a_Pinned, nNeurons);
 
     //cudaDeviceSynchronize();
 }
@@ -430,6 +417,8 @@ __host__ void Layer::calcOutputs(){
 
     //layer_set_sum_zero<<<nNeurons,1>>>(gpu_neurons);
     //cudaDeviceSynchronize();
+
+    
     gpu_calcOutputs_less_blocks<<<8,128>>>(gpu_neurons,h_bPinned,nNeurons);
     //cudaDeviceSynchronize();
     //gpu_sumTempArray<<<nNeurons,1>>>(gpu_neurons);
@@ -483,6 +472,8 @@ __host__ void Layer::setBackwardError(double _leadBackwardError) {
 }
 
 __host__ double* Layer::calcErrorWeightProductSum() {
+
+    /*
     int nThreads = nInputs * nNeurons;          // Total number of CUDA threads required
     int blockYDim = MAX_BLOCKSIZE/nInputs;      // Size of a block's Y dimension
     int blockSize = nInputs * blockYDim;        // Size of required block
@@ -490,20 +481,20 @@ __host__ double* Layer::calcErrorWeightProductSum() {
     dim3 T = dim3(nInputs, blockYDim);          // 2D block dimensions
     //printf("%d, %d, %d\n", B, nInputs, blockYDim);
     gpu_calcErrorWeightProductSum<<<B,T>>>(gpu_neurons, nNeurons, nInputs, gpu_sumlist);
-    
+    */
 
-    /*
+    
     int B;
-    if(nNeurons>1024){
+    if(nNeurons*nInputs>1024){
         B = 8;
     }
     else{
-        B = 8 * std::floor(nNeurons/128);
+        B = 8 * std::ceil(nNeurons*nInputs/128);
     }
     int T = 128;
 
     int shared_variable_size = sizeof(double)*nNeurons;
-    */
+    
     gpu_calcErrorWeightProductSum<<<B,T>>>(gpu_neurons, nNeurons, nInputs, gpu_sumlist);
     cudaDeviceSynchronize();
     return gpu_sumlist;
@@ -515,12 +506,12 @@ __host__ void Layer::propErrorBackward(double* _sumList) {
         B = 8;
     }
     else{
-        B = 8 * std::floor(nNeurons/128);
+        B = 8 * std::ceil(nNeurons/128);
     }
     int T = 128;
 
-    gpu_propErrorBackwards<<<B,T>>>(gpu_neurons, _sumList, nNeurons);
-    cudaDeviceSynchronize();
+    gpu_propErrorBackwards_less_blocks<<<B,T>>>(gpu_neurons, _sumList, nNeurons);
+    //cudaDeviceSynchronize();
 }
 
 //*************************************************************************************
@@ -539,7 +530,16 @@ __host__ void Layer::updateWeights() {
     gpu_updateWeights<<<B,T>>>(gpu_neurons, nNeurons);
     */
 
-    gpu_updateWeights_less_blocks<<<8,128>>>(gpu_neurons, nNeurons);
+    int B;
+    if((nNeurons*nInputs)>1024){
+        B = 8;
+    }
+    else{
+        B = 8 * std::ceil((nNeurons*nInputs)/128);
+    }
+    int T = 128;
+
+    gpu_updateWeights_less_blocks<<<B,T>>>(gpu_neurons, nNeurons);
     //cudaDeviceSynchronize();
 }
 

@@ -222,7 +222,7 @@ __device__ void device_doActivationPrime(double* output, double *_sum, int* actM
 
 
 __global__ void gpu_dotProduct(double* list1, double* list2, double* _value, double* _target, int arrayLength);
-__device__ void device_dotProduct(double* list1, double* list2, double* _value, double* _target, int arrayLength, double* _storageArray);
+__device__ void device_dotProduct(double* list1, double* list2, double* _target, int arrayLength, double* _storageArray);
 
 __device__ void device_calcForwardError(Neuron* n);
 __global__ void gpu_calcForwardError(Neuron* n);
@@ -253,6 +253,12 @@ __device__ void device_calcOutputCont(Neuron* n, int* _layerHasReported);
     __device__ void parallelReduction(Neuron* n, double * _array_for_sum);
 
     __device__ void warpReduce(double* shmem_ptr, int t);
+
+    //added by luca, functions for errorWeightProductSum
+
+    __device__ void device_calcErrorWeightProductSum_less_blocks(Neuron* n, int nInputs, double* sumlist,int j);
+
+    __device__ void parallelReduction_weights(int j,double* _array_for_dot_sum,double * sumlist);
 
     //end of added by luca
 

@@ -288,9 +288,52 @@ __device__ void parallelReduction(Neuron* n,double* _array_for_dot_sum){
 		double total = partial_sum[0];
         *(*n).sum = total;
 	}
-    
+}
+
+//added by luca, device function to deal with neurons block by block in calcWeightError
+
+
+__device__ void device_calcErrorWeightProductSum_less_blocks(Neuron* n, int nInputs, double* sumlist,int j){
+
+    int idx = threadIdx.x;
+    __shared__ double _array_for_sum[128];
+    double temp_sum = 0.0;
+    for(int i = idx;i<nInputs;i+=128){
+        (*n).ErrorWeightProducts[i] = (*n).weights[i] * (*n).backwardError[i];
+        temp_sum += (*n).ErrorWeightProducts[i];
+    }
+    _array_for_sum[threadIdx.x] = temp_sum;
+    __syncthreads();
+    parallelReduction_weights(j,_array_for_sum,sumlist);
+
 
 }
+
+__device__ void parallelReduction_weights(int j,double* _array_for_dot_sum,double * sumlist){
+
+    double* array = _array_for_dot_sum;
+    __shared__ double partial_sum[128];
+    int idx = threadIdx.x;
+    
+    partial_sum[idx] = array[idx];
+	__syncthreads();
+
+    for (int s = 128 / 2; s > 0; s >>= 1) {
+		// Each thread does work unless it is further than the stride
+		if (threadIdx.x < s) {
+			partial_sum[threadIdx.x] += partial_sum[threadIdx.x + s];
+		}
+		__syncthreads();
+	}
+      __syncthreads();
+    // Let the thread 0 for this block write it's result to main memory
+	// Result is inexed by this block
+	if (threadIdx.x == 0) {
+		double total = partial_sum[0];
+        sumlist[j] = total;
+	}
+}
+
 
 /*
 __device__ void device_sum_tempArray(Neuron* n){
