@@ -67,7 +67,7 @@ int main(int argc, char* argv[]){
 
         //Creating the Network 
         Net *net;
-        net = new Net::Net(nLayers,nNeurons,nInputs);
+        net = new Net(nLayers,nNeurons,nInputs);
 
 
         //Initialises the network with: weights, biases and activation function
