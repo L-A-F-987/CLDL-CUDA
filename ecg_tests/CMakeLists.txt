@@ -7,8 +7,13 @@ add_executable(ecg_test
         ecg_test.cu
 )
 
+add_executable(ecg_test_sampling_rate
+        ecg_test_sampling_rate.cu
+)
+
 
 target_link_libraries(ecg_test PRIVATE CLDL)
+target_link_libraries(ecg_test_sampling_rate PRIVATE CLDL)
 
 
 set(tests_force_shared_crt ON FORCE)

@@ -51,10 +51,6 @@ int main(int argc, char* argv[]){
         FILE *finput_arrived = fopen("ecg_inputs.dat","wt");
         FILE *finput_array =fopen("ecg_input_array.dat","wt");
 
-
-
-
-
         //generating a network to be used
 
         //Filling Neurons_array with some arbitray numbers to test network
@@ -67,10 +63,6 @@ int main(int argc, char* argv[]){
         for(int i = 0; i<= nInputs;i++){
             Array_of_0s_for_initial_inputs[i] = 0;
         }   
-
-
-        
-
 
 
         //Creating the Network 

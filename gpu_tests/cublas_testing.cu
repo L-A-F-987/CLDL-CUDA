@@ -21,7 +21,7 @@ int main(){
   std::cout<<"This program is written to test the processing time of the cublas library\n\n\n";
   
 
-  for(int i = 100;i<30000;i+=500){
+  for(int i = 100;i<5000;i+=100){
 
     std::cout<<"Performing dot product of two vectors of length:  "<<i<<"\n";
 
@@ -66,10 +66,6 @@ int main(){
 
     std::cout<<"Time To Calculate Dot--->"<<total_in_ms<<"ms\n";
     std::cout<<"Number Calculable Per Second--->"<<num_per_sec<<"\n\n";
-
- 
-
-    
     
   }
 

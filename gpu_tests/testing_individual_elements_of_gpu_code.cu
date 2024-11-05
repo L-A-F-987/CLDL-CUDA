@@ -18,7 +18,7 @@ using namespace std;
 
 
 //The nlayers should be an integer of the total number of hidden layers required not including the input layer
-    const int nLayers = 2;
+    const int nLayers = 200;
 
 //Neuron array should hold the number of neurons for each layer, each array element is a
 //single input 
@@ -40,7 +40,7 @@ int main(int argc, char* argv[]){
 
     std::cout<<"Made it to the Start :)\n\n";
 
-    for(int i =1;i<1000;i+=50){
+
 //All files to store how long it takes for various gpu functions
 
         
@@ -143,15 +143,14 @@ int main(int argc, char* argv[]){
 
             fprintf(f_gpu_nInputs_neuron,"%i \n",nInputs_time_total);
 
+
         }
 
 
 // Replicating the dot product code for testing 
 
 
-    //int nInputs = *(output_neuron->nInputs);
-    //double _value[1024] = 0;
-    //device_dotProduct(((output_neuron).inputs, (output_neuron).weights, _value, (output_neuron).sum, nInputs));
+    
     
         fclose(f_prop_inputs);
         fclose(f_calc_output);
@@ -162,4 +161,4 @@ int main(int argc, char* argv[]){
         fclose(f_gpu_dot_product);
     }
 
-}
+

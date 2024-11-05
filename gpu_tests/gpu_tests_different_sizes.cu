@@ -30,7 +30,7 @@ using namespace std;
 
 
 //setting up initial inputs
-    const int nInputs = 200;
+    const int nInputs = 500;
 
     double Array_of_0s_for_initial_inputs[nInputs];
 
@@ -53,7 +53,7 @@ using namespace std;
 
 
 //All files to store how long it takes for various gpu functions
-        FILE *f_gpu_time_per_sample = fopen("edited_200_gpu_time_taken_per_sample.txt","wt");
+        FILE *f_gpu_time_per_sample = fopen("gpu_time_taken_per_sample.txt","wt");
 
         FILE *f_gpu_time_per_input_update = fopen("gpu_time_taken_per_input_update.txt","wt");
 

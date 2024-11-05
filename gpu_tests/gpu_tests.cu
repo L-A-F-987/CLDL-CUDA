@@ -30,7 +30,7 @@ int *nNeurons = Neurons_array;
 
 
 //setting up initial inputs
-const int nInputs = 100;
+const int nInputs = 128;
 
 double Array_of_0s_for_initial_inputs[nInputs];
 
@@ -119,7 +119,6 @@ int main(int argc, char* argv[]){
         double neuron_one_layer_one;
 
         auto start = std::chrono::high_resolution_clock::now();
-
 
         for(int i=0;;i++) 
         {
