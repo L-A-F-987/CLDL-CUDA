@@ -500,6 +500,9 @@ __global__ void gpu_echoErrorBackward(double _nextSum, Neuron* n){
     double nextSum = _nextSum;
     echoErrorBackward(nextSum, n);
 }
+
+
+
 //*************************************************************************************
 //MID propagation of error
 //*************************************************************************************
@@ -604,6 +607,15 @@ __host__ double Neuron::getOutput(){
     double _output=0.0;
     cudaMemcpy(&_output, output, sizeof(double), cudaMemcpyDeviceToHost);
     return _output;
+}
+
+//added by luca 
+
+__host__ double Neuron::getOutput_no_memcpy(double* Pinned,double* Pageable){
+    *Pinned = *output;
+    printf("Pinned: %p",Pinned);
+    //memcpy(&Pageable,Pinned,sizeof(double));
+    return(0);
 }
 
 __host__ double Neuron::getSumOutput(){

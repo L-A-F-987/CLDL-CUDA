@@ -66,6 +66,10 @@ public:
     
     //end of added by luca 
 
+    //added by luca to remove memcpy
+
+    __host__ double getOutput_no_memcpy(int _neuronIndex);
+
 
     /** Sets the learning rate.
      * @param _learningRate Sets the learning rate for all neurons.
@@ -355,6 +359,10 @@ public:
 
     double* inputs_a_Pageable;
     double* inputs_a_Pinned;
+
+    //pinned and pageable for get output 
+    double* get_output_Pageable;
+    double* get_output_Pinned;
 
 
     // initialisation:

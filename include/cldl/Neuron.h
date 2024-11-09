@@ -129,6 +129,9 @@ public:
     __host__ double getWeightChange();
     __host__ double getWeight(int index);
 
+     //added by luca, to remove memcpy from get output
+    __host__ double getOutput_no_memcpy(double* Pinned,double* Pageable);
+
 
 // initialisation:
 public:
@@ -260,7 +263,11 @@ __device__ void device_calcOutputCont(Neuron* n, int* _layerHasReported);
 
     __device__ void parallelReduction_weights(int j,double* _array_for_dot_sum,double * sumlist);
 
+   
+
     //end of added by luca
+
+
 
 
 

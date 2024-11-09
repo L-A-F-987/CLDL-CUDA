@@ -47,6 +47,8 @@ __global__ void gpu_setInputs_less_blocks(Neuron* n, double *list, int nNeurons)
     }
 }
 
+//added by luca, function to integrate mutliple kernel launches into a single launch
+
 __global__ void gpu_setErrorCoeff(Neuron *n, double _globalCoeff, double _backwardsCoeff,
                                   double _midCoeff, double _forwardCoeff,
                                  double _localCoeff, double _echoCoeff, int nNeurons) {
@@ -249,9 +251,13 @@ __host__ int* Layer::generating_pinned_memory_address(int nInputs){
 
     inputs_a_Pageable = (double*)malloc(sizeof(double)*nInputs);
 
+    //getoutputs pageable
+    get_output_Pageable = (double*)malloc(sizeof(double));
+
     checkCuda(cudaMallocHost((void**)&h_aPinned, bytes) ); // host pinned
     checkCuda(cudaMallocHost((void**)&h_bPinned, bytes) ); // host pinned
     checkCuda(cudaMallocHost((void**)&inputs_a_Pinned, sizeof(double)*nInputs));
+    checkCuda(cudaMallocHost((void**)&get_output_Pinned, sizeof(double)));
 
     return(0);
 }
@@ -372,19 +378,12 @@ __host__ void Layer::setInputs(double *_inputs) {
     //cudaMemcpy(gpu_inputs, inputs, sizeof(double)*nInputs,cudaMemcpyHostToDevice);
     memcpy(inputs_a_Pinned,inputs_a_Pageable,sizeof(double)*nInputs);
 
-    int B;
-    if((nInputs)>1024){
-        B = 8;
-    }
-    else{
-        B = 8 * std::ceil(nInputs/128);
-    }
-    int T = 128;
 
-    gpu_setInputs_less_blocks<<<8,128>>>(gpu_neurons, inputs_a_Pinned, nNeurons);
+    gpu_setInputs_less_blocks<<<nInputs,128>>>(gpu_neurons, inputs_a_Pinned, nNeurons);
 
     //cudaDeviceSynchronize();
 }
+
 
 __host__ void Layer::propInputs(double* _gpu_InputOutputs) {
     int nThreads = nInputs * nNeurons;          // Total number of CUDA threads required
@@ -418,13 +417,17 @@ __host__ void Layer::calcOutputs(){
     //layer_set_sum_zero<<<nNeurons,1>>>(gpu_neurons);
     //cudaDeviceSynchronize();
 
+     int B;
+    if(nInputs>9){
+        B = 8;
+    }
+    else{
+        B = 8 * std::ceil(nInputs/8);
+    }
+    int T = 128;
     
-    gpu_calcOutputs_less_blocks<<<8,128>>>(gpu_neurons,h_bPinned,nNeurons);
-    //cudaDeviceSynchronize();
-    //gpu_sumTempArray<<<nNeurons,1>>>(gpu_neurons);
-    //sum_reduction<<<nNeurons,128>>>(gpu_neurons);
-    //cudaDeviceSynchronize();
-    //gpu_apply_activation_to_output<<<nNeurons,1>>>(gpu_neurons,h_bPinned);
+    gpu_calcOutputs_less_blocks<<<nInputs,T>>>(gpu_neurons,h_bPinned,nNeurons);
+
     memcpy(&h_bPinned, h_aPageable, sizeof(int));
     
 }
@@ -569,6 +572,12 @@ __host__ double* Layer::getOutputs(){
 
 __host__ double Layer::getOutput(int _neuronIndex) {
     return (neurons[_neuronIndex].getOutput());
+}
+
+//added by luca
+__host__ double Layer::getOutput_no_memcpy(int _neuronIndex) {
+    neurons[_neuronIndex].getOutput_no_memcpy(get_output_Pinned,get_output_Pageable);
+    return(*get_output_Pageable);
 }
 
 __host__ double Layer::getErrorWeightProductSum(int index) {

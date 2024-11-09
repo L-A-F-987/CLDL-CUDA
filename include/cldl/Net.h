@@ -56,6 +56,8 @@ public:
      * \param _am activation method,
      * see Neuron::actMethod for different options
      */
+
+
     __host__ void initNetwork(Neuron::weightInitMethod _wim, Neuron::biasInitMethod _bim, Neuron::actMethod _am);
 
     /**
@@ -200,6 +202,8 @@ public:
      * @return The value at the output of the chosen neuron
      */
     __host__ double getOutput(int _neuronIndex);
+
+    __host__ double getOutput_no_memcpy(int _neuronIndex);
 
     /**
      * Allows the user to access the weighted sum output of a specific neuron in output layer only

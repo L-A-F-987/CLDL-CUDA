@@ -156,6 +156,12 @@ __host__ double Net::getOutput(int _neuronIndex) {
     return layers[nLayers-1]->getOutput(_neuronIndex);
 }
 
+//added by luca 
+__host__ double Net::getOutput_no_memcpy(int _neuronIndex){
+    return layers[nLayers-1]->getOutput_no_memcpy(_neuronIndex);
+}
+
+
 __host__ void Net::printInitialWeights() {
     FILE* initweights = nullptr;
     initweights = fopen("initial_weights.tsv", "wt");
