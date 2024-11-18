@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include <stdio.h>
@@ -278,6 +279,12 @@ public:
      */
     __host__ void printNetwork();
 
+    //cuda graph code
+    __host__ void cudaGraph_generation_and_launch();
+
+    //added by luca 
+    __host__ double setBackwardError_LMS(double _input_signal);
+
 private:
 
     /**
@@ -344,4 +351,5 @@ private:
      * The error to be propagated locally
      */
     double theLeadLocalError = 0;
+
 };

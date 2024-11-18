@@ -1,3 +1,4 @@
+
 #include "cldl/Neuron.h"
 
 #include <cuda_runtime.h>
@@ -799,20 +800,6 @@ __device__ void setSum_zero(Neuron* n){
 
 __device__ void device_dotProduct(double* list1, double* list2, double* _target, int arrayLength, double* _storageArray){
 
-/*
-    int idx = threadIdx.x;
-    int stride = 1;
-
-    double target = 0.0;
-    for (int i = 0; i < arrayLength; i+=1){
-        target += list1[i]*list2[i];
-    }
-
-    *_target = target;
-    __syncthreads();
-
-*/
-
     int idx = threadIdx.x;
     double target = 0.0;
 
@@ -831,5 +818,3 @@ __device__ void device_dotProduct(double* list1, double* list2, double* _target,
 __global__ void gpu_multiplication(double value, double* output){
     *output = value * *output;
 }
-
-

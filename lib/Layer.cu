@@ -1,4 +1,8 @@
+
 #include "cldl/Layer.h"
+
+//added by luca 
+#include <helper_cuda.h>
 
 #include <stdio.h>
 #include <assert.h>
@@ -46,6 +50,7 @@ __global__ void gpu_setInputs_less_blocks(Neuron* n, double *list, int nNeurons)
         }
     }
 }
+
 
 //added by luca, function to integrate mutliple kernel launches into a single launch
 
@@ -119,13 +124,51 @@ __global__ void gpu_calcOutputs(Neuron* neurons, int* layerHasReported){
 
 //added by luca, gpu_calcOutputs_with less block launches
 
-__global__ void gpu_calcOutputs_less_blocks(Neuron* neurons, int* layerHasReported,int nNeurons){
+__global__ void gpu_calcOutputs_less_blocks(Neuron* neurons, int* layerHasReported, int nNeurons,double* _get_output_array_Pinned,Neuron* neurons_next_layer,int nNeurons_next_layer){
     int tid = blockDim.x * blockIdx.x + threadIdx.x;
     for(int i = tid;i<nNeurons;i+=blockDim.x * gridDim.x){
-        //printf("i:%i",i);
         device_calcOutput(&neurons[i], layerHasReported);
     }
     __syncthreads();
+
+    //adding in the output prop to remove an unneeded kernel launch at the net level
+    //threadIdx 0 selected at random, just to prevent multiple writes to the same mem location
+
+    for(int i = tid;i<nNeurons;i+=blockDim.x * gridDim.x){
+        _get_output_array_Pinned[i] = *neurons[i].output;
+    }
+
+    __syncthreads();
+
+    //attempting to implement updating the next layer's input neuron by neuron instead of all at once
+    //note if confused, the output variable is not actually the output of every neuron but rather the dotProduct output
+    //at a given neuron Index of the next layer
+
+    for(int i = tid;i<nNeurons_next_layer;i+=blockDim.x * gridDim.x){
+        for(int j = threadIdx.x;j<nNeurons;j+=128){
+            neurons_next_layer[i].inputs[j] = _get_output_array_Pinned[j];
+        }
+    }
+
+    __syncthreads();
+
+}   
+
+__global__ void gpu_calcOutputs_less_blocks_final_layer(Neuron* neurons, int* layerHasReported, int nNeurons,double* _get_output_array_Pinned){
+    int tid = blockDim.x * blockIdx.x + threadIdx.x;
+    for(int i = tid;i<nNeurons;i+=blockDim.x * gridDim.x){
+        device_calcOutput(&neurons[i], layerHasReported);
+    }
+    __syncthreads();
+
+    //adding in the output prop to remove an unneeded kernel launch at the net level
+    //threadIdx 0 selected at random, just to prevent multiple writes to the same mem location
+
+    for(int i = tid;i<nNeurons;i+=blockDim.x * gridDim.x){
+        _get_output_array_Pinned[i] = *neurons[i].output;
+    }
+
+
 }   
 
 
@@ -177,13 +220,24 @@ __global__ void gpu_propErrorBackwards(Neuron *n, double* _sumList, int nNeurons
         device_propErrorBackward(sumList[i], &n[i]);
 }
 
+
 __global__ void gpu_propErrorBackwards_less_blocks(Neuron *n, double* _sumList, int nNeurons) {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
     double* sumList = _sumList;
     for(int i = tid;i<nNeurons;i+=i+=blockDim.x * gridDim.x){
         device_propErrorBackward(sumList[i], &n[i]);
         }
+    
+    //updating weights associated with current neurons
+    __syncthreads();
+    for(int i = tid;i<nNeurons;i+=blockDim.x * gridDim.x){
+        for(int j = threadIdx.x;j<nNeurons;j+=128){
+            n[i].weights[j] += (*n[i].learningRate) * n[i].inputs[j] * (*n[i].backwardError);
+        }
+    }
 }
+
+
 
 __global__ void gpu_updateWeights(Neuron *n, int nNeurons){
     int i = threadIdx.x;    //Input index
@@ -204,11 +258,21 @@ __global__ void gpu_updateWeights_less_blocks(Neuron *n, int nNeurons){
     }
 }
 
+__global__ void gpu_updateWeights_first_layer_less_blocks(Neuron *n, int nNeurons){
+    int tid = blockDim.x * blockIdx.x + threadIdx.x;
+    for(int i = tid;i<nNeurons;i+=blockDim.x * gridDim.x){
+        for(int j = threadIdx.x;j<nNeurons;j+=128){
+            n[i].weights[j] += (*n[i].learningRate) * n[i].inputs[j] * (*n[i].backwardError);
+        }
+    }
+}
+
+
 
 __global__ void gpu_getOutputs(Neuron* n, double* _outputs, int nNeurons){
-    int i = blockIdx.x * blockDim.x + threadIdx.x;
-    if (i<nNeurons) {
-        _outputs[i] = *n[i].output;
+   int tid = blockDim.x * blockIdx.x + threadIdx.x;
+    if (tid<nNeurons) {
+        _outputs[tid] = *n[tid].output;
     }
 }
 
@@ -251,13 +315,19 @@ __host__ int* Layer::generating_pinned_memory_address(int nInputs){
 
     inputs_a_Pageable = (double*)malloc(sizeof(double)*nInputs);
 
+
+
     //getoutputs pageable
     get_output_Pageable = (double*)malloc(sizeof(double));
+
+    get_output_array_Pageable = (double*)malloc(sizeof(double)*nNeurons);
 
     checkCuda(cudaMallocHost((void**)&h_aPinned, bytes) ); // host pinned
     checkCuda(cudaMallocHost((void**)&h_bPinned, bytes) ); // host pinned
     checkCuda(cudaMallocHost((void**)&inputs_a_Pinned, sizeof(double)*nInputs));
     checkCuda(cudaMallocHost((void**)&get_output_Pinned, sizeof(double)));
+
+    checkCuda(cudaMallocHost((void**)&get_output_array_Pinned, sizeof(double)*nNeurons));
 
     return(0);
 }
@@ -377,58 +447,64 @@ __host__ void Layer::setInputs(double *_inputs) {
     inputs_a_Pageable = _inputs;
     //cudaMemcpy(gpu_inputs, inputs, sizeof(double)*nInputs,cudaMemcpyHostToDevice);
     memcpy(inputs_a_Pinned,inputs_a_Pageable,sizeof(double)*nInputs);
-
-
-    gpu_setInputs_less_blocks<<<nInputs,128>>>(gpu_neurons, inputs_a_Pinned, nNeurons);
-
-    //cudaDeviceSynchronize();
-}
-
-
-__host__ void Layer::propInputs(double* _gpu_InputOutputs) {
-    int nThreads = nInputs * nNeurons;          // Total number of CUDA threads required
-    int blockYDim = MAX_BLOCKSIZE/nInputs;      // Size of a block's Y dimension
-    int blockSize = nInputs * blockYDim;        // Size of required block
-    int B = std::ceil(float(nThreads)/blockSize);   // Total number of blocks required
-    dim3 T = dim3(nInputs, blockYDim);          // 2D block dimensions
-    gpu_setInputs<<<B,T>>>(gpu_neurons, _gpu_InputOutputs, nNeurons);
-    //cudaDeviceSynchronize();
-}
-
-__host__ void Layer::calcOutputs(){
-
-    //block id gets neuron
-
-//original code for testing
-/*
-    int* _layerHasReported;
-    gpu_allocateInt(&_layerHasReported, 0);
-    cudaMemcpy(_layerHasReported, &layerHasReported, sizeof(int), cudaMemcpyHostToDevice);
-    gpu_calcOutputs<<<nNeurons, 1>>>(gpu_neurons, _layerHasReported);
-    cudaDeviceSynchronize();
-    cudaMemcpy(&layerHasReported, _layerHasReported, sizeof(int), cudaMemcpyDeviceToHost);
-*/
-    //edited code by luca
-
-    //change is that memcpy is used in place of cudaMemcpy before and after the gpu_calcOutput, also removed the allocate
-
-    memcpy(h_aPinned, h_aPageable, sizeof(int));
-
-    //layer_set_sum_zero<<<nNeurons,1>>>(gpu_neurons);
-    //cudaDeviceSynchronize();
-
-     int B;
-    if(nInputs>9){
+    int B;
+    if(nNeurons*nInputs>1024){
         B = 8;
     }
     else{
-        B = 8 * std::ceil(nInputs/8);
+        B = 8 * std::ceil(nNeurons*nInputs/128);
+    }
+    int T = 128;
+
+    gpu_setInputs_less_blocks<<<B,T>>>(gpu_neurons, inputs_a_Pinned, nNeurons);
+
+    //cudaDeviceSynchronize();
+}
+
+
+
+__host__ void Layer::propInputs(double* _gpu_InputOutputs) {
+    
+    int B;
+    if(nNeurons*nInputs>1024){
+        B = 8;
+    }
+    else{
+        B = 8 * std::ceil(nNeurons*nInputs/128);
+    }
+    int T = 128;
+
+    gpu_setInputs_less_blocks<<<B,T>>>(gpu_neurons, _gpu_InputOutputs, nNeurons);
+    //cudaDeviceSynchronize();
+}
+
+__host__ void Layer::calcOutputs(Neuron* gpu_neurons_next_layer,int nNeurons_next_layer){
+
+    int B;
+    if(nNeurons*nInputs>1024){
+        B = 8;
+    }
+    else{
+        B = 8 * std::ceil(nNeurons*nInputs/128);
     }
     int T = 128;
     
-    gpu_calcOutputs_less_blocks<<<nInputs,T>>>(gpu_neurons,h_bPinned,nNeurons);
+    gpu_calcOutputs_less_blocks<<<B,T>>>(gpu_neurons,h_bPinned,nNeurons,get_output_array_Pinned,gpu_neurons_next_layer,nNeurons_next_layer);
+    
+}
 
-    memcpy(&h_bPinned, h_aPageable, sizeof(int));
+__host__ void Layer::calcOutputs_final_layer(){
+
+    int B;
+    if(nNeurons*nInputs>1024){
+        B = 8;
+    }
+    else{
+        B = 8 * std::ceil(nNeurons*nInputs/128);
+    }
+    int T = 128;
+    
+    gpu_calcOutputs_less_blocks_final_layer<<<B,T>>>(gpu_neurons,h_bPinned,nNeurons,get_output_array_Pinned);
     
 }
 
@@ -472,6 +548,22 @@ __host__ void Layer::setBackwardError(double _leadBackwardError) {
     //printf("%d, %d\n", B, T);
     gpu_setBackwardError<<<B,T>>>(gpu_neurons, leadBackwardError, nNeurons);
     cudaDeviceSynchronize();
+}
+
+//added by luca, funtion specific to LMS type applications, error is calculated from the input signal
+__host__ double Layer::setBackwardError_LMS(double input_signal) {
+    leadBackwardError = input_signal-get_output_array_Pinned[0];
+    //printf("%f\n",leadBackwardError);
+    int B = std::ceil(float(nNeurons)/MAX_BLOCKSIZE);   // Total number of blocks required
+    int T = MAX_BLOCKSIZE;
+    if (nNeurons<MAX_BLOCKSIZE){
+        T = nNeurons;
+    }
+    //printf("%d, %d\n", B, T);
+    gpu_setBackwardError<<<B,T>>>(gpu_neurons, leadBackwardError, nNeurons);
+    cudaDeviceSynchronize();
+
+    return leadBackwardError;
 }
 
 __host__ double* Layer::calcErrorWeightProductSum() {
@@ -522,17 +614,6 @@ __host__ void Layer::propErrorBackward(double* _sumList) {
 //*************************************************************************************
 
 __host__ void Layer::updateWeights() {
-
-    /*
-    int nThreads = nInputs * nNeurons;          // Total number of CUDA threads required
-    int blockYDim = MAX_BLOCKSIZE/nInputs;      // Size of a block's Y dimension
-    int blockSize = MAX_BLOCKSIZE;        // Size of required block
-    int B = std::ceil(float(nThreads)/blockSize);   // Total number of blocks required
-    dim3 T = dim3(nInputs, blockYDim);          // 2D block dimensions
-
-    gpu_updateWeights<<<B,T>>>(gpu_neurons, nNeurons);
-    */
-
     int B;
     if((nNeurons*nInputs)>1024){
         B = 8;
@@ -543,6 +624,21 @@ __host__ void Layer::updateWeights() {
     int T = 128;
 
     gpu_updateWeights_less_blocks<<<B,T>>>(gpu_neurons, nNeurons);
+    //cudaDeviceSynchronize();
+}
+
+
+__host__ void Layer::updateWeights_first_layer() {
+    int B;
+    if((nNeurons*nInputs)>1024){
+        B = 8;
+    }
+    else{
+        B = 8 * std::ceil((nNeurons*nInputs)/128);
+    }
+    int T = 128;
+
+    gpu_updateWeights_first_layer_less_blocks<<<B,T>>>(gpu_neurons, nNeurons);
     //cudaDeviceSynchronize();
 }
 
@@ -559,15 +655,19 @@ __host__ int Layer::getnNeurons(){
 }
 
 __host__ double* Layer::getOutputs(){
-    double* _outputs;
-    cudaMalloc(&_outputs, sizeof(double)*nNeurons);
-    int B = std::ceil(float(nNeurons)/MAX_BLOCKSIZE);   // Total number of blocks required
-    int T = MAX_BLOCKSIZE;
-    if (nNeurons<MAX_BLOCKSIZE){
-        T = nNeurons;
+
+    int B;
+    if((nNeurons)>1024){
+        B = 8;
     }
-    gpu_getOutputs<<<B,T>>>(gpu_neurons, _outputs, nNeurons);
-    return _outputs;
+    else{
+        B = 8 * std::ceil((nNeurons)/128);
+    }
+    int T = 128;
+
+    gpu_getOutputs<<<B,T>>>(gpu_neurons, get_output_array_Pinned, nNeurons);
+
+    return get_output_array_Pinned;
 }
 
 __host__ double Layer::getOutput(int _neuronIndex) {
@@ -600,5 +700,6 @@ __host__ void Layer::printWeights(FILE* weights) {
     }
     fprintf(weights,"\n");
 }
+
 
 

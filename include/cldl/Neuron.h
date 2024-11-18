@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include <assert.h>
@@ -266,8 +267,3 @@ __device__ void device_calcOutputCont(Neuron* n, int* _layerHasReported);
    
 
     //end of added by luca
-
-
-
-
-

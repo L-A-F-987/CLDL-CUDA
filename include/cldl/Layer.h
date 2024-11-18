@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include <stdio.h>
@@ -70,6 +71,9 @@ public:
 
     __host__ double getOutput_no_memcpy(int _neuronIndex);
 
+    //added by luca, function to update weights for the first layer
+    __host__ void updateWeights_first_layer();
+
 
     /** Sets the learning rate.
      * @param _learningRate Sets the learning rate for all neurons.
@@ -92,7 +96,7 @@ public:
     /**
      * Demands that all neurons in this layer calculate their output
      */
-    __host__ void calcOutputs();
+    __host__ void calcOutputs(Neuron* gpu_neurons_next_layer,int nNeurons_next_layer);
 
     /**
      * Sets the error to be propagated forward to all neurons in the first hidden layer only
@@ -124,6 +128,9 @@ public:
      * @param _leadError the error to be propagated backward
      */
     __host__ void setBackwardError(double _leadError);
+
+    //added by luca, setBackward error to input - output
+    __host__ double setBackwardError_LMS(double input_signal);
 
     __host__ double* calcErrorWeightProductSum();
 
@@ -345,7 +352,8 @@ public:
     __host__ void printLayer();
 
     //added by luca 
-    __device__ void device_set_First_Layer_Output(double* inputs, int nNeurons,Neuron *n,int* layerHasReported);
+    //calcOutputs function that doesn't include propagation to the next layer
+    __host__ void calcOutputs_final_layer();
 
 public:
     /**Added by Luca
@@ -363,6 +371,11 @@ public:
     //pinned and pageable for get output 
     double* get_output_Pageable;
     double* get_output_Pinned;
+
+    //pinned and pageable for output array
+    double* get_output_array_Pageable;
+    double* get_output_array_Pinned;
+
 
 
     // initialisation:
