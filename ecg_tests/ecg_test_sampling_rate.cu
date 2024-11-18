@@ -16,14 +16,14 @@
 using namespace std; 
 
 //The nlayers should be an integer of the total number of hidden layers required not including the input layer
-const int nLayers = 2;
+const int nLayers = 3;
 
 //Neuron array should hold the number of neurons for each layer, each array element is a
 //single input 
 int nNeurons[nLayers];
 
 //setting up initial inputs
-const int nInputs = 500;
+const int nInputs = 100;
 
 double delay_line[nInputs];
 
@@ -43,8 +43,8 @@ int main(int argc, char* argv[]){
     //Filling Neurons_array with some arbitray numbers to test network
     //Setting the output layer to be of size 1
     nNeurons[0] = nInputs;
-   //nNeurons[1] = nInputs/4;
-    nNeurons[1] = 1;
+    nNeurons[1] = nInputs/4;
+    nNeurons[2] = 1;
 
     //Filling Input array with 0s array 
 
@@ -130,16 +130,16 @@ int main(int argc, char* argv[]){
 	    net ->propInputs();
 
 	    //storing output of the function and calculation error
-	    double canceller = net->getOutput(0);
+	    //double canceller = net->getOutput(0);
 
-	    double error = input_signal - canceller;
+	    //double error = input_signal - canceller;
 
 	    //Setting the backward error and updating weights
-	    net->setBackwardError(error);
+	    double error = net->setBackwardError_LMS(error);
 	    net->propErrorBackward();
-	    net->updateWeights();
+	    //net->updateWeights();
 
-	    fprintf(foutput,"%f %f %f\n",error, input_signal, canceller);
+	    fprintf(foutput,"%f %f \n",error, input_signal);
 	}
 
     auto elapsed = std::chrono::high_resolution_clock::now() - start;

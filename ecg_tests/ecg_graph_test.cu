@@ -138,16 +138,18 @@ int main(int argc, char* argv[]){
 
                 //propegating the sample forwards
                 
-                net ->propInputs();
+                //net ->propInputs();
+
+                net -> cudaGraph_generation_and_launch();
 
                 //storing output of the function and calculating error
-                //output = net->getOutput(0);
+                output = net->getOutput(0);
 
-                //error = input_signal - output;
+                error = input_signal - output;
 
                 //Setting the backward error and updating weights
-
-                error = net->setBackwardError_LMS(input_signal);
+            
+                net->setBackwardError(error);
 
                 //std::cout<<output_layer->getBackwardError(0)<<" ,"<<error<<"\n";
 
@@ -155,7 +157,7 @@ int main(int argc, char* argv[]){
 
                 net->propErrorBackward();
 
-                //net ->updateWeights();
+                net ->updateWeights();
 
             
                 //printf("%p  other value is %p #n",pointer_to_array_of_0s,Array_of_0s_for_initial_inputs);
