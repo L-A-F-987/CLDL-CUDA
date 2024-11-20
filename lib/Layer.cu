@@ -1,8 +1,6 @@
 
 #include "cldl/Layer.h"
 
-//added by luca 
-#include <helper_cuda.h>
 
 #include <stdio.h>
 #include <assert.h>

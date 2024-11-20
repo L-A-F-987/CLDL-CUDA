@@ -40,6 +40,3 @@ find_package(Threads)
 
 target_link_libraries(CLDL curand ${CMAKE_THREAD_LIBS_INIT})
 
-target_include_directories(CLDL
-        PUBLIC
-        /usr/local/cuda-10.2/samples/common/inc)
