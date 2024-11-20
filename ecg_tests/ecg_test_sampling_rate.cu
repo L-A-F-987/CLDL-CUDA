@@ -44,7 +44,7 @@ int main(int argc, char* argv[]){
     //Setting the output layer to be of size 1
     nNeurons[0] = nInputs;
     nNeurons[1] = nInputs/4;
-    nNeurons[2] = 1;
+    nNeurons[nLayers-1] = 1;
 
     //Filling Input array with 0s array 
 
@@ -135,7 +135,7 @@ int main(int argc, char* argv[]){
 	    //double error = input_signal - canceller;
 
 	    //Setting the backward error and updating weights
-	    double error = net->setBackwardError_LMS(error);
+	    double error = net->setBackwardError_LMS(input_signal);
 	    net->propErrorBackward();
 	    //net->updateWeights();
 

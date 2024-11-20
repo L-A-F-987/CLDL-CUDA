@@ -105,6 +105,7 @@ __host__ void Net::propInputs() {
     layers[nLayers-1]->calcOutputs_final_layer();
 }
 
+
 //*************************************************************************************
 //back propagation of error
 //*************************************************************************************
@@ -119,7 +120,6 @@ __host__ double Net::setBackwardError_LMS(double _input_signal){
     /* this is only for the final layer */
     double input_signal = _input_signal;
     double error = layers[nLayers-1]->setBackwardError_LMS(input_signal);
-
     return(error);
 
 }
@@ -196,110 +196,4 @@ __host__ void Net::printWeights() {
     }
     fclose(weights);
 }
-
-//added by luca gpu_set_inputs wth less blocks to launch, moved from layer level to test the graphs
-
-__global__ void gpu_setInputs_less_blocks_net_level(Neuron* n, double *list, int nNeurons) {
-    int tid = blockDim.x * blockIdx.x + threadIdx.x;
-    for(int i = tid;i<nNeurons;i+=blockDim.x * gridDim.x){
-        for(int j = threadIdx.x;j<nNeurons;j+=128){
-            n[i].inputs[j] = list[j];
-        }
-    }
-}
-
-__global__ void gpu_calcOutputs_less_blocks_net_level(Neuron* neurons, int* layerHasReported, int nNeurons){
-    int tid = blockDim.x * blockIdx.x + threadIdx.x;
-    for(int i = tid;i<nNeurons;i+=blockDim.x * gridDim.x){
-        device_calcOutput(&neurons[i], layerHasReported);
-    }
-    __syncthreads();
-}   
-
-__global__ void gpu_getOutputs_net_level(Neuron* n, double* _outputs, int nNeurons){
-    int tid = blockDim.x * blockIdx.x + threadIdx.x;
-    if (tid<nNeurons) {
-        _outputs[tid] = *n[tid].output;
-    }
-}
-//added by luca
-//creating graph, see: https://developer.nvidia.com/blog/cuda-10-features-revealed/ for inspiration behind this
-
-__host__ void Net::cudaGraph_generation_and_launch(){
-
-    cudaStream_t stream1, stream2,streamForGraph;
-    cudaEvent_t calcOutputs,getOutputs,set_inputs ;
-    cudaGraphExec_t instance;
-    cudaGraph_t graph;
-
-    checkCudaErrors(cudaStreamCreate(&stream1));
-    checkCudaErrors(cudaStreamCreate(&streamForGraph));
-
-    checkCudaErrors(cudaStreamBeginCapture(stream1, cudaStreamCaptureModeGlobal));
-
-    
-
-    //adding in prop Inputs
-
-    for(int i=0;i<nLayers-1;i++){
-
-    //getting the number of inputs for the given layer
-        int nInputs_i =  layers[i]->nInputs;
-
-        int B;
-
-        if(nInputs_i>9){
-            B = 8;
-        }
-        else{
-            B = 8 * std::ceil(nInputs_i/8);
-        }
-        int T = 128;
-
-        // Calculates the output to the given layer using a layer function
-        gpu_calcOutputs_less_blocks_net_level<<<B, T, 0, stream1>>>(layers[i]->gpu_neurons,layers[i]->h_bPinned,layers[i]->nNeurons);
-        cudaEventRecord(calcOutputs, stream1);
-
-
-        //getting the output from layer i
-
-
-        //cudaEventRecord(propInputs_Loop, stream1);
-        cudaStreamWaitEvent(stream2, calcOutputs,0);
-        gpu_getOutputs_net_level<<<B, T, 0, stream2>>>(layers[i]->gpu_neurons, layers[i]->get_output_array_Pinned, layers[i]->nNeurons);
-        cudaEventRecord(getOutputs, stream2);
-
-        //props the inputs to the next layers
-        int nInputs_i_p_1 =  layers[i+1]->nInputs;
-
-
-        if(nInputs_i_p_1>9){
-            B = 8;
-        }
-        else{
-            B = 8 * std::ceil(nInputs_i_p_1/8);
-        }
-        cudaStreamWaitEvent(stream1, getOutputs,0);
-        gpu_setInputs_less_blocks_net_level<<<B, T, 0, stream1>>>(layers[i+1]->gpu_neurons,layers[i]->get_output_array_Pinned,nInputs_i_p_1);
-        cudaEventRecord(set_inputs, stream1);
-
-        
-        }
-
-    //cudaEventRecord(propInputs_Loop, stream1);
-    gpu_calcOutputs_less_blocks_net_level<<<8, 128, 0, stream1>>>(layers[nLayers-1]->gpu_neurons,layers[nLayers-1]->h_bPinned,layers[nLayers-1]->nNeurons);
-    
-
-    checkCudaErrors(cudaStreamEndCapture(stream1, &graph));
-
-    cudaGraphInstantiate(&instance, graph, NULL, NULL, 0);
-
-    cudaGraphLaunch(instance, streamForGraph);
-
-    checkCudaErrors(cudaGraphDestroy(graph));
-
-    
-  }
-
-
 

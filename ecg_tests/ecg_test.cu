@@ -40,7 +40,6 @@ int main(int argc, char* argv[]){
 
         std::cout<<"Made it to the Start :)\n\n";
 
-
         //Opening the .dat file and the output file
         //in the final program this should be replaced with the mic inputs
         char *file="../../ecg_tests/ecg50hz.dat";

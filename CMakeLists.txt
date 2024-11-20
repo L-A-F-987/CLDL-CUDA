@@ -5,11 +5,11 @@ project(CLDL LANGUAGES CXX CUDA)
 
 add_subdirectory(gpu_tests)
 
-add_subdirectory(gtest)
-
 add_subdirectory(ecg_tests)
 
 add_subdirectory(wav_tests)
+
+add_subdirectory(audio_in_and_out_testing)
 
 enable_testing()
 
@@ -22,6 +22,7 @@ add_library(CLDL STATIC
         lib/Layer.cu
         lib/Net.cu)
 
+
 set_target_properties(
 		CLDL
         PROPERTIES
@@ -33,6 +34,12 @@ target_include_directories(CLDL
         PUBLIC
         include/)
 
+
+
 find_package(Threads)
 
 target_link_libraries(CLDL curand ${CMAKE_THREAD_LIBS_INIT})
+
+target_include_directories(CLDL
+        PUBLIC
+        /usr/local/cuda-10.2/samples/common/inc)

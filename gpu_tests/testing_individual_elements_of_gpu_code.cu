@@ -29,7 +29,7 @@ using namespace std;
 
 
 //setting up initial inputs
-    const int nInputs = 1;
+    const int nInputs = 500;
 
     double Array_of_0s_for_initial_inputs[nInputs];
 
@@ -44,6 +44,7 @@ int main(int argc, char* argv[]){
 //All files to store how long it takes for various gpu functions
 
         
+
         FILE *f_prop_inputs = fopen("prop_inputs.txt","wt");
         FILE *f_calc_output = fopen("Calc_outputs.txt","wt");
         FILE *f_allocate_input = fopen("allocate_int.txt","wt");
@@ -104,9 +105,6 @@ int main(int argc, char* argv[]){
 
 //getting the time for calculating the outputs
             auto calc_outputs_start = std::chrono::high_resolution_clock::now();
-
-            input_layer->calcOutputs();
-
             auto calc_outputs_total = std::chrono::high_resolution_clock::now() - calc_outputs_start;
 
             fprintf(f_calc_output,"%i \n",calc_outputs_total);

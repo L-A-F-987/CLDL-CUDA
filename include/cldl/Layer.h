@@ -354,6 +354,7 @@ public:
     //added by luca 
     //calcOutputs function that doesn't include propagation to the next layer
     __host__ void calcOutputs_final_layer();
+    
 
 public:
     /**Added by Luca

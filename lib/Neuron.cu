@@ -4,6 +4,7 @@
 #include <cuda_runtime.h>
 #include <cstdint>
 #include <iostream>
+#include <stdio.h>
 
 
 
@@ -294,19 +295,36 @@ __device__ void parallelReduction(Neuron* n,double* _array_for_dot_sum){
 //added by luca, device function to deal with neurons block by block in calcWeightError
 
 
-__device__ void device_calcErrorWeightProductSum_less_blocks(Neuron* n, int nInputs, double* sumlist,int j){
+__device__ void device_calcErrorWeightProductSum_less_blocks(Neuron* n, int nNeurons, double* sumlist,int j){
+
+    //want to update sumlist[nInputs] by the new error calculated for neuron[j]
 
     int idx = threadIdx.x;
     __shared__ double _array_for_sum[128];
-    double temp_sum = 0.0;
-    for(int i = idx;i<nInputs;i+=128){
-        (*n).ErrorWeightProducts[i] = (*n).weights[i] * (*n).backwardError[i];
-        temp_sum += (*n).ErrorWeightProducts[i];
-    }
-    _array_for_sum[threadIdx.x] = temp_sum;
-    __syncthreads();
-    parallelReduction_weights(j,_array_for_sum,sumlist);
 
+    double temp_sum = 0.0;
+    _array_for_sum[idx] = 0.0;
+    __syncthreads();
+
+    for(int i = idx;i<nNeurons;i+=128){
+        n[i].ErrorWeightProducts[j] = n[i].weights[j] * (*n[i].backwardError);
+        temp_sum += n[i].ErrorWeightProducts[j];
+    }
+   
+    _array_for_sum[idx] = temp_sum;
+
+    __syncthreads();
+
+    if(idx ==10 ){
+        double total = 0.0;
+        for(int i = 0;i<128;i++){
+            total += _array_for_sum[i];
+        }
+        sumlist[j] = total;
+        printf("total: %f\n",sumlist[j]);
+    }
+    
+    parallelReduction_weights(j,_array_for_sum,sumlist);
 
 }
 

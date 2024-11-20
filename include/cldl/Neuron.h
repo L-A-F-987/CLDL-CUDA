@@ -260,7 +260,7 @@ __device__ void device_calcOutputCont(Neuron* n, int* _layerHasReported);
 
     //added by luca, functions for errorWeightProductSum
 
-    __device__ void device_calcErrorWeightProductSum_less_blocks(Neuron* n, int nInputs, double* sumlist,int j);
+    __device__ void device_calcErrorWeightProductSum_less_blocks(Neuron* n, int nNeurons, double* sumlist,int j);
 
     __device__ void parallelReduction_weights(int j,double* _array_for_dot_sum,double * sumlist);
 

@@ -30,7 +30,7 @@ int *nNeurons = Neurons_array;
 
 
 //setting up initial inputs
-const int nInputs = 128;
+const int nInputs = 400;
 
 double Array_of_0s_for_initial_inputs[nInputs];
 
@@ -40,25 +40,33 @@ double *pointer_to_array_of_0s = Array_of_0s_for_initial_inputs;
 int main(int argc, char* argv[]){
 
     std::cout<<"Made it to the Start :)\n\n";
-
-
-
+        
         //Opening the .dat file and the output file
         //in the final program this should be replaced with the mic inputs
-        char *file="/home/luca/Documents/CLDL-CUDA/ecg_tests/ecg50hz.dat";
+        char *file="../../ecg_tests/ecg50hz.dat";
+        
+        char sample_file[70];
+
+        snprintf(sample_file,70,"./per_sample_outputs/gpu_time_taken_per_sample_original_%i.txt",nInputs);
+
+        std::cout<<sample_file;
+
+
         FILE *finput = fopen(file,"rt");
 	FILE *foutput = fopen("ecg_filtered.dat","wt");
 
-        //All files to store how long it takes for various gpu functions
-        FILE *f_gpu_time_per_sample = fopen("gpu_time_taken_per_sample.txt","wt");
+        //All files to store how long it takes for various gpu function
 
-        FILE *f_gpu_time_per_input_update = fopen("gpu_time_taken_per_input_update.txt","wt");
 
-        FILE *f_gpu_time_per_input_prop = fopen("gpu_time_taken_per_input_prop.txt","wt");
+        FILE *f_gpu_time_per_sample = fopen(sample_file,"wt");
 
-        FILE *f_gpu_time_per_error_update = fopen("gpu_time_taken_per_error_update.txt","wt");
+        //FILE *f_gpu_time_per_input_update = fopen("gpu_time_taken_per_input_update.txt","wt");
 
-        FILE *f_gpu_time_per_error_prop = fopen("gpu_time_taken_per_error_prop.txt","wt");
+        //FILE *f_gpu_time_per_input_prop = fopen("gpu_time_taken_per_input_prop.txt","wt");
+
+        //FILE *f_gpu_time_per_error_update = fopen("gpu_time_taken_per_error_update.txt","wt");
+
+        //FILE *f_gpu_time_per_error_prop = fopen("gpu_time_taken_per_error_prop.txt","wt");
 
 
 
@@ -94,9 +102,6 @@ int main(int argc, char* argv[]){
         net->initNetwork(Neuron::W_ONES, Neuron::B_NONE, Neuron::Act_Sigmoid);
 
 
-
-        //Setting all intial inputs to 0
-        net -> setInputs(pointer_to_array_of_0s);
 
 
         //Setting Learning Rate
@@ -148,7 +153,7 @@ int main(int argc, char* argv[]){
                 long long int_gpu_time_taken_input_update_total = std::chrono::duration_cast<std::chrono::microseconds>(
                 gpu_time_taken_input_update_total).count();
 
-                fprintf(f_gpu_time_per_input_update,"%i \n",int_gpu_time_taken_input_update_total);
+                //fprintf(f_gpu_time_per_input_update,"%i \n",int_gpu_time_taken_input_update_total);
     
 
 
@@ -162,16 +167,9 @@ int main(int argc, char* argv[]){
     
 
 
-                //storing output of the function and calculation error
-                output = net->getOutput(0);
-
-
-                error = ref_noise - output;
-
-
                 //Setting the backward error
                 auto gpu_time_taken_per_update_error_start = std::chrono::high_resolution_clock::now();
-                net->setBackwardError(error);
+                error = net->setBackwardError_LMS(input_signal);
                 auto gpu_time_taken_per_update_error_total = std::chrono::high_resolution_clock::now()- gpu_time_taken_per_update_error_start;
 
 
@@ -192,13 +190,13 @@ int main(int argc, char* argv[]){
                 //printing to files
                 fprintf(foutput,"%f \n",output);
 
-                fprintf(f_gpu_time_per_input_prop,"%i \n",int_gpu_time_taken_input_prop_total);
+                //fprintf(f_gpu_time_per_input_prop,"%i \n",int_gpu_time_taken_input_prop_total);
 
                 fprintf(f_gpu_time_per_sample,"%i \n",gpu_timer_1_sample_time);
 
-                fprintf(f_gpu_time_per_error_update,"%i \n",gpu_time_taken_per_update_error_total);
+                //fprintf(f_gpu_time_per_error_update,"%i \n",gpu_time_taken_per_update_error_total);
 
-                fprintf(f_gpu_time_per_error_prop,"%i \n",gpu_time_taken_per_error_prop_total);
+                //fprintf(f_gpu_time_per_error_prop,"%i \n",gpu_time_taken_per_error_prop_total);
 
     
 
@@ -217,10 +215,10 @@ std::cout<<"Time Taken:     "<<microseconds_taken<<"µs\n";
 fclose(finput);
 fclose(foutput);
 fclose(f_gpu_time_per_sample);
-fclose(f_gpu_time_per_input_update);
-fclose(f_gpu_time_per_error_update);
-fclose(f_gpu_time_per_input_prop);
-fclose(f_gpu_time_per_error_prop);
+//fclose(f_gpu_time_per_input_update);
+//fclose(f_gpu_time_per_error_update);
+//fclose(f_gpu_time_per_input_prop);
+//fclose(f_gpu_time_per_error_prop);
 
 //fprintf(stderr,"Written the filtered ECG to 'ecg_filtered.dat'\n");
 
