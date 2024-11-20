@@ -7,10 +7,6 @@ add_subdirectory(gpu_tests)
 
 add_subdirectory(ecg_tests)
 
-add_subdirectory(wav_tests)
-
-add_subdirectory(audio_in_and_out_testing)
-
 enable_testing()
 
 # nvcc flags
