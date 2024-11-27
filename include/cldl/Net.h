@@ -68,6 +68,15 @@ public:
      */
     __host__ void setLearningRate(double _learningRate);
 
+    //added by luca, single block launch code 
+    __host__ double single_block_launch(double* input_array, double input_signal);
+
+    __host__ void storing_all_neurons_in_array_for_single_block_launch();
+
+    //added by luca 
+    //combining prop and update inputs for LMS mode 
+    __host__ void setInputs_and_prop_lms(double* _inputs);
+
     /**
      * Sets the inputs to the network in each iteration
      * of learning, needs to be placed in an infinite loop.
@@ -279,13 +288,15 @@ public:
      */
     __host__ void printNetwork();
 
-    //cuda graph code
-    __host__ void cudaGraph_generation_and_launch();
 
     //added by luca 
     __host__ double setBackwardError_LMS(double _input_signal);
 
 private:
+
+    //added by luca, array to store all neurons in the network in a single array
+    Neuron* all_Neurons;
+    int* neurons_each_layer;
 
     /**
      * Total number of hidden layers

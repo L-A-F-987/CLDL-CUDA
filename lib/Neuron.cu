@@ -7,6 +7,19 @@
 #include <stdio.h>
 
 
+//check_cuda_function
+inline
+cudaError_t checkCuda(cudaError_t result)
+{
+#if defined(DEBUG) || defined(_DEBUG)
+  if (result != cudaSuccess) {
+    fprintf(stderr, "CUDA Runtime Error: %s\n", 
+            cudaGetErrorString(result));
+    assert(result == cudaSuccess);
+  }
+#endif
+  return result;
+}
 
 //*************************************************************************************
 // constructor de-constructor
@@ -28,7 +41,7 @@ __host__ Neuron::Neuron(int _nInputs)
 
 
     // forward propagation of inputs
-    cudaMalloc((void**)&inputs, sizeof(double)*_nInputs);
+    checkCuda(cudaMallocHost((void**)&inputs, sizeof(double)*_nInputs));
     gpu_allocateDouble(&bias, 0.0);
     gpu_allocateDouble(&sum, 0.0);
     gpu_allocateDouble(&output, 0.0);
@@ -96,7 +109,7 @@ __host__ Neuron::~Neuron(){
     cudaFree(iHaveReported);
 
     // forward propagation of inputs
-    cudaFree(inputs);
+    cudaFreeHost(inputs);
     cudaFree(bias);
     cudaFree(sum);
     cudaFree(output);
@@ -231,15 +244,48 @@ __host__ void Neuron::propInputs(int _index,  double _value){
 }
 
 
+
 __device__ void device_calcOutput(Neuron* n, int* _layerHasReported){
     int nInputs = *(n->nInputs);
     __shared__ double _array_for_sum[128];
     device_dotProduct((*n).inputs, (*n).weights, (*n).sum, nInputs,_array_for_sum);
     __syncthreads();
-    parallelReduction(n,_array_for_sum);
+        parallelReduction(n,_array_for_sum,nInputs);
+
     __syncthreads();
     if(threadIdx.x ==0){
     device_calcOutputCont(n, _layerHasReported);
+    }
+}
+
+
+__device__ void device_calcOutput_using_layer_level_inputs_no_prop(Neuron* n, int* _layerHasReported,double* inputs,double* outputs_current_layer,int neuron_index,int start_idx_for_reduction){
+    int nInputs = *(n->nInputs);
+    __shared__ double _array_for_sum[128];
+    device_dotProduct(inputs, (*n).weights, (*n).sum, nInputs,_array_for_sum);
+    __syncthreads();
+        parallelReduction(n,_array_for_sum,start_idx_for_reduction);
+
+    __syncthreads();
+    if(threadIdx.x ==0){
+    device_calcOutputCont(n, _layerHasReported);
+    outputs_current_layer[neuron_index] = *(*n).output;
+    }
+}
+
+__device__ void device_calcOutput_using_layer_level_inputs(Neuron* n, int* _layerHasReported,double* inputs,double* next_layer_inputs,double * outputs_current_layer,int neuron_index,int start_idx_for_reduction){
+    int nInputs = *(n->nInputs);
+    __shared__ double _array_for_sum[128];
+    device_dotProduct(inputs, (*n).weights, (*n).sum, nInputs,_array_for_sum);
+    __syncthreads();
+    parallelReduction(n,_array_for_sum,start_idx_for_reduction);
+
+    __syncthreads();
+    if(threadIdx.x == 0){
+    device_calcOutputCont(n, _layerHasReported);
+    outputs_current_layer[neuron_index] = *(*n).output;
+    next_layer_inputs[neuron_index] = *(*n).output;
+    //printf("Neuron Index: %i\noutput:%f\nnext_layer_inputs:%f\n\n",neuron_index,*(*n).output,next_layer_inputs[neuron_index]);
     }
 }
 
@@ -258,36 +304,44 @@ __device__ void device_calcOutputCont(Neuron* n, int* _layerHasReported){
 
 //added by luca 
 
-__device__ void warpReduce(double* shmem_ptr, int t) {
-	shmem_ptr[t] += shmem_ptr[t + 32];
-	shmem_ptr[t] += shmem_ptr[t + 16];
-	shmem_ptr[t] += shmem_ptr[t + 8];
-	shmem_ptr[t] += shmem_ptr[t + 4];
-	shmem_ptr[t] += shmem_ptr[t + 2];
-	shmem_ptr[t] += shmem_ptr[t + 1];
-}
-
-__device__ void parallelReduction(Neuron* n,double* _array_for_dot_sum){
+__device__ void parallelReduction(Neuron* n,double* _array_for_dot_sum,int start){
 
     double* array = _array_for_dot_sum;
     __shared__ double partial_sum[128];
     int idx = threadIdx.x;
+
+    int neuron_in_block_being_calculated;
+
+    //effective_idx
+    int e_idx = idx;
+
+    if(start != 1){
+
+        //effectivly can ignore the added part from e_idx as it is removed by the int
+        neuron_in_block_being_calculated = idx/start;
+
+        //calculating effective idx
+        e_idx = idx - neuron_in_block_being_calculated * start;
+    }
+
+    if(e_idx != idx){
+    printf("start:%i\nneuron_being_calculated: %i\nidx:%i\nEffective_idx:%i\n\n",start,neuron_in_block_being_calculated,idx,e_idx);}
     
     partial_sum[idx] = array[idx];
 	__syncthreads();
 
-    for (int s = 128 / 2; s > 0; s >>= 1) {
+    for (int s = start / 2; s > 0; s >>= 1) {
 		// Each thread does work unless it is further than the stride
-		if (threadIdx.x < s) {
-			partial_sum[threadIdx.x] += partial_sum[threadIdx.x + s];
+		if (e_idx < s) {
+			partial_sum[e_idx] += partial_sum[e_idx + s];
 		}
 		__syncthreads();
 	}
       __syncthreads();
     // Let the thread 0 for this block write it's result to main memory
 	// Result is inexed by this block
-	if (threadIdx.x == 0) {
-		double total = partial_sum[0];
+	if (e_idx == 0){
+		double total = partial_sum[e_idx];
         *(*n).sum = total;
 	}
 }
@@ -301,34 +355,28 @@ __device__ void device_calcErrorWeightProductSum_less_blocks(Neuron* n, int nNeu
 
     int idx = threadIdx.x;
     __shared__ double _array_for_sum[128];
-
     double temp_sum = 0.0;
-    _array_for_sum[idx] = 0.0;
-    __syncthreads();
 
-    for(int i = idx;i<nNeurons;i+=128){
+    for(int i = threadIdx.x;i<nNeurons;i+=128){
+        //printf("idx:%i \nj:%i \n",idx,j);
         n[i].ErrorWeightProducts[j] = n[i].weights[j] * (*n[i].backwardError);
         temp_sum += n[i].ErrorWeightProducts[j];
     }
    
     _array_for_sum[idx] = temp_sum;
-
     __syncthreads();
 
-    if(idx ==10 ){
-        double total = 0.0;
-        for(int i = 0;i<128;i++){
-            total += _array_for_sum[i];
-        }
-        sumlist[j] = total;
-        printf("total: %f\n",sumlist[j]);
+   
+    if(idx == 0){
+        
+        parallelReduction_weights(j,_array_for_sum,sumlist,0);
+        //printf("array_for_sum[10]: %f\n",_array_for_sum[10]);
     }
-    
-    parallelReduction_weights(j,_array_for_sum,sumlist);
+    __syncthreads();
 
 }
 
-__device__ void parallelReduction_weights(int j,double* _array_for_dot_sum,double * sumlist){
+__device__ void parallelReduction_weights(int j,double* _array_for_dot_sum,double * sumlist,int s){
 
     double* array = _array_for_dot_sum;
     __shared__ double partial_sum[128];
@@ -337,10 +385,11 @@ __device__ void parallelReduction_weights(int j,double* _array_for_dot_sum,doubl
     partial_sum[idx] = array[idx];
 	__syncthreads();
 
-    for (int s = 128 / 2; s > 0; s >>= 1) {
+    for (int start = s / 2 ; start > 0; start >>= 1) {
 		// Each thread does work unless it is further than the stride
+        printf("s: %i\n",start);
 		if (threadIdx.x < s) {
-			partial_sum[threadIdx.x] += partial_sum[threadIdx.x + s];
+			partial_sum[threadIdx.x] += partial_sum[threadIdx.x + start];
 		}
 		__syncthreads();
 	}
@@ -350,6 +399,7 @@ __device__ void parallelReduction_weights(int j,double* _array_for_dot_sum,doubl
 	if (threadIdx.x == 0) {
 		double total = partial_sum[0];
         sumlist[j] = total;
+        //printf("sumlist[j]: %f\ntotal: %f\n_array_for_sum[0]: %f\n",sumlist[j],total,_array_for_dot_sum[0]);
 	}
 }
 
@@ -470,9 +520,7 @@ __host__ void Neuron::setBackwardError(double _leadError){
 
 __device__ void device_setBackwardError(double _leadError, Neuron* n){
     device_doActivationPrime((*n).backwardError, (*n).sum, (*n).actMet);
-//edited by luca so the backward error is just set and not calculated
     *(*n).backwardError = *(*n).backwardError * _leadError;
-    //*(*n).backwardError =  _leadError;
 }
 
 __global__ void gpu_setBackwardError(double _leadError, Neuron* n){
@@ -828,9 +876,6 @@ __device__ void device_dotProduct(double* list1, double* list2, double* _target,
     __syncthreads();
     _storageArray[idx] = target;
     __syncthreads();
-    
-
-
 }
 
 __global__ void gpu_multiplication(double value, double* output){

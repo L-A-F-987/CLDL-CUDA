@@ -41,6 +41,10 @@ __host__ Net::Net(int _nLayers, int* _nNeurons, int _nInputs) {
     nOutputs=layers[nLayers-1]->getnNeurons();
     errorGradient= new double[nLayers];
 
+
+    //added by luca, used to store all neurons
+    cudaMalloc( (void**) &all_Neurons, sizeof(Neuron)*nNeurons);
+    cudaMalloc( (void**) &neurons_each_layer, sizeof(int)*nLayers);
 }
 
 __host__ Net::~Net(){
@@ -49,6 +53,8 @@ __host__ Net::~Net(){
     }
     delete[] layers;
     delete[] errorGradient;
+
+    cudaFree(all_Neurons);
 }
 
 __host__ void Net::initNetwork(Neuron::weightInitMethod _wim, Neuron::biasInitMethod _bim, Neuron::actMethod _am){
@@ -87,17 +93,28 @@ __host__ void Net::setWeights(double* _weightsList) {
 
 __host__ void Net::setInputs(double* _inputs){
     inputs=_inputs;
-    layers[0]->setInputs(inputs); //sets the inputs to the first layer only
-    //printf("%i\n",layers[0]->nNeurons);
+    layers[0]->setInputs_layer_level_only(inputs); //sets the inputs to the first layer only
+
+}
+
+//added by luca 
+
+__host__ void Net::setInputs_and_prop_lms(double* _inputs){
+    inputs = _inputs;
+    layers[0]->setInputs_layer_level_only(inputs);
+
+    for (int i=0;i<nLayers-1; i++) {
+        // Calculates the output to the given layer using a layer function
+        layers[i]->calcOutputs(layers[i+1]->inputs_a_Pinned,layers[i+1]->nNeurons);
+    }
+    layers[nLayers-1]->calcOutputs_final_layer();
+    
 }
 
 __host__ void Net::propInputs() {
     for (int i=0;i<nLayers-1; i++) {
 // Calculates the output to the given layer using a layer function
-        //[i]->calcOutputs_final_layer();
-        layers[i]->calcOutputs(layers[i+1]->gpu_neurons,layers[i+1]->nNeurons);
-// Propagates the new outputs to the Input of the next layer
-        //layers[i+1]->propInputs(layers[i]->get_output_array_Pinned);
+        layers[i]->calcOutputs(layers[i+1]->inputs_a_Pinned,layers[i+1]->nNeurons);
     }
     layers[nLayers-1]->calcOutputs_final_layer();
 }
@@ -122,10 +139,8 @@ __host__ double Net::setBackwardError_LMS(double _input_signal){
 }
 
 __host__ void Net::propErrorBackward() {
-    double* sumlist;
     for (int i = nLayers - 1; i > 0; i--) {
-        sumlist = layers[i]->calcErrorWeightProductSum();
-        layers[i-1]->propErrorBackward(sumlist);
+        layers[i]->calcErrorWeightProductSum(layers[i-1]->gpu_neurons,layers[i-1]->inputs_a_Pinned);
     }
     layers[0]->updateWeights_first_layer();
 }
@@ -139,7 +154,53 @@ __host__ void Net::updateWeights(){
     //   layers[i]->updateWeights();
     //}
     layers[0]->updateWeights_first_layer();
+    
 }
+
+//single block launch code
+__global__ void gpu_single_block_launch(double* input_array, double input_signal,int nLayers,int* neurons_each_layer,Neuron* all_Neurons){
+
+    //prop inputs
+
+    //set and calc error
+
+    //prop error backward
+}
+
+//added by luca
+
+__host__ void Net::storing_all_neurons_in_array_for_single_block_launch(){
+
+    int starting_index = 0;
+    for(int i = 0;i<nLayers;i++){
+
+        int num_neurons = layers[i]->nNeurons;
+        
+        cudaMemcpy(all_Neurons+starting_index,layers[i]->gpu_neurons, sizeof(Neuron)*num_neurons,cudaMemcpyHostToDevice);
+
+        cudaMemcpy(neurons_each_layer+i,&num_neurons, sizeof(int),cudaMemcpyHostToDevice);
+
+        starting_index += num_neurons;
+    }
+    
+}
+
+__host__ double Net::single_block_launch(double* input_array, double input_signal){
+
+    double error;
+
+    //set input layer
+    memcpy(layers[0]->inputs_a_Pinned,layers[0]->inputs_a_Pageable,sizeof(double)*nInputs);
+
+    gpu_single_block_launch<<<1,128>>>(input_array,input_signal,nLayers,neurons_each_layer,all_Neurons);
+    cudaDeviceSynchronize();
+
+    return error;
+
+    
+}
+
+
 
 //*************************************************************************************
 // getters:

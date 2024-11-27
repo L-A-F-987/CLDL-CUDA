@@ -138,7 +138,7 @@ public:
 public:
 
     //added by luca to store dot product results
-    //double* array_for_dot_product_sum;
+    double* input_pageable_neuron_level;
 
     int *nInputs;
     double *learningRate;
@@ -244,7 +244,15 @@ __device__ void device_calcMidError(Neuron *n);
 __global__ void gpu_multiplication(double value, double* output);
 
 __device__ void device_calcOutput(Neuron* n,int* _layerHasReported);
-__device__ void device_calcOutputCont(Neuron* n, int* _layerHasReported);
+
+//added by luca
+    //function to allow for the layer level inputs to replace the neuron level ones
+    __device__ void device_calcOutput_using_layer_level_inputs(Neuron* n, int* _layerHasReported,double* inputs,double* next_layer_inputs,double * outputs_current_layer,int neuron_index,int start_idx_for_reduction);
+    
+    __device__ void device_calcOutput_using_layer_level_inputs_no_prop(Neuron* n, int* _layerHasReported,double* inputs,double* outputs_current_layer,int neuron_index,int start_idx_for_reduction);
+    
+    __device__ void device_calcOutputCont(Neuron* n, int* _layerHasReported);
+    
 
 
 //added by luca 
@@ -254,15 +262,13 @@ __device__ void device_calcOutputCont(Neuron* n, int* _layerHasReported);
     //added by luca to sum the temp array from dot product
     //__device__ void device_sum_tempArray(Neuron* n);
 
-    __device__ void parallelReduction(Neuron* n, double * _array_for_sum);
-
-    __device__ void warpReduce(double* shmem_ptr, int t);
+    __device__ void parallelReduction(Neuron* n, double * _array_for_sum,int start);
 
     //added by luca, functions for errorWeightProductSum
 
     __device__ void device_calcErrorWeightProductSum_less_blocks(Neuron* n, int nNeurons, double* sumlist,int j);
 
-    __device__ void parallelReduction_weights(int j,double* _array_for_dot_sum,double * sumlist);
+    __device__ void parallelReduction_weights(int j,double* _array_for_dot_sum,double * sumlist, int s);
 
    
 

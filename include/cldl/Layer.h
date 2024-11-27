@@ -86,6 +86,11 @@ public:
      */
     __host__ void setInputs(double *_inputs);
 
+    //added by luca
+    //seting inputs only at the layer level to reduce number of operations 
+
+    __host__ void setInputs_layer_level_only(double* _inputs);
+
     /**
      * Sets the inputs to all neurons in the deeper layers (excluding the first hidden layer)
      * @param _index The index of the input
@@ -96,7 +101,7 @@ public:
     /**
      * Demands that all neurons in this layer calculate their output
      */
-    __host__ void calcOutputs(Neuron* gpu_neurons_next_layer,int nNeurons_next_layer);
+    __host__ void calcOutputs(double* inputs_next_layer,int nNeurons_next_layer);
 
     /**
      * Sets the error to be propagated forward to all neurons in the first hidden layer only
@@ -132,7 +137,7 @@ public:
     //added by luca, setBackward error to input - output
     __host__ double setBackwardError_LMS(double input_signal);
 
-    __host__ double* calcErrorWeightProductSum();
+    __host__ double* calcErrorWeightProductSum(Neuron* neuron_previous_layer,double* inputs_previous_layer);
 
     /**
      * Sets the error to be propagated backward at all neurons, except those in the output layer.
@@ -376,6 +381,12 @@ public:
     //pinned and pageable for output array
     double* get_output_array_Pageable;
     double* get_output_array_Pinned;
+
+
+    //variables for use in calculating how many neurons should be calculated per thread block 
+    int threads_per_block;
+    int start_idx_for_reduction;
+    int number_of_concurrent_neurons_per_thread_block;
 
 
 
