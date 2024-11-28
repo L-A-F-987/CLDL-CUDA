@@ -244,7 +244,7 @@ __host__ void Neuron::propInputs(int _index,  double _value){
 }
 
 
-
+/*
 __device__ void device_calcOutput(Neuron* n, int* _layerHasReported){
     int nInputs = *(n->nInputs);
     __shared__ double _array_for_sum[128];
@@ -257,34 +257,75 @@ __device__ void device_calcOutput(Neuron* n, int* _layerHasReported){
     device_calcOutputCont(n, _layerHasReported);
     }
 }
+*/
 
-
-__device__ void device_calcOutput_using_layer_level_inputs_no_prop(Neuron* n, int* _layerHasReported,double* inputs,double* outputs_current_layer,int neuron_index,int start_idx_for_reduction){
+__device__ void device_calcOutput_using_layer_level_inputs_no_prop(Neuron* n, int* _layerHasReported,double* inputs,double* outputs_current_layer,int neuron_index,int start_idx_for_reduction,const int threads_per_block,int nNeurons){
     int nInputs = *(n->nInputs);
-    __shared__ double _array_for_sum[128];
+    extern __shared__ double _array_for_sum[];
     device_dotProduct(inputs, (*n).weights, (*n).sum, nInputs,_array_for_sum);
     __syncthreads();
-        parallelReduction(n,_array_for_sum,start_idx_for_reduction);
 
+    //calculating effective index
+    int idx = threadIdx.x;
+    int neuron_in_block_being_calculated = 0;
+
+    //effective_idx
+    int e_idx = idx;
+
+    if(start_idx_for_reduction != threads_per_block){
+
+        //effectivly can ignore the added part from e_idx as it is removed by the int
+        neuron_in_block_being_calculated = idx/start_idx_for_reduction;
+
+        //calculating effective idx
+        e_idx = idx - neuron_in_block_being_calculated * start_idx_for_reduction;
+    }
+
+    //performing parallel reduction
+    parallelReduction(n,_array_for_sum,start_idx_for_reduction,e_idx,neuron_in_block_being_calculated);
     __syncthreads();
-    if(threadIdx.x ==0){
+
+    //needs updated for effective index
+    if(e_idx ==0 && neuron_index+neuron_in_block_being_calculated < nNeurons){
     device_calcOutputCont(n, _layerHasReported);
-    outputs_current_layer[neuron_index] = *(*n).output;
+    outputs_current_layer[neuron_index+neuron_in_block_being_calculated] = *(*n).output;
     }
 }
 
-__device__ void device_calcOutput_using_layer_level_inputs(Neuron* n, int* _layerHasReported,double* inputs,double* next_layer_inputs,double * outputs_current_layer,int neuron_index,int start_idx_for_reduction){
+__device__ void device_calcOutput_using_layer_level_inputs(Neuron* n, int* _layerHasReported,double* inputs,double* next_layer_inputs,double * outputs_current_layer,int neuron_index,int start_idx_for_reduction,const int threads_per_block,int nNeurons){
     int nInputs = *(n->nInputs);
-    __shared__ double _array_for_sum[128];
+
+    //the size of this array is equal to the number of threads that are set per block 
+    extern __shared__ double _array_for_sum[];
     device_dotProduct(inputs, (*n).weights, (*n).sum, nInputs,_array_for_sum);
     __syncthreads();
-    parallelReduction(n,_array_for_sum,start_idx_for_reduction);
 
+
+    //calculating effective index
+    int idx = threadIdx.x;
+    int neuron_in_block_being_calculated = 0;
+
+    //effective_idx
+    int e_idx = idx;
+
+    if(start_idx_for_reduction != threads_per_block){
+        //effectivly can ignore the added part from e_idx as it is removed by the int
+        neuron_in_block_being_calculated = idx/start_idx_for_reduction;
+
+        //calculating effective idx
+        e_idx = idx - neuron_in_block_being_calculated * start_idx_for_reduction;
+    }
+
+    //performing parallel reduction
+    parallelReduction(n,_array_for_sum,start_idx_for_reduction,e_idx,neuron_in_block_being_calculated);
     __syncthreads();
-    if(threadIdx.x == 0){
+
+    //needs updated for effective index
+    if(e_idx == 0){
     device_calcOutputCont(n, _layerHasReported);
-    outputs_current_layer[neuron_index] = *(*n).output;
-    next_layer_inputs[neuron_index] = *(*n).output;
+    outputs_current_layer[neuron_index+neuron_in_block_being_calculated] = *(*n).output;
+    next_layer_inputs[neuron_index+neuron_in_block_being_calculated] = *(*n).output;
+
     //printf("Neuron Index: %i\noutput:%f\nnext_layer_inputs:%f\n\n",neuron_index,*(*n).output,next_layer_inputs[neuron_index]);
     }
 }
@@ -304,44 +345,26 @@ __device__ void device_calcOutputCont(Neuron* n, int* _layerHasReported){
 
 //added by luca 
 
-__device__ void parallelReduction(Neuron* n,double* _array_for_dot_sum,int start){
+__device__ void parallelReduction(Neuron* n,double* _array_for_dot_sum,int start,int e_idx,int neuron_in_block_being_calculated){
 
-    double* array = _array_for_dot_sum;
-    __shared__ double partial_sum[128];
     int idx = threadIdx.x;
 
-    int neuron_in_block_being_calculated;
-
-    //effective_idx
-    int e_idx = idx;
-
-    if(start != 1){
-
-        //effectivly can ignore the added part from e_idx as it is removed by the int
-        neuron_in_block_being_calculated = idx/start;
-
-        //calculating effective idx
-        e_idx = idx - neuron_in_block_being_calculated * start;
-    }
-
-    if(e_idx != idx){
-    printf("start:%i\nneuron_being_calculated: %i\nidx:%i\nEffective_idx:%i\n\n",start,neuron_in_block_being_calculated,idx,e_idx);}
-    
-    partial_sum[idx] = array[idx];
-	__syncthreads();
-
+    //if(e_idx != idx){
+    //printf("start:%i\nneuron_being_calculated: %i\nidx:%i\nEffective_idx:%i\n\n",start,neuron_in_block_being_calculated,idx,e_idx);}
     for (int s = start / 2; s > 0; s >>= 1) {
 		// Each thread does work unless it is further than the stride
 		if (e_idx < s) {
-			partial_sum[e_idx] += partial_sum[e_idx + s];
+			_array_for_dot_sum[e_idx] += _array_for_dot_sum[e_idx + s];
 		}
 		__syncthreads();
 	}
       __syncthreads();
     // Let the thread 0 for this block write it's result to main memory
-	// Result is inexed by this block
+	// uses effective index
 	if (e_idx == 0){
-		double total = partial_sum[e_idx];
+
+        //printf("idx:%i\n",idx);
+		double total = _array_for_dot_sum[neuron_in_block_being_calculated * start];
         *(*n).sum = total;
 	}
 }

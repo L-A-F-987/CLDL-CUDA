@@ -383,10 +383,17 @@ public:
     double* get_output_array_Pinned;
 
 
-    //variables for use in calculating how many neurons should be calculated per thread block 
-    int threads_per_block;
+   
+
+    //constant global variables 
+    const int threads_per_block = 128;
+    const int max_blocks = 8;
+
+
+     //variables for use in calculating how many neurons should be calculated per thread block 
     int start_idx_for_reduction;
     int number_of_concurrent_neurons_per_thread_block;
+
 
 
 
