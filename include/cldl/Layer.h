@@ -394,6 +394,11 @@ public:
     int start_idx_for_reduction;
     int number_of_concurrent_neurons_per_thread_block;
 
+    //calc weight product sum variables
+    int start_idx_for_reduction_calcWeightProduct_sum;
+    int number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum;
+
+
 
 
 
