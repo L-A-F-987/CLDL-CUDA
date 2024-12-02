@@ -75,7 +75,7 @@ public:
 
     //added by luca 
     //combining prop and update inputs for LMS mode 
-    __host__ void setInputs_and_prop_lms(double* _inputs);
+    __host__ double single_block_lms(double* _inputs,double input_signal);
 
     /**
      * Sets the inputs to the network in each iteration

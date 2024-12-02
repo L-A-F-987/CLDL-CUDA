@@ -94,26 +94,26 @@ __host__ void Net::setWeights(double* _weightsList) {
 __host__ void Net::setInputs(double* _inputs){
     inputs=_inputs;
     layers[0]->setInputs_layer_level_only(inputs); //sets the inputs to the first layer only
-
 }
 
-//added by luca 
 
-__host__ void Net::setInputs_and_prop_lms(double* _inputs){
+
+__host__ double Net::single_block_lms(double* _inputs,double input_signal){
     inputs = _inputs;
+    double error = 0;
+
+    //setting inputs with memcpy
     layers[0]->setInputs_layer_level_only(inputs);
 
-    for (int i=0;i<nLayers-1; i++) {
-        // Calculates the output to the given layer using a layer function
-        layers[i]->calcOutputs(layers[i+1]->inputs_a_Pinned,layers[i+1]->nNeurons);
-    }
-    layers[nLayers-1]->calcOutputs_final_layer();
-    
+    layers[0]->single_block_launch(layers,nLayers,input_signal,&error);
+
+    return(error);
 }
 
 __host__ void Net::propInputs() {
     for (int i=0;i<nLayers-1; i++) {
 // Calculates the output to the given layer using a layer function
+
         layers[i]->calcOutputs(layers[i+1]->inputs_a_Pinned,layers[i+1]->nNeurons);
     }
     layers[nLayers-1]->calcOutputs_final_layer();

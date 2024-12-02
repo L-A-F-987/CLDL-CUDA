@@ -226,7 +226,7 @@ __device__ void device_doActivationPrime(double* output, double *_sum, int* actM
 
 
 __global__ void gpu_dotProduct(double* list1, double* list2, double* _value, double* _target, int arrayLength);
-__device__ void device_dotProduct(double* list1, double* list2, double* _target, int arrayLength, double* _storageArray);
+__device__ void device_dotProduct(double* list1, double* list2, double* _target, int arrayLength, double* _storageArray, int e_idx);
 
 __device__ void device_calcForwardError(Neuron* n);
 __global__ void gpu_calcForwardError(Neuron* n);
@@ -266,9 +266,9 @@ __global__ void gpu_multiplication(double value, double* output);
 
     //added by luca, functions for errorWeightProductSum
 
-    __device__ void device_calcErrorWeightProductSum_less_blocks(Neuron* n, int nNeurons, double* sumlist,int j,int start_idx_for_reduction,int number_of_concurrent_neurons_per_thread_block,int e_idx,double* _array_for_dot_sum);
+    __device__ void device_calcErrorWeightProductSum_less_blocks(Neuron* n, int nNeurons, double* sumlist,int j,int start_idx_for_reduction,int number_of_concurrent_neurons_per_thread_block,int e_idx,double* _array_for_dot_sum,int neuron_in_block_being_calculated);
 
-    __device__ void parallelReduction_weights(int j,double* _array_for_dot_sum,double * sumlist, int s,int e_idx);
+    __device__ void parallelReduction_weights(int j,double* _array_for_dot_sum,double * sumlist, int s,int e_idx,int neuron_in_block_being_calculated);
 
     //parallel reduction for weight sum
     __device__ double parallelReduction_updating_weights(double* weight_sum_array);

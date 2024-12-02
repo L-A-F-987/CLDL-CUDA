@@ -359,6 +359,8 @@ public:
     //added by luca 
     //calcOutputs function that doesn't include propagation to the next layer
     __host__ void calcOutputs_final_layer();
+
+    __host__ double single_block_launch(Layer** layers,int nLayers,double input_signal,double* error);
     
 
 public:
@@ -386,8 +388,8 @@ public:
    
 
     //constant global variables 
-    const int threads_per_block = 128;
-    const int max_blocks = 8;
+    const int threads_per_block = 512;
+    const int max_blocks = 1;
 
 
      //variables for use in calculating how many neurons should be calculated per thread block 
