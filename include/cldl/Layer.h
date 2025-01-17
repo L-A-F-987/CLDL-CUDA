@@ -139,6 +139,9 @@ public:
 
     __host__ double* calcErrorWeightProductSum(Neuron* neuron_previous_layer,double* inputs_previous_layer);
 
+    //updated version of set backward error to use on the final layer to prop and supply in a single launch
+    __host__ double calcErrorWeightProductSum_LMS(Neuron* neuron_previous_layer,double* inputs_previous_layer,double input_signal);
+
     /**
      * Sets the error to be propagated backward at all neurons, except those in the output layer.
      * @param _neuronIndex The index of the neuron receiving the weighted sum of errors
@@ -360,7 +363,16 @@ public:
     //calcOutputs function that doesn't include propagation to the next layer
     __host__ void calcOutputs_final_layer();
 
-    __host__ double single_block_launch(Layer** layers,int nLayers,double input_signal,double* error);
+    __host__ double single_block_launch(    Layer** layers,
+                                            int nLayers,
+                                            double input_signal,
+                                            double* error,
+                                            int* nNeurons_array,
+                                            int* nNeurons_per_block_calcOut,
+                                            int* nNeurons_per_block_calcErrorWeight,
+                                            int* start_idx_calc_out,
+                                            int* start_idx_calcErrorWeight,
+                                            Neuron** gpu_neuron_pointers);
     
 
 public:
@@ -385,11 +397,12 @@ public:
     double* get_output_array_Pinned;
 
 
+
    
 
     //constant global variables 
-    const int threads_per_block = 512;
-    const int max_blocks = 1;
+    const int threads_per_block = 128;
+    const int max_blocks = 8;
 
 
      //variables for use in calculating how many neurons should be calculated per thread block 
@@ -399,6 +412,8 @@ public:
     //calc weight product sum variables
     int start_idx_for_reduction_calcWeightProduct_sum;
     int number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum;
+
+
 
 
 

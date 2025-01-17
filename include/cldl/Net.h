@@ -68,10 +68,6 @@ public:
      */
     __host__ void setLearningRate(double _learningRate);
 
-    //added by luca, single block launch code 
-    __host__ double single_block_launch(double* input_array, double input_signal);
-
-    __host__ void storing_all_neurons_in_array_for_single_block_launch();
 
     //added by luca 
     //combining prop and update inputs for LMS mode 
@@ -292,11 +288,24 @@ public:
     //added by luca 
     __host__ double setBackwardError_LMS(double _input_signal);
 
+
+    __host__ double set_and_propErrorBackward_lms(double _input_signal) ;
+
 private:
 
-    //added by luca, array to store all neurons in the network in a single array
-    Neuron* all_Neurons;
-    int* neurons_each_layer;
+    //added by luca, storing the number of neurons in each layer in an array so it can be passed to the single block function 
+    int* nNeurons_array;
+    int* nNeurons_array_pageable;
+
+    Neuron** gpu_neuron_pointers;
+
+    //storing the start indexes and n_neurons per block 
+
+    int* nNeurons_per_block_calcOut;
+    int* nNeurons_per_block_calcErrorWeight;
+
+    int* start_idx_calcOut;
+    int* start_idx_calcErrorWeight;
 
     /**
      * Total number of hidden layers

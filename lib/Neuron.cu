@@ -260,22 +260,23 @@ __device__ void device_calcOutput(Neuron* n, int* _layerHasReported){
 */
 
 __device__ void device_calcOutput_using_layer_level_inputs_no_prop(Neuron* n, int* _layerHasReported,double* inputs,double* outputs_current_layer,int neuron_index,int start_idx_for_reduction,const int threads_per_block,int nNeurons, double* _array_for_sum){
+    
     int nInputs = *(n->nInputs);
 
     //calculating effective index
-    int idx = threadIdx.x;
+    
     int neuron_in_block_being_calculated = 0;
 
     //effective_idx
-    int e_idx = idx;
+    int e_idx = threadIdx.x;
 
     if(start_idx_for_reduction != threads_per_block){
 
         //effectivly can ignore the added part from e_idx as it is removed by the int
-        neuron_in_block_being_calculated = idx/start_idx_for_reduction;
+        neuron_in_block_being_calculated = threadIdx.x/start_idx_for_reduction;
 
         //calculating effective idx
-        e_idx = idx - neuron_in_block_being_calculated * start_idx_for_reduction;
+        e_idx = threadIdx.x - neuron_in_block_being_calculated * start_idx_for_reduction;
     }
 
     device_dotProduct(inputs, (*n).weights, (*n).sum, nInputs,_array_for_sum,e_idx);
@@ -286,32 +287,32 @@ __device__ void device_calcOutput_using_layer_level_inputs_no_prop(Neuron* n, in
     __syncthreads();
 
     //needs updated for effective index
-    if(e_idx ==0){
+    if(e_idx == 0){
     device_calcOutputCont(n, _layerHasReported);
     outputs_current_layer[neuron_index] = *(*n).output;
     }
 }
 
 __device__ void device_calcOutput_using_layer_level_inputs(Neuron* n, int* _layerHasReported,double* inputs,double* next_layer_inputs,double * outputs_current_layer,int neuron_index,int start_idx_for_reduction,const int threads_per_block,int nNeurons,double* _array_for_sum){
-    int nInputs = *(n->nInputs);
+    
+    //printf("hi");
 
     //calculating effective index
-    int idx = threadIdx.x;
     int neuron_in_block_being_calculated = 0;
 
     //effective_idx
-    int e_idx = idx;
+    int e_idx = threadIdx.x;
 
     if(start_idx_for_reduction != threads_per_block){
         //effectivly can ignore the added part from e_idx as it is removed by the int
-        neuron_in_block_being_calculated = idx/start_idx_for_reduction;
+        neuron_in_block_being_calculated = threadIdx.x/start_idx_for_reduction;
 
         //calculating effective idx
-        e_idx = idx - neuron_in_block_being_calculated * start_idx_for_reduction;
+        e_idx = threadIdx.x - neuron_in_block_being_calculated * start_idx_for_reduction;
     }
 
     //the size of this array is equal to the number of threads that are set per block 
-    device_dotProduct(inputs, (*n).weights, (*n).sum, nInputs,_array_for_sum,e_idx);
+    device_dotProduct(inputs, (*n).weights, (*n).sum, *(n->nInputs),_array_for_sum,e_idx);
     __syncthreads();
 
 
@@ -359,7 +360,7 @@ __device__ void parallelReduction(Neuron* n,double* _array_for_dot_sum,int start
 		__syncthreads();
 	}
     __syncthreads();
-    // Let the thread 0 for this block write it's result to main memory
+    // Let the thread 0 for this block write its result to main memory
 	// uses effective index
 	if (e_idx == 0){
 
@@ -418,6 +419,7 @@ __device__ void parallelReduction_weights(int j,double* _array_for_dot_sum,doubl
         sumlist[j] = total;
         //printf("sumlist[j]: %f\nindex: %i\n_array_for_sum[0]: %f\n",sumlist[j],neuron_in_block_being_calculated * start,_array_for_dot_sum[0]);
 	}
+
 }
 
 __device__ double parallelReduction_updating_weights(double* weight_sum_array){
@@ -887,13 +889,19 @@ __device__ void setSum_zero(Neuron* n){
 
 __device__ void device_dotProduct(double* list1, double* list2, double* _target, int arrayLength, double* _storageArray,int e_idx){
 
-    double target = 0.0;
+    //double target = 0.0;
+
+    int idx = threadIdx.x;
+
+     _storageArray[idx] = 0.0;
 
     for (int i = e_idx; i < arrayLength; i+=blockDim.x){
-        target+=list1[i]*list2[i];
+        _storageArray[idx]+=list1[i]*list2[i];
 
     }
-    _storageArray[threadIdx.x] = target;
+   
+   
+    //_storageArray[threadIdx.x] = target;
 
 }
 

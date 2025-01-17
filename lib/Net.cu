@@ -42,19 +42,94 @@ __host__ Net::Net(int _nLayers, int* _nNeurons, int _nInputs) {
     errorGradient= new double[nLayers];
 
 
+    
+    
+
+
     //added by luca, used to store all neurons
-    cudaMalloc( (void**) &all_Neurons, sizeof(Neuron)*nNeurons);
-    cudaMalloc( (void**) &neurons_each_layer, sizeof(int)*nLayers);
+    cudaMalloc((void**) &nNeurons_array, sizeof(int)*nLayers);
+
+    nNeurons_array_pageable = _nNeurons;
+
+    cudaMemcpy(nNeurons_array, nNeurons_array_pageable, sizeof(int)*nLayers, cudaMemcpyHostToDevice);
+
+    //storing all neurons in a single array, note this only needed if you are going to use the single block method program
+
+    cudaMalloc((void**) &gpu_neuron_pointers,sizeof(Neuron)*nNeurons);
+
+    int index_for_memcpy = 0;
+    for(int i = 0; i<nLayers;i+=1){
+    cudaMemcpy(gpu_neuron_pointers+index_for_memcpy,layers[i]->gpu_neurons,sizeof(Neuron)*layers[i]->nNeurons,cudaMemcpyHostToDevice);
+    index_for_memcpy += nNeurons;
+    }
+
+    //creating array that stores all of the start indexes and n_neurons_per_block
+
+    /*
+    int* _nNeurons_per_block_calcOut = new int[nLayers];
+    int* _nNeurons_per_block_calcErrorWeight = new int[nLayers];
+
+    int* _start_idx_calcOut = new int[nLayers];
+    int* _start_idx_calcErrorWeight = new int[nLayers];
+
+    //gpu_neuron_pointers array
+
+    gpu_neuron_pointers = new Neuron*[nLayers];
+
+    for(int i = 0; i<nLayers; i++){
+
+    _start_idx_calcOut[i] = layers[i]->start_idx_for_reduction;
+    _start_idx_calcErrorWeight[i] = layers[i]->start_idx_for_reduction_calcWeightProduct_sum;
+
+    _nNeurons_per_block_calcOut[i] = layers[i]->number_of_concurrent_neurons_per_thread_block;
+    _nNeurons_per_block_calcErrorWeight[i] = layers[i]->number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum;
+
+
+    //storing the neuron pointers
+
+    gpu_neuron_pointers[i] = layers[i]->gpu_neurons;
+
+    //printf("gpu_pointers:%p\n",gpu_neuron_pointers + i);
+    //printf("output at pointer 0:%p\n",gpu_neuron_pointers[i]);
+    }
+
+    cudaMalloc((void**)&start_idx_calcOut, sizeof(int)*nLayers) ; // host pinned
+    cudaMalloc((void**)&start_idx_calcErrorWeight, sizeof(int)*nLayers) ; // host pinned
+    cudaMalloc((void**)&nNeurons_per_block_calcOut, sizeof(int)*nLayers) ; // host pinned
+    cudaMalloc((void**)&nNeurons_per_block_calcErrorWeight, sizeof(int)*nLayers) ; // host pinned
+
+    cudaMemcpy(start_idx_calcOut, _start_idx_calcOut, sizeof(int)*nLayers, cudaMemcpyHostToDevice);
+    cudaMemcpy(start_idx_calcErrorWeight, _start_idx_calcErrorWeight, sizeof(int)*nLayers, cudaMemcpyHostToDevice);
+    cudaMemcpy(nNeurons_per_block_calcOut, _nNeurons_per_block_calcOut, sizeof(int)*nLayers, cudaMemcpyHostToDevice);
+    cudaMemcpy(nNeurons_per_block_calcErrorWeight, _nNeurons_per_block_calcErrorWeight, sizeof(int)*nLayers, cudaMemcpyHostToDevice);
+    */
+
+    //*********End of Variables added for single block implementation */
 }
 
 __host__ Net::~Net(){
     for (int i=0; i<nLayers; i++){
         delete layers[i];
+
+        //added by luca 
+        //delete gpu_neuron_pointers[i];
     }
     delete[] layers;
     delete[] errorGradient;
 
-    cudaFree(all_Neurons);
+    //added by luca 
+
+    //delete[] gpu_neuron_pointers;
+
+    cudaFree(nNeurons_array);
+
+    cudaFree(start_idx_calcOut);
+    cudaFree(start_idx_calcErrorWeight);
+    cudaFree(nNeurons_per_block_calcOut);
+    cudaFree(nNeurons_per_block_calcErrorWeight);
+
+    //added Dec 20
+    cudaFree(gpu_neuron_pointers);
 }
 
 __host__ void Net::initNetwork(Neuron::weightInitMethod _wim, Neuron::biasInitMethod _bim, Neuron::actMethod _am){
@@ -105,7 +180,7 @@ __host__ double Net::single_block_lms(double* _inputs,double input_signal){
     //setting inputs with memcpy
     layers[0]->setInputs_layer_level_only(inputs);
 
-    layers[0]->single_block_launch(layers,nLayers,input_signal,&error);
+    layers[0]->single_block_launch(  layers,  nLayers,  input_signal,  &error,  nNeurons_array,  nNeurons_per_block_calcOut,  nNeurons_per_block_calcErrorWeight,  start_idx_calcOut,  start_idx_calcErrorWeight,  gpu_neuron_pointers);
 
     return(error);
 }
@@ -113,10 +188,10 @@ __host__ double Net::single_block_lms(double* _inputs,double input_signal){
 __host__ void Net::propInputs() {
     for (int i=0;i<nLayers-1; i++) {
 // Calculates the output to the given layer using a layer function
-
         layers[i]->calcOutputs(layers[i+1]->inputs_a_Pinned,layers[i+1]->nNeurons);
     }
     layers[nLayers-1]->calcOutputs_final_layer();
+
 }
 
 
@@ -134,7 +209,9 @@ __host__ double Net::setBackwardError_LMS(double _input_signal){
     /* this is only for the final layer */
     double input_signal = _input_signal;
     double error = layers[nLayers-1]->setBackwardError_LMS(input_signal);
+
     return(error);
+
 
 }
 
@@ -143,6 +220,21 @@ __host__ void Net::propErrorBackward() {
         layers[i]->calcErrorWeightProductSum(layers[i-1]->gpu_neurons,layers[i-1]->inputs_a_Pinned);
     }
     layers[0]->updateWeights_first_layer();
+}
+
+__host__ double Net::set_and_propErrorBackward_lms(double _input_signal ) {
+
+    double input_signal = _input_signal;
+
+    //setting error and proping the first layer 
+    double error = layers[nLayers-1]->calcErrorWeightProductSum_LMS(layers[nLayers-2]->gpu_neurons,layers[nLayers-2]->inputs_a_Pinned,input_signal);
+    //cudaDeviceSynchronize();
+    for (int i = nLayers - 2; i > 0; i--) {
+        layers[i]->calcErrorWeightProductSum(layers[i-1]->gpu_neurons,layers[i-1]->inputs_a_Pinned);
+    }
+    layers[0]->updateWeights_first_layer();
+
+    return error;
 }
 
 //*************************************************************************************
@@ -167,38 +259,6 @@ __global__ void gpu_single_block_launch(double* input_array, double input_signal
     //prop error backward
 }
 
-//added by luca
-
-__host__ void Net::storing_all_neurons_in_array_for_single_block_launch(){
-
-    int starting_index = 0;
-    for(int i = 0;i<nLayers;i++){
-
-        int num_neurons = layers[i]->nNeurons;
-        
-        cudaMemcpy(all_Neurons+starting_index,layers[i]->gpu_neurons, sizeof(Neuron)*num_neurons,cudaMemcpyHostToDevice);
-
-        cudaMemcpy(neurons_each_layer+i,&num_neurons, sizeof(int),cudaMemcpyHostToDevice);
-
-        starting_index += num_neurons;
-    }
-    
-}
-
-__host__ double Net::single_block_launch(double* input_array, double input_signal){
-
-    double error;
-
-    //set input layer
-    memcpy(layers[0]->inputs_a_Pinned,layers[0]->inputs_a_Pageable,sizeof(double)*nInputs);
-
-    gpu_single_block_launch<<<1,128>>>(input_array,input_signal,nLayers,neurons_each_layer,all_Neurons);
-    cudaDeviceSynchronize();
-
-    return error;
-
-    
-}
 
 
 
