@@ -32,7 +32,7 @@ public:
      * @param _nNeurons Total number of neurons in the layer
      * @param _nInputs Total number of inputs to that layer
      */
-    Layer(int _nNeurons, int _nInputs);
+    Layer(int _nNeurons, int _nInputs,int _nOut);
 
     /**
      * Destructor
@@ -64,6 +64,8 @@ public:
     __host__ int* generating_pinned_memory_address(int nInputs);
 
     __host__ void setSum_zero();
+
+    __host__ void set_nOutputs_variable(int nOut);
     
     //end of added by luca 
 
@@ -397,7 +399,7 @@ public:
     double* get_output_array_Pinned;
 
 
-
+     
    
 
     //constant global variables 
@@ -422,6 +424,9 @@ public:
     // initialisation:
     int nNeurons = 0;
     int nInputs = 0;
+    //added by luca 
+    int nOutputs = 0;
+
     double learningRate = 0;
     int myLayerIndex = 0;
     Neuron *neurons;

@@ -27,10 +27,17 @@ __host__ Net::Net(int _nLayers, int* _nNeurons, int _nInputs) {
 
     int nInput = 0; //temporary variable to use within the scope of for loop
     for (int i=0; i<nLayers; i++){
+
         int numNeurons= *nNeuronsp; //no. neurons in this layer
+        int nOut = 0;
+        //added by luca to set the number of outputs in the layer so it knows
+        if(i<nLayers-1){
+            nOut = *(nNeuronsp+1);
+        }
         if (i==0){nInput=nInputs;}
         /* no. inputs to the first layer is equal to no. inputs to the network */
-        layers[i]= new Layer(numNeurons, nInput);
+
+        layers[i]= new Layer(numNeurons, nInput,nOut);
         nNeurons += numNeurons;
         nWeights += (numNeurons * nInput);
         nInput=numNeurons;
@@ -40,10 +47,6 @@ __host__ Net::Net(int _nLayers, int* _nNeurons, int _nInputs) {
     }
     nOutputs=layers[nLayers-1]->getnNeurons();
     errorGradient= new double[nLayers];
-
-
-    
-    
 
 
     //added by luca, used to store all neurons

@@ -143,7 +143,7 @@ __global__ void gpu_calcErrorWeightProductSum_less_blocks(Neuron* n,Neuron* neur
     }
     __syncthreads();
 
-    for(int i = tid/start_idx_for_reduction_calcWeightProduct_sum;i<nInputs;i+= gridDim.x * number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum){
+    for(int i = blockIdx.x+(threadIdx.x)*(gridDim.x);i<nInputs;i+= gridDim.x * blockDim.x){
         device_propErrorBackward(sumlist[i], &neuron_previous_layer[i]);
         }
     
@@ -201,7 +201,7 @@ __global__ void gpu_calcErrorWeightProductSum_less_blocks_final_layer_lms(Neuron
     __syncthreads();
 
     
-    for(int i = tid/start_idx_for_reduction_calcWeightProduct_sum;i<nInputs;i+= gridDim.x * number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum){
+    for(int i = blockIdx.x+(threadIdx.x)*(gridDim.x);i<nInputs;i+= gridDim.x * blockDim.x){
         device_propErrorBackward(sumlist[i], &neuron_previous_layer[i]);
         }
     
@@ -386,10 +386,10 @@ __host__ int* Layer::generating_pinned_memory_address(int nInputs){
 
 // HOST FUNCTIONS //
 
-__host__ Layer::Layer(int _nNeurons, int _nInputs){
+__host__ Layer::Layer(int _nNeurons, int _nInputs,int _nOut){
     nNeurons = _nNeurons; // number of neurons in this layer
     nInputs = _nInputs; // number of inputs to each neuron
-
+    nOutputs = _nOut;
 
     neurons = (Neuron*) (malloc(sizeof(Neuron) * nNeurons));
     for (int i=0; i<nNeurons; i++){
@@ -422,18 +422,35 @@ __host__ Layer::Layer(int _nNeurons, int _nInputs){
         printf("<nInputs>:%i\nnumber_of_concurrent_neurons_per_thread_block: %i\nstart_idx_for_reduction: %i\n",nInputs,number_of_concurrent_neurons_per_thread_block,start_idx_for_reduction);
     }
 
-    if(nNeurons<threads_per_block/2 ){
-        int n_reductions_needed_weights = ceil(log2(nNeurons));
-        start_idx_for_reduction_calcWeightProduct_sum = pow(2,n_reductions_needed_weights);
-        number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum = threads_per_block/start_idx_for_reduction_calcWeightProduct_sum;
-        printf("nNeurons:%i\nnumber_of_concurrent_neurons_per_thread_block_weights: %i\nstart_idx_for_reduction_weights: %i\n\n",nNeurons,number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum,start_idx_for_reduction_calcWeightProduct_sum);
+    //specifying that the first layer of backprop is done on a single block
+    if(nOutputs == 0){
+
+        if(nNeurons<MAX_BLOCKSIZE/2 ){
+            int n_reductions_needed_weights = ceil(log2(nNeurons));
+            start_idx_for_reduction_calcWeightProduct_sum = pow(2,n_reductions_needed_weights);
+            number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum = MAX_BLOCKSIZE/start_idx_for_reduction_calcWeightProduct_sum;
+            printf("nNeurons:%i\nnumber_of_concurrent_neurons_per_thread_block_weights: %i\nstart_idx_for_reduction_weights: %i\n\n",nNeurons,number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum,start_idx_for_reduction_calcWeightProduct_sum);
+        }
+        else{
+            start_idx_for_reduction_calcWeightProduct_sum = threads_per_block;
+            number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum = 1;
+            printf("<nNeurons>:%i\nnumber_of_concurrent_neurons_per_thread_block_weights: %i\nstart_idx_for_reduction_weights: %i\n\n",nNeurons,number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum,start_idx_for_reduction_calcWeightProduct_sum);
+        }
+
     }
     else{
-        start_idx_for_reduction_calcWeightProduct_sum = threads_per_block;
-        number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum = 1;
-        printf("<nNeurons>:%i\nnumber_of_concurrent_neurons_per_thread_block_weights: %i\nstart_idx_for_reduction_weights: %i\n\n",nNeurons,number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum,start_idx_for_reduction_calcWeightProduct_sum);
+        if(nNeurons<threads_per_block/2 ){
+            int n_reductions_needed_weights = ceil(log2(nNeurons));
+            start_idx_for_reduction_calcWeightProduct_sum = pow(2,n_reductions_needed_weights);
+            number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum = threads_per_block/start_idx_for_reduction_calcWeightProduct_sum;
+            printf("nNeurons:%i\nnumber_of_concurrent_neurons_per_thread_block_weights: %i\nstart_idx_for_reduction_weights: %i\n\n",nNeurons,number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum,start_idx_for_reduction_calcWeightProduct_sum);
+        }
+        else{
+            start_idx_for_reduction_calcWeightProduct_sum = threads_per_block;
+            number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum = 1;
+            printf("<nNeurons>:%i\nnumber_of_concurrent_neurons_per_thread_block_weights: %i\nstart_idx_for_reduction_weights: %i\n\n",nNeurons,number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum,start_idx_for_reduction_calcWeightProduct_sum);
+        }
     }
-
 
 }
 
@@ -525,7 +542,11 @@ __host__ double Layer::single_block_launch( Layer** layers,
     cudaDeviceSynchronize();
 }
 
+//Added by luca, function to set the number of outputs that the layer thinks it has 
 
+__host__ void Layer::set_nOutputs_variable(int nOut){
+    nOutputs = nOut;
+}
 
 
 __host__ void Layer::initLayer(int _layerIndex, Neuron::weightInitMethod _wim, Neuron::biasInitMethod _bim, Neuron::actMethod _am){
@@ -728,19 +749,20 @@ __host__ double* Layer::calcErrorWeightProductSum(Neuron* neuron_previous_layer,
 //be enough to ensure the error is set before propagating the error
 __host__ double Layer::calcErrorWeightProductSum_LMS(Neuron* neuron_previous_layer,double* inputs_previous_layer,double input_signal) { 
 
-    int B;
-    if(nInputs<max_blocks){
-        B = nInputs;
-    }
-    else{
-        B = max_blocks;
-    }
+    int B = 1;
+
+    //if(nInputs<max_blocks){
+    //    B = nInputs;
+    //}
+    //else{
+    //    B = max_blocks;
+    //}
 
     //printf("B:%i\nthreads per block:%i\n",B,threads_per_block);
 
     leadBackwardError = input_signal - get_output_array_Pinned[0];
     
-    gpu_calcErrorWeightProductSum_less_blocks_final_layer_lms<<<B,threads_per_block,sizeof(double)*threads_per_block>>>(gpu_neurons,neuron_previous_layer, nNeurons, nInputs, gpu_sumlist,inputs_previous_layer,start_idx_for_reduction_calcWeightProduct_sum,number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum,leadBackwardError);
+    gpu_calcErrorWeightProductSum_less_blocks_final_layer_lms<<<B,MAX_BLOCKSIZE,sizeof(double)*MAX_BLOCKSIZE>>>(gpu_neurons,neuron_previous_layer, nNeurons, nInputs, gpu_sumlist,inputs_previous_layer,start_idx_for_reduction_calcWeightProduct_sum,number_of_concurrent_neurons_per_thread_block_calcWeight_Product_sum,leadBackwardError);
     cudaDeviceSynchronize();
 
     return leadBackwardError;
