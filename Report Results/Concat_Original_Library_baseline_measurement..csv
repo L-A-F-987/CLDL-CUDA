@@ -1,0 +1,131 @@
+Type,Time(%),Time,Calls,Avg,Min,Max,Name
+,%,s,,us,us,us,
+GPU activities,39.351677,1.694972,20002.0,84.74,80.263,108.805,"gpu_calcOutputs(Neuron*, int*)"
+GPU activities,12.04752,0.518916,10001.0,51.886,51.303,63.023,"gpu_propErrorBackwards(Neuron*, double*, int)"
+GPU activities,11.660984,0.502267,10001.0,50.221,49.897,57.449,"gpu_setBackwardError(Neuron*, double, int)"
+GPU activities,8.465096,0.364612,20002.0,18.228,17.449,20.938,"gpu_updateWeights(Neuron*, int)"
+GPU activities,6.969587,0.300197,20003.0,15.007,13.75,17.085,"gpu_setInputs(Neuron*, double*, int)"
+GPU activities,6.305971,0.271613,10001.0,27.158,25.729,32.343,"gpu_calcErrorWeightProductSum(Neuron*, int, int, double*)"
+GPU activities,6.119105,0.263565,20014.0,13.169,12.708,18.491,"gpu_setInt(int*, int)"
+GPU activities,4.358586,0.187735,10001.0,18.771,18.125,25.678,"gpu_getOutputs(Neuron*, double*, int)"
+GPU activities,3.104828,0.133732,30009.0,4.456,4.375,10.364,[CUDA memcpy DtoH]
+GPU activities,1.59803,0.068831,30010.0,2.293,2.239,4.062,[CUDA memcpy HtoD]
+GPU activities,0.015171,0.000653,50.0,13.068,12.812,16.406,"gpu_setDouble(double*, double)"
+GPU activities,0.001206,0.000052,2.0,25.964,23.906,28.022,"gpu_getSumAndMaxMin(double*, double*, double*, double*, int)"
+GPU activities,0.000902,0.000039,2.0,19.427,17.293,21.562,"gpu_setLearningRate(Neuron*, double, int)"
+GPU activities,0.000671,0.000029,2.0,14.453,13.021,15.885,[CUDA memcpy DtoD]
+GPU activities,0.000666,0.000029,2.0,14.349,13.282,15.417,"gpu_setValuesInArray(double, double*)"
+API calls,39.748239,8.523496,90012.0,94.692,8.594,1029.547,cudaDeviceSynchronize
+API calls,28.208801,6.049012,60021.0,100.781,34.427,2118.68,cudaMemcpy
+API calls,25.611886,5.492138,120081.0,45.736,29.167,938.4,cudaLaunchKernel
+API calls,6.430468,1.378931,30081.0,45.84,16.042,352192.726,cudaMalloc
+API calls,0.000508,0.000109,97.0,1.122,0.625,23.073,cuDeviceGetAttribute
+API calls,0.000044,0.000009,1.0,9.375,9.375,9.375,cuDeviceTotalMem
+API calls,0.000026,0.000005,3.0,1.823,1.355,2.604,cuDeviceGetCount
+API calls,0.000015,0.000003,2.0,1.588,1.302,1.875,cuDeviceGet
+API calls,0.000009,0.000002,1.0,1.927,1.927,1.927,cuDeviceGetName
+API calls,0.000005,0.000001,1.0,1.041,1.041,1.041,cuDeviceGetUuid
+,%,s,,us,us,us,
+GPU activities,39.330839,1.700641,20002.0,85.023,81.147,108.545,"gpu_calcOutputs(Neuron*, int*)"
+GPU activities,12.105731,0.523444,10001.0,52.339,51.407,62.188,"gpu_propErrorBackwards(Neuron*, double*, int)"
+GPU activities,11.77533,0.509158,10001.0,50.91,49.897,59.012,"gpu_setBackwardError(Neuron*, double, int)"
+GPU activities,8.386484,0.362626,20002.0,18.129,17.448,20.677,"gpu_updateWeights(Neuron*, int)"
+GPU activities,7.085934,0.306391,20003.0,15.317,13.594,17.188,"gpu_setInputs(Neuron*, double*, int)"
+GPU activities,6.34638,0.274414,10001.0,27.438,25.835,31.823,"gpu_calcErrorWeightProductSum(Neuron*, int, int, double*)"
+GPU activities,6.053722,0.261759,20014.0,13.078,12.708,17.76,"gpu_setInt(int*, int)"
+GPU activities,4.212305,0.182137,10001.0,18.211,18.074,21.355,"gpu_getOutputs(Neuron*, double*, int)"
+GPU activities,3.092864,0.133734,30009.0,4.456,4.375,8.229,[CUDA memcpy DtoH]
+GPU activities,1.591862,0.068831,30010.0,2.293,2.239,4.166,[CUDA memcpy HtoD]
+GPU activities,0.015081,0.000652,50.0,13.042,12.812,15.052,"gpu_setDouble(double*, double)"
+GPU activities,0.001237,0.000053,2.0,26.746,23.855,29.637,"gpu_getSumAndMaxMin(double*, double*, double*, double*, int)"
+GPU activities,0.000895,0.000039,2.0,19.349,17.293,21.406,"gpu_setLearningRate(Neuron*, double, int)"
+GPU activities,0.000684,0.00003,2.0,14.792,13.438,16.146,"gpu_setValuesInArray(double, double*)"
+GPU activities,0.00065,0.000028,2.0,14.062,13.02,15.104,[CUDA memcpy DtoD]
+API calls,39.74797,8.483224,90012.0,94.245,8.333,1529.712,cudaDeviceSynchronize
+API calls,28.163293,6.010761,60021.0,100.144,34.271,1285.177,cudaMemcpy
+API calls,25.566389,5.456515,120081.0,45.44,29.48,1225.957,cudaLaunchKernel
+API calls,6.521744,1.391905,30081.0,46.271,15.729,366733.012,cudaMalloc
+API calls,0.000506,0.000108,97.0,1.113,0.625,22.813,cuDeviceGetAttribute
+API calls,0.00004,0.000009,1.0,8.542,8.542,8.542,cuDeviceTotalMem
+API calls,0.000027,0.000006,3.0,1.944,1.302,2.708,cuDeviceGetCount
+API calls,0.000015,0.000003,2.0,1.562,1.093,2.031,cuDeviceGet
+API calls,0.000011,0.000002,1.0,2.291,2.291,2.291,cuDeviceGetName
+API calls,0.000005,0.000001,1.0,1.145,1.145,1.145,cuDeviceGetUuid
+,%,s,,us,us,us,
+GPU activities,39.29342,1.711366,20002.0,85.559,80.575,105.471,"gpu_calcOutputs(Neuron*, int*)"
+GPU activities,12.085144,0.52635,10001.0,52.629,52.188,61.355,"gpu_propErrorBackwards(Neuron*, double*, int)"
+GPU activities,11.749806,0.511745,10001.0,51.169,49.898,58.231,"gpu_setBackwardError(Neuron*, double, int)"
+GPU activities,8.325135,0.362589,20002.0,18.127,17.136,20.574,"gpu_updateWeights(Neuron*, int)"
+GPU activities,7.222907,0.314583,20003.0,15.726,14.792,17.189,"gpu_setInputs(Neuron*, double*, int)"
+GPU activities,6.389775,0.278297,10001.0,27.826,26.46,32.709,"gpu_calcErrorWeightProductSum(Neuron*, int, int, double*)"
+GPU activities,6.085734,0.265055,20014.0,13.243,12.708,18.439,"gpu_setInt(int*, int)"
+GPU activities,4.180049,0.182056,10001.0,18.203,18.074,24.48,"gpu_getOutputs(Neuron*, double*, int)"
+GPU activities,3.069298,0.133679,30009.0,4.454,4.375,8.334,[CUDA memcpy DtoH]
+GPU activities,1.580329,0.068829,30010.0,2.293,2.239,4.062,[CUDA memcpy HtoD]
+GPU activities,0.014994,0.000653,50.0,13.06,12.865,15.834,"gpu_setDouble(double*, double)"
+GPU activities,0.001192,0.000052,2.0,25.964,23.854,28.074,"gpu_getSumAndMaxMin(double*, double*, double*, double*, int)"
+GPU activities,0.000922,0.00004,2.0,20.078,17.292,22.865,"gpu_setLearningRate(Neuron*, double, int)"
+GPU activities,0.000652,0.000028,2.0,14.193,13.283,15.104,"gpu_setValuesInArray(double, double*)"
+GPU activities,0.000643,0.000028,2.0,14.01,13.021,15,[CUDA memcpy DtoD]
+API calls,40.042415,8.522056,90012.0,94.676,8.229,7594.234,cudaDeviceSynchronize
+API calls,28.134761,5.987801,60021.0,99.761,32.136,1021.787,cudaMemcpy
+API calls,25.442522,5.414823,120081.0,45.093,29.428,910.952,cudaLaunchKernel
+API calls,6.379702,1.357765,30081.0,45.136,15.834,350891.257,cudaMalloc
+API calls,0.000505,0.000107,97.0,1.107,0.573,22.865,cuDeviceGetAttribute
+API calls,0.000038,0.000008,1.0,8.021,8.021,8.021,cuDeviceTotalMem
+API calls,0.000031,0.000007,3.0,2.222,1.302,3.021,cuDeviceGetCount
+API calls,0.000014,0.000003,2.0,1.537,1.355,1.719,cuDeviceGet
+API calls,0.000008,0.000002,1.0,1.771,1.771,1.771,cuDeviceGetName
+API calls,0.000004,0.000001,1.0,0.833,0.833,0.833,cuDeviceGetUuid
+,%,s,,us,us,us,
+GPU activities,39.483063,1.705682,20002.0,85.275,80.835,109.065,"gpu_calcOutputs(Neuron*, int*)"
+GPU activities,11.969967,0.517107,10001.0,51.705,51.355,61.877,"gpu_propErrorBackwards(Neuron*, double*, int)"
+GPU activities,11.625295,0.502217,10001.0,50.216,49.636,57.45,"gpu_setBackwardError(Neuron*, double, int)"
+GPU activities,8.489613,0.366754,20002.0,18.335,17.761,20.52,"gpu_updateWeights(Neuron*, int)"
+GPU activities,6.951668,0.300314,20003.0,15.013,13.854,17.031,"gpu_setInputs(Neuron*, double*, int)"
+GPU activities,6.364529,0.27495,10001.0,27.492,26.406,31.98,"gpu_calcErrorWeightProductSum(Neuron*, int, int, double*)"
+GPU activities,6.194852,0.26762,20014.0,13.371,12.813,16.823,"gpu_setInt(int*, int)"
+GPU activities,4.214625,0.182073,10001.0,18.205,18.074,21.822,"gpu_getOutputs(Neuron*, double*, int)"
+GPU activities,3.09443,0.13368,30009.0,4.454,4.375,10.262,[CUDA memcpy DtoH]
+GPU activities,1.593344,0.068833,30010.0,2.293,2.239,4.167,[CUDA memcpy HtoD]
+GPU activities,0.01512,0.000653,50.0,13.063,12.812,15.833,"gpu_setDouble(double*, double)"
+GPU activities,0.001242,0.000054,2.0,26.824,24.168,29.48,"gpu_getSumAndMaxMin(double*, double*, double*, double*, int)"
+GPU activities,0.000922,0.00004,2.0,19.922,17.345,22.5,"gpu_setLearningRate(Neuron*, double, int)"
+GPU activities,0.000673,0.000029,2.0,14.531,13.177,15.885,[CUDA memcpy DtoD]
+GPU activities,0.000657,0.000028,2.0,14.194,13.283,15.106,"gpu_setValuesInArray(double, double*)"
+API calls,39.756989,8.505279,90012.0,94.49,7.865,1599.765,cudaDeviceSynchronize
+API calls,28.183881,6.029424,60021.0,100.455,34.532,999.391,cudaMemcpy
+API calls,25.675411,5.492783,120081.0,45.742,29.375,1026.058,cudaLaunchKernel
+API calls,6.383168,1.365562,30081.0,45.396,15.573,347214.222,cudaMalloc
+API calls,0.000456,0.000098,97.0,1.006,0.521,22.135,cuDeviceGetAttribute
+API calls,0.000039,0.000008,1.0,8.438,8.438,8.438,cuDeviceTotalMem
+API calls,0.00003,0.000007,3.0,2.17,1.094,3.49,cuDeviceGetCount
+API calls,0.000014,0.000003,2.0,1.484,1.042,1.927,cuDeviceGet
+API calls,0.000007,0.000001,1.0,1.407,1.407,1.407,cuDeviceGetName
+API calls,0.000004,0.000001,1.0,0.834,0.834,0.834,cuDeviceGetUuid
+,%,s,,us,us,us,
+GPU activities,39.396576,1.705474,20002.0,85.265,80.21,106.826,"gpu_calcOutputs(Neuron*, int*)"
+GPU activities,12.167194,0.526717,10001.0,52.666,52.188,61.408,"gpu_propErrorBackwards(Neuron*, double*, int)"
+GPU activities,11.697714,0.506393,10001.0,50.634,50.261,58.543,"gpu_setBackwardError(Neuron*, double, int)"
+GPU activities,8.377176,0.362647,20002.0,18.13,17.448,20.574,"gpu_updateWeights(Neuron*, int)"
+GPU activities,7.116781,0.308085,20003.0,15.401,14.375,17.135,"gpu_setInputs(Neuron*, double*, int)"
+GPU activities,6.270518,0.27145,10001.0,27.142,26.354,33.178,"gpu_calcErrorWeightProductSum(Neuron*, int, int, double*)"
+GPU activities,6.072839,0.262893,20014.0,13.135,12.708,16.614,"gpu_setInt(int*, int)"
+GPU activities,4.204319,0.182005,10001.0,18.198,18.074,21.615,"gpu_getOutputs(Neuron*, double*, int)"
+GPU activities,3.088312,0.133693,30009.0,4.455,4.375,8.281,[CUDA memcpy DtoH]
+GPU activities,1.590024,0.068832,30010.0,2.293,2.239,4.375,[CUDA memcpy HtoD]
+GPU activities,0.015089,0.000653,50.0,13.064,12.865,15.73,"gpu_setDouble(double*, double)"
+GPU activities,0.001196,0.000052,2.0,25.885,23.906,27.864,"gpu_getSumAndMaxMin(double*, double*, double*, double*, int)"
+GPU activities,0.000918,0.00004,2.0,19.87,17.292,22.449,"gpu_setLearningRate(Neuron*, double, int)"
+GPU activities,0.000675,0.000029,2.0,14.609,13.125,16.094,"gpu_setValuesInArray(double, double*)"
+GPU activities,0.000669,0.000029,2.0,14.479,12.968,15.99,[CUDA memcpy DtoD]
+API calls,39.540758,8.488996,90012.0,94.309,8.698,1283.562,cudaDeviceSynchronize
+API calls,28.142913,6.041995,60021.0,100.664,35.886,1449.606,cudaMemcpy
+API calls,25.798244,5.538619,120081.0,46.124,29.74,1220.697,cudaLaunchKernel
+API calls,6.517489,1.399238,30081.0,46.515,15.626,358661.552,cudaMalloc
+API calls,0.000507,0.000109,97.0,1.121,0.625,23.125,cuDeviceGetAttribute
+API calls,0.000038,0.000008,1.0,8.177,8.177,8.177,cuDeviceTotalMem
+API calls,0.000028,0.000006,3.0,1.979,1.25,2.708,cuDeviceGetCount
+API calls,0.000013,0.000003,2.0,1.38,1.198,1.562,cuDeviceGet
+API calls,0.000007,0.000002,1.0,1.51,1.51,1.51,cuDeviceGetName
+API calls,0.000005,0.000001,1.0,0.99,0.99,0.99,cuDeviceGetUuid

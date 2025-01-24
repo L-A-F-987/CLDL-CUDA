@@ -1,0 +1,161 @@
+Type,Time(%),Time,Calls,Avg,Min,Max,Name
+,%,s,,ms,ms,ms,
+GPU activities,51.749428,20.435621,501.0,40.789663,39.085097,149.947819,"generate_seed_pseudo(__int64, __int64, __int64, curandOrdering, curandStateXORWOW*, unsigned int*)"
+GPU activities,29.141255,11.507753,10001.0,1.15066,1.108773,1.249668,"gpu_calcOutputs_and_PropInputs_less_blocks(Neuron*, int*, int, double*, int, double*, double*, int, int, int)"
+GPU activities,16.142267,6.37451,10001.0,0.637387,0.541495,0.779064,"gpu_updateWeights_first_layer_less_blocks(Neuron*, int, double*)"
+GPU activities,1.654303,0.653277,10001.0,0.065321,0.061619,0.081151,"gpu_calcErrorWeightProductSum_less_blocks_final_layer_lms(Neuron*, Neuron*, int, int, double*, double*, int, int, double)"
+GPU activities,0.437875,0.172915,501.0,0.345139,0.340283,0.818284,"gpu_getSumAndMaxMin(double*, double*, double*, double*, int)"
+GPU activities,0.383682,0.151514,12525.0,0.012096,0.001041,0.015887,"gpu_setDouble(double*, double)"
+GPU activities,0.383106,0.151287,10001.0,0.015127,0.014585,0.019168,"gpu_calcOutputs_less_blocks_final_layer(Neuron*, int*, int, double*, double*, int, int, int)"
+GPU activities,0.084346,0.033308,3006.0,0.01108,0.001041,0.016824,"gpu_setInt(int*, int)"
+GPU activities,0.014543,0.005743,501.0,0.011463,0.009427,0.267518,"void gen_sequenced<curandStateXORWOW, double, int, __operator_&__(double curand_uniform_double_noargs<curandStateXORWOW>(curandStateXORWOW*, int)), rng_config<curandStateXORWOW>>(curandStateXORWOW*, double*, unsigned long, unsigned long, int)"
+GPU activities,0.004909,0.001939,1503.0,0.001289,0.000677,0.008855,[CUDA memcpy DtoH]
+GPU activities,0.003169,0.001251,503.0,0.002488,0.00151,0.166938,[CUDA memcpy DtoD]
+GPU activities,0.001051,0.000415,1005.0,0.000413,0.000208,0.146572,[CUDA memcpy HtoD]
+GPU activities,0.000065,0.000025,2.0,0.012735,0.001927,0.023544,"gpu_setLearningRate(Neuron*, double, int)"
+API calls,40.688123,20.890108,1002.0,20.84841,0.003177,150.631246,cudaFree
+API calls,34.314414,17.617716,10003.0,1.761243,0.016511,7.73216,cudaDeviceSynchronize
+API calls,18.392964,9.443321,18046.0,0.523291,0.018282,366.454518,cudaMalloc
+API calls,5.451348,2.798833,57040.0,0.049067,0.027606,5.322162,cudaLaunchKernel
+API calls,0.974129,0.500137,3011.0,0.166103,0.046409,3.608101,cudaMemcpy
+API calls,0.074154,0.038072,501.0,0.075992,0.03818,0.154593,cudaGetDeviceProperties
+API calls,0.0697,0.035785,511.0,0.07003,0.033596,0.830472,cudaMallocHost
+API calls,0.023878,0.012259,501.0,0.024469,0.017606,0.086203,cudaThreadSynchronize
+API calls,0.00561,0.00288,2004.0,0.001437,0.000573,0.213191,cudaGetLastError
+API calls,0.005113,0.002625,501.0,0.005239,0.003802,0.053754,cudaGetDevice
+API calls,0.000474,0.000244,191.0,0.001275,0.000677,0.039274,cuDeviceGetAttribute
+API calls,0.000044,0.000023,2.0,0.011251,0.00797,0.014532,cuDeviceTotalMem
+API calls,0.000016,0.000008,4.0,0.002018,0.001407,0.002865,cuDeviceGetCount
+API calls,0.000011,0.000006,1.0,0.005521,0.005521,0.005521,cuInit
+API calls,0.000008,0.000004,3.0,0.001336,0.001093,0.001823,cuDeviceGet
+API calls,0.000008,0.000004,2.0,0.001927,0.001875,0.001979,cuDeviceGetName
+API calls,0.000004,0.000002,1.0,0.002031,0.002031,0.002031,cuDriverGetVersion
+API calls,0.000004,0.000002,2.0,0.001015,0.000937,0.001093,cuDeviceGetUuid
+,%,s,,ms,ms,ms,
+GPU activities,51.895452,20.515957,501.0,40.950013,39.080834,203.870652,"generate_seed_pseudo(__int64, __int64, __int64, curandOrdering, curandStateXORWOW*, unsigned int*)"
+GPU activities,29.13204,11.516841,10001.0,1.151568,1.110644,1.278988,"gpu_calcOutputs_and_PropInputs_less_blocks(Neuron*, int*, int, double*, int, double*, double*, int, int, int)"
+GPU activities,16.051774,6.345787,10001.0,0.634515,0.534565,0.781248,"gpu_updateWeights_first_layer_less_blocks(Neuron*, int, double*)"
+GPU activities,1.584031,0.626219,10001.0,0.062615,0.058025,0.073911,"gpu_calcErrorWeightProductSum_less_blocks_final_layer_lms(Neuron*, Neuron*, int, int, double*, double*, int, int, double)"
+GPU activities,0.437327,0.17289,501.0,0.345089,0.341272,0.51571,"gpu_getSumAndMaxMin(double*, double*, double*, double*, int)"
+GPU activities,0.409198,0.161769,10001.0,0.016175,0.015469,0.019116,"gpu_calcOutputs_less_blocks_final_layer(Neuron*, int*, int, double*, double*, int, int, int)"
+GPU activities,0.382956,0.151395,12525.0,0.012087,0.001041,0.014793,"gpu_setDouble(double*, double)"
+GPU activities,0.084361,0.033351,3006.0,0.011094,0.001406,0.016668,"gpu_setInt(int*, int)"
+GPU activities,0.013655,0.005398,501.0,0.010775,0.009479,0.265277,"void gen_sequenced<curandStateXORWOW, double, int, __operator_&__(double curand_uniform_double_noargs<curandStateXORWOW>(curandStateXORWOW*, int)), rng_config<curandStateXORWOW>>(curandStateXORWOW*, double*, unsigned long, unsigned long, int)"
+GPU activities,0.004898,0.001936,1503.0,0.001288,0.000677,0.008595,[CUDA memcpy DtoH]
+GPU activities,0.003207,0.001268,503.0,0.00252,0.001875,0.164906,[CUDA memcpy DtoD]
+GPU activities,0.001045,0.000413,1005.0,0.000411,0.000208,0.146156,[CUDA memcpy HtoD]
+GPU activities,0.000056,0.000022,2.0,0.011068,0.001822,0.020315,"gpu_setLearningRate(Neuron*, double, int)"
+API calls,41.008559,20.991854,1002.0,20.949953,0.003542,204.431451,cudaFree
+API calls,34.513203,17.666949,10003.0,1.766165,0.017345,8.178513,cudaDeviceSynchronize
+API calls,18.059373,9.244405,18046.0,0.512268,0.017449,386.986856,cudaMalloc
+API calls,5.256822,2.690912,57040.0,0.047175,0.027658,10.114141,cudaLaunchKernel
+API calls,1.002515,0.513177,3011.0,0.170434,0.041201,7.806827,cudaMemcpy
+API calls,0.074731,0.038254,501.0,0.076355,0.0387,0.140686,cudaGetDeviceProperties
+API calls,0.050655,0.02593,511.0,0.050743,0.030991,0.878492,cudaMallocHost
+API calls,0.023313,0.011934,501.0,0.02382,0.018595,0.113809,cudaThreadSynchronize
+API calls,0.005147,0.002635,501.0,0.005258,0.003438,0.063441,cudaGetDevice
+API calls,0.005089,0.002605,2004.0,0.001299,0.000625,0.006719,cudaGetLastError
+API calls,0.000496,0.000254,191.0,0.00133,0.000625,0.039221,cuDeviceGetAttribute
+API calls,0.000047,0.000024,2.0,0.01211,0.009844,0.014376,cuDeviceTotalMem
+API calls,0.000016,0.000008,4.0,0.002031,0.00125,0.003333,cuDeviceGetCount
+API calls,0.000011,0.000006,1.0,0.005521,0.005521,0.005521,cuInit
+API calls,0.000008,0.000004,3.0,0.001441,0.001094,0.001979,cuDeviceGet
+API calls,0.000007,0.000004,2.0,0.001875,0.001615,0.002136,cuDeviceGetName
+API calls,0.000004,0.000002,2.0,0.001042,0.00099,0.001094,cuDeviceGetUuid
+API calls,0.000003,0.000002,1.0,0.001771,0.001771,0.001771,cuDriverGetVersion
+,%,s,,ms,ms,ms,
+GPU activities,51.876271,20.570603,501.0,41.059087,39.022063,144.887936,"generate_seed_pseudo(__int64, __int64, __int64, curandOrdering, curandStateXORWOW*, unsigned int*)"
+GPU activities,29.002827,11.50055,10001.0,1.149939,1.111265,1.236066,"gpu_calcOutputs_and_PropInputs_less_blocks(Neuron*, int*, int, double*, int, double*, double*, int, int, int)"
+GPU activities,15.961447,6.329225,10001.0,0.632859,0.532063,0.762755,"gpu_updateWeights_first_layer_less_blocks(Neuron*, int, double*)"
+GPU activities,1.829943,0.725631,10001.0,0.072555,0.068651,0.08584,"gpu_calcErrorWeightProductSum_less_blocks_final_layer_lms(Neuron*, Neuron*, int, int, double*, double*, int, int, double)"
+GPU activities,0.437926,0.173652,501.0,0.34661,0.340957,0.514927,"gpu_getSumAndMaxMin(double*, double*, double*, double*, int)"
+GPU activities,0.402477,0.159595,10001.0,0.015957,0.014688,0.018907,"gpu_calcOutputs_less_blocks_final_layer(Neuron*, int*, int, double*, double*, int, int, int)"
+GPU activities,0.382067,0.151502,12525.0,0.012095,0.001041,0.015886,"gpu_setDouble(double*, double)"
+GPU activities,0.084013,0.033314,3006.0,0.011082,0.001145,0.016771,"gpu_setInt(int*, int)"
+GPU activities,0.014148,0.00561,501.0,0.011198,0.009896,0.263974,"void gen_sequenced<curandStateXORWOW, double, int, __operator_&__(double curand_uniform_double_noargs<curandStateXORWOW>(curandStateXORWOW*, int)), rng_config<curandStateXORWOW>>(curandStateXORWOW*, double*, unsigned long, unsigned long, int)"
+GPU activities,0.004902,0.001944,1503.0,0.001293,0.000677,0.008594,[CUDA memcpy DtoH]
+GPU activities,0.002868,0.001137,503.0,0.00226,0.001666,0.16652,[CUDA memcpy DtoD]
+GPU activities,0.001047,0.000415,1005.0,0.000413,0.000208,0.146519,[CUDA memcpy HtoD]
+GPU activities,0.000064,0.000026,2.0,0.012761,0.001823,0.023699,"gpu_setLearningRate(Neuron*, double, int)"
+API calls,41.105565,21.034308,1002.0,20.992322,0.004167,145.480239,cudaFree
+API calls,34.494248,17.651202,10003.0,1.76459,0.012292,7.890659,cudaDeviceSynchronize
+API calls,17.983983,9.202662,18046.0,0.509955,0.018126,372.088026,cudaMalloc
+API calls,5.28507,2.704446,57040.0,0.047413,0.02797,1.101157,cudaLaunchKernel
+API calls,0.959208,0.490841,3011.0,0.163015,0.043492,0.691603,cudaMemcpy
+API calls,0.075428,0.038598,501.0,0.077041,0.039013,0.194855,cudaGetDeviceProperties
+API calls,0.063007,0.032242,511.0,0.063094,0.03495,0.834893,cudaMallocHost
+API calls,0.022292,0.011407,501.0,0.022768,0.016824,0.078129,cudaThreadSynchronize
+API calls,0.005671,0.002902,2004.0,0.001448,0.000677,0.101204,cudaGetLastError
+API calls,0.004918,0.002517,501.0,0.005023,0.00375,0.026303,cudaGetDevice
+API calls,0.000514,0.000263,191.0,0.001375,0.000677,0.035835,cuDeviceGetAttribute
+API calls,0.000046,0.000023,2.0,0.011745,0.008803,0.014688,cuDeviceTotalMem
+API calls,0.000015,0.000008,4.0,0.001979,0.001302,0.003073,cuDeviceGetCount
+API calls,0.000011,0.000006,1.0,0.005521,0.005521,0.005521,cuInit
+API calls,0.000008,0.000004,3.0,0.001441,0.001042,0.001928,cuDeviceGet
+API calls,0.000008,0.000004,2.0,0.002031,0.001979,0.002084,cuDeviceGetName
+API calls,0.000004,0.000002,2.0,0.00112,0.001042,0.001198,cuDeviceGetUuid
+API calls,0.000004,0.000002,1.0,0.001979,0.001979,0.001979,cuDriverGetVersion
+,%,s,,ms,ms,ms,
+GPU activities,51.803286,20.550335,501.0,41.018631,39.164485,181.27657,"generate_seed_pseudo(__int64, __int64, __int64, curandOrdering, curandStateXORWOW*, unsigned int*)"
+GPU activities,29.119342,11.551627,10001.0,1.155047,1.113712,1.39128,"gpu_calcOutputs_and_PropInputs_less_blocks(Neuron*, int*, int, double*, int, double*, double*, int, int, int)"
+GPU activities,16.001492,6.347783,10001.0,0.634714,0.532116,0.939848,"gpu_updateWeights_first_layer_less_blocks(Neuron*, int, double*)"
+GPU activities,1.751327,0.69475,10001.0,0.069468,0.065629,0.086203,"gpu_calcErrorWeightProductSum_less_blocks_final_layer_lms(Neuron*, Neuron*, int, int, double*, double*, int, int, double)"
+GPU activities,0.437467,0.173543,501.0,0.346393,0.340436,0.818381,"gpu_getSumAndMaxMin(double*, double*, double*, double*, int)"
+GPU activities,0.395822,0.157022,10001.0,0.0157,0.01474,0.019115,"gpu_calcOutputs_less_blocks_final_layer(Neuron*, int*, int, double*, double*, int, int, int)"
+GPU activities,0.381935,0.151513,12525.0,0.012096,0.001041,0.016407,"gpu_setDouble(double*, double)"
+GPU activities,0.084341,0.033458,3006.0,0.01113,0.001093,0.018126,"gpu_setInt(int*, int)"
+GPU activities,0.015655,0.00621,501.0,0.012395,0.009584,0.272828,"void gen_sequenced<curandStateXORWOW, double, int, __operator_&__(double curand_uniform_double_noargs<curandStateXORWOW>(curandStateXORWOW*, int)), rng_config<curandStateXORWOW>>(curandStateXORWOW*, double*, unsigned long, unsigned long, int)"
+GPU activities,0.005049,0.002003,1503.0,0.001332,0.000677,0.009011,[CUDA memcpy DtoH]
+GPU activities,0.003175,0.001259,503.0,0.002503,0.001458,0.164175,[CUDA memcpy DtoD]
+GPU activities,0.001046,0.000415,1005.0,0.000412,0.000208,0.146519,[CUDA memcpy HtoD]
+GPU activities,0.000064,0.000025,2.0,0.012605,0.001928,0.023282,"gpu_setLearningRate(Neuron*, double, int)"
+API calls,40.923933,21.014232,1002.0,20.972287,0.003958,181.867172,cudaFree
+API calls,34.583931,17.758673,10003.0,1.775334,0.015834,16.786178,cudaDeviceSynchronize
+API calls,17.953425,9.218993,18046.0,0.51086,0.01797,366.666461,cudaMalloc
+API calls,5.415226,2.780691,57040.0,0.048749,0.027397,8.604481,cudaLaunchKernel
+API calls,0.949488,0.487557,3011.0,0.161925,0.041878,0.823379,cudaMemcpy
+API calls,0.074662,0.038339,501.0,0.076524,0.036617,0.183083,cudaGetDeviceProperties
+API calls,0.066145,0.033965,511.0,0.066467,0.035314,0.835463,cudaMallocHost
+API calls,0.022308,0.011455,501.0,0.022864,0.01797,0.09214,cudaThreadSynchronize
+API calls,0.005142,0.00264,501.0,0.00527,0.003803,0.049482,cudaGetDevice
+API calls,0.005127,0.002633,2004.0,0.001313,0.000573,0.002344,cudaGetLastError
+API calls,0.000515,0.000265,191.0,0.001385,0.000677,0.038179,cuDeviceGetAttribute
+API calls,0.000046,0.000023,2.0,0.011745,0.010157,0.013334,cuDeviceTotalMem
+API calls,0.000016,0.000008,4.0,0.002044,0.001354,0.003177,cuDeviceGetCount
+API calls,0.00001,0.000005,1.0,0.005156,0.005156,0.005156,cuInit
+API calls,0.000009,0.000004,3.0,0.001475,0.001198,0.001771,cuDeviceGet
+API calls,0.000007,0.000004,2.0,0.001875,0.001875,0.001875,cuDeviceGetName
+API calls,0.000005,0.000003,2.0,0.001302,0.00125,0.001354,cuDeviceGetUuid
+API calls,0.000004,0.000002,1.0,0.002135,0.002135,0.002135,cuDriverGetVersion
+,%,s,,ms,ms,ms,
+GPU activities,51.674764,20.354453,501.0,40.62765,39.160544,168.92704,"generate_seed_pseudo(__int64, __int64, __int64, curandOrdering, curandStateXORWOW*, unsigned int*)"
+GPU activities,29.217224,11.50853,10001.0,1.150737,1.10876,1.26101,"gpu_calcOutputs_and_PropInputs_less_blocks(Neuron*, int*, int, double*, int, double*, double*, int, int, int)"
+GPU activities,16.21422,6.386707,10001.0,0.638606,0.528155,0.790358,"gpu_updateWeights_first_layer_less_blocks(Neuron*, int, double*)"
+GPU activities,1.582894,0.623494,10001.0,0.062343,0.05844,0.073493,"gpu_calcErrorWeightProductSum_less_blocks_final_layer_lms(Neuron*, Neuron*, int, int, double*, double*, int, int, double)"
+GPU activities,0.436058,0.171761,501.0,0.342837,0.340332,0.457786,"gpu_getSumAndMaxMin(double*, double*, double*, double*, int)"
+GPU activities,0.384618,0.151499,12525.0,0.012095,0.001041,0.016095,"gpu_setDouble(double*, double)"
+GPU activities,0.383362,0.151004,10001.0,0.015098,0.014532,0.018439,"gpu_calcOutputs_less_blocks_final_layer(Neuron*, int*, int, double*, double*, int, int, int)"
+GPU activities,0.084644,0.033341,3006.0,0.011091,0.001093,0.016615,"gpu_setInt(int*, int)"
+GPU activities,0.013039,0.005136,501.0,0.010251,0.009427,0.012709,"void gen_sequenced<curandStateXORWOW, double, int, __operator_&__(double curand_uniform_double_noargs<curandStateXORWOW>(curandStateXORWOW*, int)), rng_config<curandStateXORWOW>>(curandStateXORWOW*, double*, unsigned long, unsigned long, int)"
+GPU activities,0.004875,0.00192,1503.0,0.001277,0.000677,0.009011,[CUDA memcpy DtoH]
+GPU activities,0.00319,0.001257,503.0,0.002498,0.00151,0.170531,[CUDA memcpy DtoD]
+GPU activities,0.001051,0.000414,1005.0,0.000411,0.000208,0.14631,[CUDA memcpy HtoD]
+GPU activities,0.000061,0.000024,2.0,0.012031,0.001875,0.022188,"gpu_setLearningRate(Neuron*, double, int)"
+API calls,40.769416,20.853169,1002.0,20.811545,0.003021,169.513381,cudaFree
+API calls,34.564963,17.67965,10003.0,1.767434,0.015573,3.123498,cudaDeviceSynchronize
+API calls,18.251123,9.335276,18046.0,0.517304,0.017709,385.340886,cudaMalloc
+API calls,5.28069,2.701023,57040.0,0.047353,0.027241,1.185792,cudaLaunchKernel
+API calls,0.947604,0.484691,3011.0,0.160973,0.041669,1.042816,cudaMemcpy
+API calls,0.076602,0.039181,501.0,0.078205,0.041669,0.159801,cudaGetDeviceProperties
+API calls,0.076492,0.039125,511.0,0.076565,0.035471,0.857233,cudaMallocHost
+API calls,0.022203,0.011357,501.0,0.022668,0.017188,0.077036,cudaThreadSynchronize
+API calls,0.005224,0.002672,501.0,0.005333,0.003177,0.069119,cudaGetDevice
+API calls,0.005072,0.002594,2004.0,0.001294,0.000625,0.043805,cudaGetLastError
+API calls,0.000508,0.00026,191.0,0.001359,0.000625,0.039845,cuDeviceGetAttribute
+API calls,0.000048,0.000024,2.0,0.01224,0.009792,0.014689,cuDeviceTotalMem
+API calls,0.000017,0.000009,4.0,0.002187,0.001666,0.003073,cuDeviceGetCount
+API calls,0.000011,0.000006,1.0,0.005677,0.005677,0.005677,cuInit
+API calls,0.000009,0.000005,3.0,0.00158,0.001146,0.002188,cuDeviceGet
+API calls,0.000008,0.000004,2.0,0.002005,0.00177,0.00224,cuDeviceGetName
+API calls,0.000005,0.000003,2.0,0.001328,0.00125,0.001407,cuDeviceGetUuid
+API calls,0.000005,0.000003,1.0,0.002552,0.002552,0.002552,cuDriverGetVersion
