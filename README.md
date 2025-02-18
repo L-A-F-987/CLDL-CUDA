@@ -26,7 +26,18 @@ This will create 4 folders each containing executables.
 
  Tested with CUDA-10.2 on a Jetson Nano Dev Kit running Ubuntu 18.04
 ``
-# Hardware 
+
+# Improvements made to the library
+
+- Reduced the number of redundant API calls
+- Further optimised the mathematical operation time taken fo calculate the layer outputs
+
+# Future Work 
+
+- Integrate all functions for deep learning into a single block to reduce the overhead.
+- Test the system in real-time with headphone inputs
+
+# Hardware Set-up for future tasks
 - Jetson Nano Developer Kit
 
 - Two I2s compatable Microphones
